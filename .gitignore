@@ -26,3 +26,4 @@ client/dist
 vite.config.js.*
 generated-scripts*
 dump*
+.DS_Store

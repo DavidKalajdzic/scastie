@@ -15,7 +15,7 @@ import js.annotation._
 @js.native
 object ScastieLogo extends js.Any
 
-@JSImport("@resources/images/placeholder.png", JSImport.Default)
+@JSImport("@resources/images/icon-scastie.png", JSImport.Default)
 @js.native
 object Placeholder extends js.Any
 
