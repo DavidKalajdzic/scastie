@@ -9,6 +9,7 @@ import com.olegych.scastie.client
 import scalajs.js
 
 object EditorKeymaps {
+
   import typings.codemirrorCommands.mod._
 
   private def presentationMode(editor: CodeEditor): Unit = {
@@ -75,7 +76,10 @@ object KeyBinding {
 
   def apply(action: EditorView => Unit, key: Key, preventDefault: Boolean = false): JSKeyBinding = {
     JSKeyBinding()
-      .setRun(editorView => { action(editorView); true })
+      .setRun(editorView => {
+        action(editorView);
+        true
+      })
       .setKey(key.default)
       .setLinux(key.linux)
       .setMac(key.mac)

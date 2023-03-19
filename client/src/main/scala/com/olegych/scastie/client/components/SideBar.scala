@@ -19,6 +19,7 @@ object Placeholder extends js.Any
 
 object Assets {
   def logo: String = ScastieLogo.asInstanceOf[String]
+
   def placeholder: String = Placeholder.asInstanceOf[String]
 }
 

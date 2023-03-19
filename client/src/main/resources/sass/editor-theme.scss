@@ -8,6 +8,7 @@
 
   .workSheetIndicator {
     color: $topbar-background;
+
     &.enabled {
       color: $worksheet-enabled;
     }

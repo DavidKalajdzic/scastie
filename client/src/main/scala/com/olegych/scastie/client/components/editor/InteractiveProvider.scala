@@ -151,7 +151,7 @@ case class InteractiveProvider(props: CodeEditor) {
         from = from.toDouble,
         to = to.toDouble,
         insert = completion.instructions.text
-      ).asInstanceOf[ChangeSpec] +: createAdditionalTextEdits(completion.additionalInsertInstructions, view)):_*
+      ).asInstanceOf[ChangeSpec] +: createAdditionalTextEdits(completion.additionalInsertInstructions, view)): _*
     ).setSelection(codemirrorState.anon.Anchor(cursorChange))
   }
 
@@ -183,7 +183,7 @@ case class InteractiveProvider(props: CodeEditor) {
       makeRequest(request, "complete").map(maybeText =>
         parseMetalsResponse[Set[api.CompletionItemDTO]](maybeText).map { completionList =>
           val completions = completionList.map {
-            case cmp @ api.CompletionItemDTO(name, detail, tpe, boost, insertInstructions, additionalInsertInstructions, symbol) =>
+            case cmp@api.CompletionItemDTO(name, detail, tpe, boost, insertInstructions, additionalInsertInstructions, symbol) =>
               Completion(name)
                 .setDetail(detail)
                 .setInfo(getCompletionInfo(cmp))
@@ -234,7 +234,9 @@ object InteractiveProvider {
   val highlightJS = typings.highlightJs.mod.default
   val highlightF: (String, String, js.UndefOr[Any]) => String = (str, lang, x) => {
     if (lang != null && highlightJS.getLanguage(lang) != null && lang != "") {
-      Try { highlightJS.highlight(str, HLJSOptions(lang)).value}.getOrElse(str)
+      Try {
+        highlightJS.highlight(str, HLJSOptions(lang)).value
+      }.getOrElse(str)
     } else {
       str
     }
@@ -245,18 +247,18 @@ object InteractiveProvider {
 
   private def wasMetalsToggled(prevProps: CodeEditor, props: CodeEditor): Boolean =
     (prevProps.metalsStatus == MetalsDisabled && props.metalsStatus == MetalsLoading) ||
-    (prevProps.metalsStatus != MetalsDisabled && props.metalsStatus == MetalsDisabled)
+      (prevProps.metalsStatus != MetalsDisabled && props.metalsStatus == MetalsDisabled)
 
   private def didConfigChange(prevProps: CodeEditor, props: CodeEditor): Boolean =
-      props.target != prevProps.target ||
-        props.dependencies != prevProps.dependencies ||
-        props.isWorksheetMode != prevProps.isWorksheetMode
+    props.target != prevProps.target ||
+      props.dependencies != prevProps.dependencies ||
+      props.isWorksheetMode != prevProps.isWorksheetMode
 
   def reloadMetalsConfiguration(
-    editorView: UseStateF[CallbackTo, EditorView],
-    prevProps: Option[CodeEditor],
-    props: CodeEditor
-  ): Callback = {
+                                 editorView: UseStateF[CallbackTo, EditorView],
+                                 prevProps: Option[CodeEditor],
+                                 props: CodeEditor
+                               ): Callback = {
     Callback {
       val extension = InteractiveProvider(props).extension
       val effects = interactive.reconfigure(extension)

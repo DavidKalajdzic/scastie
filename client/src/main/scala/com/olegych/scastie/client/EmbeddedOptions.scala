@@ -57,8 +57,8 @@ object EmbeddedOptions {
   }
 
   private def extractSnippetId(
-      options: SharedEmbeddedOptions
-  ): Option[SnippetId] = {
+                                options: SharedEmbeddedOptions
+                              ): Option[SnippetId] = {
     import options._
 
     base64UUID.toOption.map(
@@ -67,13 +67,13 @@ object EmbeddedOptions {
           uuid,
           user.toOption
             .map(u => SnippetUserPart(u, update.toOption.getOrElse(0)))
-      )
+        )
     )
   }
 
   def fromJsRessource(
-      defaultServerUrl: String
-  )(options: EmbeddedResourceOptionsJs): EmbeddedOptions = {
+                       defaultServerUrl: String
+                     )(options: EmbeddedResourceOptionsJs): EmbeddedOptions = {
 
     import options._
 
@@ -95,15 +95,15 @@ object EmbeddedOptions {
   }
 
   def fromJs(
-      defaultServerUrl: String
-  )(options: EmbeddedOptionsJs): EmbeddedOptions = {
+              defaultServerUrl: String
+            )(options: EmbeddedOptionsJs): EmbeddedOptions = {
     import options._
 
     val scalaTarget =
       (targetType.toOption,
-       scalaVersion.toOption,
-       None: Option[String], // scalaJsVersion.toOption,
-       None: Option[String] // scalaNativeVersion.toOption
+        scalaVersion.toOption,
+        None: Option[String], // scalaJsVersion.toOption,
+        None: Option[String] // scalaNativeVersion.toOption
       ) match {
 
         case (Some("jvm"), _, None, None) => {

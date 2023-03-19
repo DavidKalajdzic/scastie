@@ -6,25 +6,23 @@ import japgolly.scalajs.react._
 
 import vdom.all._
 
-final case class BuildSettings(
-    visible: Boolean,
-    librariesFrom: Map[ScalaDependency, Project],
-    isDarkTheme: Boolean,
-    isBuildDefault: Boolean,
-    isResetModalClosed: Boolean,
-    scalaTarget: ScalaTarget,
-    sbtConfigExtra: String,
-    sbtConfig: String,
-    sbtPluginsConfig: String,
-    setTarget: ScalaTarget ~=> Callback,
-    closeResetModal: Reusable[Callback],
-    resetBuild: Reusable[Callback],
-    openResetModal: Reusable[Callback],
-    sbtConfigChange: String ~=> Callback,
-    removeScalaDependency: ScalaDependency ~=> Callback,
-    updateDependencyVersion: (ScalaDependency, String) ~=> Callback,
-    addScalaDependency: (ScalaDependency, Project) ~=> Callback
-) {
+final case class BuildSettings(visible: Boolean,
+                               librariesFrom: Map[ScalaDependency, Project],
+                               isDarkTheme: Boolean,
+                               isBuildDefault: Boolean,
+                               isResetModalClosed: Boolean,
+                               scalaTarget: ScalaTarget,
+                               sbtConfigExtra: String,
+                               sbtConfig: String,
+                               sbtPluginsConfig: String,
+                               setTarget: ScalaTarget ~=> Callback,
+                               closeResetModal: Reusable[Callback],
+                               resetBuild: Reusable[Callback],
+                               openResetModal: Reusable[Callback],
+                               sbtConfigChange: String ~=> Callback,
+                               removeScalaDependency: ScalaDependency ~=> Callback,
+                               updateDependencyVersion: (ScalaDependency, String) ~=> Callback,
+                               addScalaDependency: (ScalaDependency, Project) ~=> Callback) {
 
   @inline def render: VdomElement = BuildSettings.component(this)
 }
@@ -33,6 +31,12 @@ object BuildSettings {
 
   implicit val reusability: Reusability[BuildSettings] =
     Reusability.derive[BuildSettings]
+  private val component =
+    ScalaComponent
+      .builder[BuildSettings]("BuildSettings")
+      .render_P(render)
+      .configure(Reusability.shouldComponentUpdate)
+      .build
 
   private def render(props: BuildSettings): VdomElement = {
 
@@ -115,11 +119,4 @@ object BuildSettings {
       )
     )
   }
-
-  private val component =
-    ScalaComponent
-      .builder[BuildSettings]("BuildSettings")
-      .render_P(render)
-      .configure(Reusability.shouldComponentUpdate)
-      .build
 }

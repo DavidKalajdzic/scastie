@@ -4,7 +4,9 @@ import japgolly.scalajs.react._
 import vdom.all._
 import com.olegych.scastie.client.components.editor.EditorKeymaps
 
-final case class HelpModal(isDarkTheme: Boolean, isClosed: Boolean, close: Reusable[Callback]) {
+final case class HelpModal(isDarkTheme: Boolean,
+                           isClosed: Boolean,
+                           close: Reusable[Callback]) {
   @inline def render: VdomElement = HelpModal.component(this)
 }
 
@@ -41,8 +43,8 @@ object HelpModal {
       modalCss = TagMod(),
       modalId = "long-help",
       content = div(cls := "markdown-body")(
-        p( "Scastie is an interactive playground for Scala with support for sbt configuration."),
-        p( "Scastie editor supports Sublime Text ", sublime),
+        p("Scastie is an interactive playground for Scala with support for sbt configuration."),
+        p("Scastie editor supports Sublime Text ", sublime),
         h2(s"Save (${EditorKeymaps.saveOrUpdate.getName})"),
         p(
           "Run and save your code."
@@ -91,9 +93,9 @@ object HelpModal {
           "Your saved code fragments will appear here and you'll be able to delete or share them."
         ),
         h2("Feedback"),
-        p( "You can join our ", gitter, " channel and send issues."),
+        p("You can join our ", gitter, " channel and send issues."),
         h2("BuildInfo"),
-        p( "It's available on Github at ")(
+        p("It's available on Github at ")(
           scastieGithub,
           br,
           " License: Apache 2",

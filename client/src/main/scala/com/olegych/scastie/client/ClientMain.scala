@@ -25,11 +25,14 @@ object Exports {
   val ScastieMain = com.olegych.scastie.client.ScastieMain
   @JSExport
   val ClientMain = com.olegych.scastie.client.ScastieClientMain
+
   @JSExport
   def Embedded(selector: UndefOr[String | Node], options: UndefOr[EmbeddedOptionsJs]) = ScastieEmbedded.embedded(selector, options)
+
   @JSExport
   def EmbeddedResource(options: UndefOr[EmbeddedResourceOptionsJs]) = ScastieEmbedded.embeddedResource(options)
 }
+
 /* Entry point for the website
  */
 object ScastieMain {
@@ -146,6 +149,7 @@ object ScastieEmbedded {
       }
     }
   }
+
   def addStylesheet(baseUrl: String): Unit = {
     val link = dom.document
       .createElement("link")

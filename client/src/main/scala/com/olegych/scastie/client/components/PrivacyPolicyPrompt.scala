@@ -10,13 +10,11 @@ import extra._
 
 // scheduled for removal 2023-04-30
 @deprecated("Scheduled for removal", "2023-04-30")
-final case class PrivacyPolicyPrompt(
-                           isDarkTheme: Boolean,
-                           isClosed: Boolean,
-                           acceptPrivacyPolicy: Reusable[Callback],
-                           refusePrivacyPolicy: Reusable[Callback],
-                           openPrivacyPolicyModal: Reusable[Callback]
-                         ) {
+final case class PrivacyPolicyPrompt(isDarkTheme: Boolean,
+                                     isClosed: Boolean,
+                                     acceptPrivacyPolicy: Reusable[Callback],
+                                     refusePrivacyPolicy: Reusable[Callback],
+                                     openPrivacyPolicyModal: Reusable[Callback]) {
   @inline def render: VdomElement = PrivacyPolicyPrompt.component(this)
 }
 
@@ -26,7 +24,9 @@ object PrivacyPolicyPrompt {
   implicit val reusability: Reusability[PrivacyPolicyPrompt] =
     Reusability.derive[PrivacyPolicyPrompt]
 
-  def reloadWindow = Reusable.always(Callback { dom.window.location.reload() })
+  def reloadWindow = Reusable.always(Callback {
+    dom.window.location.reload()
+  })
 
   def render(props: PrivacyPolicyPrompt): VdomElement = {
     val theme = if (props.isDarkTheme) "dark" else "light"
@@ -40,7 +40,8 @@ object PrivacyPolicyPrompt {
       modalId = "privacy-policy-prompt",
       content = TagMod(
         div(cls := "modal-intro")(
-          p("""With the introduction of privacy policy to Scastie, you have to decide
+          p(
+            """With the introduction of privacy policy to Scastie, you have to decide
               | whether you want to keep your existing code snippets, or remove them all from our database.
               | By keeping the snippets, you acknowledge that you have read and agreed
               | to the privacy policy terms available """.stripMargin.stripLineEnd,
@@ -68,9 +69,9 @@ object PrivacyPolicyPrompt {
           li(onClick ==> (e => e.stopPropagationCB >> props.acceptPrivacyPolicy), cls := "btn")(
             "Keep my existing snippets"
           ),
-        li(onClick ==> (e =>
+          li(onClick ==> (e =>
             e.stopPropagationCB >> props.refusePrivacyPolicy
-          ), cls := "btn")(
+            ), cls := "btn")(
             "Delete my existing snippets"
           )
         )

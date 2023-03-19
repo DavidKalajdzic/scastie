@@ -7,7 +7,9 @@ import com.olegych.scastie.client.components.editor.CodeEditor
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.all._
 
-final case class MainPanel(state: ScastieState, backend: ScastieBackend, props: Scastie) {
+final case class MainPanel(state: ScastieState,
+                           backend: ScastieBackend,
+                           props: Scastie) {
 
   @inline def render: VdomElement = MainPanel.component(this)
 }
@@ -20,6 +22,7 @@ object MainPanel {
     import in._
 
     def visible(view: View) = view == state.view
+
     def show(view: View) =
       if (visible(view)) display.block
       else display.none

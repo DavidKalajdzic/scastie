@@ -5,7 +5,8 @@ import japgolly.scalajs.react._
 
 import vdom.all._
 
-case class TargetSelector(scalaTarget: ScalaTarget, onChange: ScalaTarget ~=> Callback) {
+case class TargetSelector(scalaTarget: ScalaTarget,
+                          onChange: ScalaTarget ~=> Callback) {
   @inline def render: VdomElement = TargetSelector.targetSelector(this)
 }
 
@@ -20,10 +21,10 @@ object TargetSelector {
 
   def labelFor(targetType: ScalaTargetType) = {
     targetType match {
-      case ScalaTargetType.Scala2    => "Scala 2"
-      case ScalaTargetType.JS        => "Scala.js"
-      case ScalaTargetType.Scala3    => "Scala 3"
-      case ScalaTargetType.Native    => "Native"
+      case ScalaTargetType.Scala2 => "Scala 2"
+      case ScalaTargetType.JS => "Scala.js"
+      case ScalaTargetType.Scala3 => "Scala 3"
+      case ScalaTargetType.Native => "Native"
       case ScalaTargetType.Typelevel => "Typelevel"
     }
   }

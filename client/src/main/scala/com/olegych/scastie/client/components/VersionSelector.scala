@@ -5,7 +5,8 @@ import japgolly.scalajs.react._
 
 import vdom.all._
 
-case class VersionSelector(scalaTarget: ScalaTarget, onChange: ScalaTarget ~=> Callback) {
+case class VersionSelector(scalaTarget: ScalaTarget,
+                           onChange: ScalaTarget ~=> Callback) {
   @inline def render: VdomElement = VersionSelector.versionSelectorHook(this)
 }
 
@@ -17,11 +18,11 @@ object VersionSelector {
       .render(props => {
         def versionSelectors(scalaVersion: String) =
           props.scalaTarget match {
-            case d: ScalaTarget.Jvm       => ScalaTarget.Jvm.apply(scalaVersion)
+            case d: ScalaTarget.Jvm => ScalaTarget.Jvm.apply(scalaVersion)
             case d: ScalaTarget.Typelevel => ScalaTarget.Typelevel.apply(scalaVersion)
-            case d: ScalaTarget.Scala3    => ScalaTarget.Scala3.apply(scalaVersion)
-            case js: ScalaTarget.Js       => ScalaTarget.Js(scalaVersion, js.scalaJsVersion)
-            case n: ScalaTarget.Native    => ScalaTarget.Native(n.scalaNativeVersion, n.scalaVersion)
+            case d: ScalaTarget.Scala3 => ScalaTarget.Scala3.apply(scalaVersion)
+            case js: ScalaTarget.Js => ScalaTarget.Js(scalaVersion, js.scalaJsVersion)
+            case n: ScalaTarget.Native => ScalaTarget.Native(n.scalaNativeVersion, n.scalaVersion)
           }
 
         ul(cls := "suggestedVersions")(

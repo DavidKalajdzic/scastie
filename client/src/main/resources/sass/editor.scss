@@ -12,7 +12,7 @@
       height: $editor-topbar-height;
     }
 
-    .editor-topbar{
+    .editor-topbar {
       display: inline-block;
 
       &.disabled {
@@ -25,23 +25,24 @@
         width: 14px;
         margin-left: 8px;
         font-size: 14px;
-        
+
         &.enabled.alpha {
           opacity: 0.3;
         }
       }
+
       .editor-buttons {
         white-space: nowrap;
 
         li {
           display: inline-block;
         }
-        
+
         .btn {
           cursor: pointer;
           padding: 0 20px;
           line-height: 58px;
-          
+
           i {
             margin-right: 5px;
           }
@@ -55,11 +56,13 @@
 
       .save-buttons {
         display: inline-block;
+
         .btn {
           padding: 0 20px;
         }
       }
     }
+
     $console-handle-height: 38px;
 
     .content {
@@ -75,7 +78,7 @@
       width: 800px;
       margin: 10px auto;
       padding: 10px 0;
-      
+
       .main-panel {
         position: relative;
       }
@@ -90,7 +93,7 @@
 
       .editor-container {
         .code {
-          overflow: auto; 
+          overflow: auto;
 
           $min-height: 400px;
 
@@ -99,7 +102,7 @@
             height: 100%;
           }
 
-          &.console-open{
+          &.console-open {
             .cm-scroll {
               min-height: $min-height - $console-height + $console-handle-height;
               height: 100%;
@@ -131,7 +134,8 @@
 
         .code {
           height: 100%;
-          &.console-open{
+
+          &.console-open {
             height: calc(100% - #{$console-height});
           }
         }
@@ -143,7 +147,7 @@
         .code {
           height: calc(100% - #{$header-height + $editor-topbar-height + $console-handle-height});
 
-          &.console-open{
+          &.console-open {
             height: calc(100% - #{$header-height + $editor-topbar-height + $header-height + $console-height - $console-handle-height + 5px});
           }
         }
@@ -159,8 +163,8 @@
       }
 
       .fa {
-          width: 30px;
-          text-align: center;
+        width: 30px;
+        text-align: center;
       }
 
       .code {
@@ -220,7 +224,8 @@
           .editor-container {
             .code {
               height: calc(100% - #{$force-desktop-height + $console-handle-height});
-              &.console-open{
+
+              &.console-open {
                 height: calc(100% - #{$force-desktop-height + $console-height});
               }
             }
@@ -229,8 +234,9 @@
 
         .editor-container {
           .code {
-             height: calc(100% - #{$editor-mobile-height + $console-handle-height});
-            &.console-open{
+            height: calc(100% - #{$editor-mobile-height + $console-handle-height});
+
+            &.console-open {
               height: calc(100% - #{$editor-mobile-height + $console-height});
             }
           }
@@ -263,7 +269,7 @@
           left: 0px;
           height: $editor-mobile-height;
           width: 100%;
-          
+
           & > * {
             padding: 0px 24px !important;
           }
@@ -276,12 +282,14 @@
             display: inline-block !important;
             float: left;
             padding: 0px !important;
+
             span {
-                display: none;
+              display: none;
             }
+
             i.fa {
-                line-height: 40px;
-                font-size: 20px;
+              line-height: 40px;
+              font-size: 20px;
             }
           }
         }
@@ -292,8 +300,8 @@
       @include tablet {
         .force-desktop {
           .main-panel {
-            width: calc(100% - #{$force-desktop-width});  
-          }      
+            width: calc(100% - #{$force-desktop-width});
+          }
         }
 
         .main-panel:not(.presentation-mode) {
@@ -303,6 +311,7 @@
 
         .editor-topbar {
           font-size: 20px;
+
           li span {
             display: none;
           }

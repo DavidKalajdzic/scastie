@@ -1,16 +1,19 @@
 @import "commonvars";
 
 @mixin snippet() {
-  .modal { 
+  .modal {
     .modal-fade-screen {
       .modal-share {
         max-width: 80%;
+
         .modal-inner {
           overflow: hidden;
+
           p {
-              margin: 10px 0 10px 0;
+            margin: 10px 0 10px 0;
           }
         }
+
         .snippet-link {
           border: 1px solid #5d7c83;
           margin-left: 10px;
@@ -33,6 +36,7 @@
             cursor: pointer;
             font-size: 22px;
             vertical-align: middle;
+
             i.fa {
               width: 22px;
               text-align: center;
@@ -43,11 +47,11 @@
       }
     }
   }
-  
+
   .snippets-container {
     height: 100%;
     overflow-y: auto;
-    
+
     .code-snippets-container {
       padding: 45px 45px;
 
@@ -69,7 +73,7 @@
         margin-bottom: 30px;
         margin-top: 10px;
         font-weight: 300;
-        
+
         i {
           margin-right: 3px;
         }
@@ -80,7 +84,7 @@
 
         .group {
           position: relative;
-          
+
           &:before {
             border-left-width: 3px;
             border-left-style: solid;
@@ -109,7 +113,7 @@
                 left: 0;
                 width: 20px;
               }
-              
+
               .clear-mobile {
                 display: none;
               }
@@ -180,6 +184,7 @@
         float: left;
         line-height: 32px;
       }
+
       .actions {
         display: block;
         float: right;
@@ -204,6 +209,7 @@
         float: left;
         line-height: 32px;
       }
+
       .actions {
         display: block;
         float: right;

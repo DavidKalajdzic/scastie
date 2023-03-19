@@ -9,7 +9,10 @@ import japgolly.scalajs.react._
 import vdom.all._
 import extra.router._
 
-final case class Status(state: StatusState, router: RouterCtl[Page], isAdmin: Boolean, inputs: Inputs) {
+final case class Status(state: StatusState,
+                        router: RouterCtl[Page],
+                        isAdmin: Boolean,
+                        inputs: Inputs) {
   @inline def render: VdomElement = Status.component(this)
 }
 

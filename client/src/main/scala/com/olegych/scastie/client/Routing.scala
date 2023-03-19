@@ -49,9 +49,9 @@ class Routing(defaultServerUrl: String) {
       ) match {
         case (Some(g), Some(a), Some(v), o, r, c) =>
           val target = map.get("t").flatMap(ScalaTargetType.parse) match {
-            case Some(t @ ScalaTargetType.Scala2) =>
+            case Some(t@ScalaTargetType.Scala2) =>
               map.get("sv").map(sv => ScalaTarget.Jvm(ScalaVersions.find(t, sv)))
-            case Some(t @ ScalaTargetType.JS) =>
+            case Some(t@ScalaTargetType.JS) =>
               (map.get("sv"), map.get("sjsv")) match {
                 case (Some(sv), sjsv) =>
                   Some(ScalaTarget.Js(ScalaVersions.find(t, sv), sjsv.getOrElse(ScalaTarget.Js.default.scalaJsVersion)))
@@ -61,7 +61,7 @@ class Routing(defaultServerUrl: String) {
           }
           val project = (r, o) match {
             case (Some(r), Some(o)) => Project(organization = o, repository = r, None, Nil)
-            case _                  => Project("", "", None, Nil)
+            case _ => Project("", "", None, Nil)
           }
           target.map(t => TryLibraryPage(ScalaDependency(g, a, t, v), project, c))
         case _ => None
@@ -70,9 +70,9 @@ class Routing(defaultServerUrl: String) {
 
     def renderTryLibrary(dep: TryLibraryPage) = {
       val tm = dep.dependency.target match {
-        case ScalaTarget.Jvm(sv)      => Map("sv" -> sv)
+        case ScalaTarget.Jvm(sv) => Map("sv" -> sv)
         case ScalaTarget.Js(sv, sjsv) => Map("sv" -> sv, "sjsv" -> sjsv)
-        case _                        => Map[String, String]()
+        case _ => Map[String, String]()
       }
       tm ++ dep.code.map("c" -> _) ++ Map(
         "g" -> dep.dependency.groupId,
@@ -93,32 +93,32 @@ class Routing(defaultServerUrl: String) {
     (
       trimSlashes
         | staticRoute(root, Home) ~>
-          renderR(renderScastieDefault)
+        renderR(renderScastieDefault)
         | dynamicRouteCT("try" ~ tryLibrary) ~>
-          dynRenderR((page, router) => renderTryLibraryPage(page, router))
+        dynRenderR((page, router) => renderTryLibraryPage(page, router))
         | dynamicRouteCT(inputs) ~>
-          dynRenderR((page, router) => renderInputs(page, router))
+        dynRenderR((page, router) => renderInputs(page, router))
         | dynamicRouteCT(targetType) ~>
-          dynRenderR((page, router) => renderTargetTypePage(page, router))
+        dynRenderR((page, router) => renderTargetTypePage(page, router))
         | dynamicRouteCT(oldId.caseClass[OldSnippetIdPage]) ~>
-          dynRenderR((page, router) => renderOldSnippetIdPage(page, router))
+        dynRenderR((page, router) => renderOldSnippetIdPage(page, router))
         | dynamicRouteCT(anon.caseClass[AnonymousResource]) ~>
-          dynRenderR((page, router) => renderPage(page, router))
+        dynRenderR((page, router) => renderPage(page, router))
         | dynamicRouteCT(user.caseClass[UserResource]) ~>
-          dynRenderR((page, router) => renderPage(page, router))
+        dynRenderR((page, router) => renderPage(page, router))
         | dynamicRouteCT(userUpdate.caseClass[UserResourceUpdated]) ~>
-          dynRenderR((page, router) => renderPage(page, router))
+        dynRenderR((page, router) => renderPage(page, router))
         | staticRoute(embedded, Embedded) ~>
-          renderR(renderScastieDefaultEmbedded)
+        renderR(renderScastieDefaultEmbedded)
         | dynamicRouteCT(embedded / anon.caseClass[EmbeddedAnonymousResource]) ~>
-          dynRenderR((page, router) => renderPage(page, router))
+        dynRenderR((page, router) => renderPage(page, router))
         | dynamicRouteCT(embedded / user.caseClass[EmbeddedUserResource]) ~>
-          dynRenderR((page, router) => renderPage(page, router))
+        dynRenderR((page, router) => renderPage(page, router))
         | dynamicRouteCT(
-          embedded / userUpdate.caseClass[EmbeddedUserResourceUpdated]
-        ) ~>
-          dynRenderR((page, router) => renderPage(page, router))
-    ).notFound(redirectToPage(Home)(SetRouteVia.HistoryReplace))
+        embedded / userUpdate.caseClass[EmbeddedUserResourceUpdated]
+      ) ~>
+        dynRenderR((page, router) => renderPage(page, router))
+      ).notFound(redirectToPage(Home)(SetRouteVia.HistoryReplace))
       .renderWith((page, router) => layout(page, router))
   }
 
@@ -144,8 +144,8 @@ class Routing(defaultServerUrl: String) {
   }
 
   private def renderScastieDefaultEmbedded(
-      router: RouterCtl[Page]
-  ): VdomElement =
+                                            router: RouterCtl[Page]
+                                          ): VdomElement =
     Scastie
       .default(router)
       .copy(embedded = Some(EmbeddedOptions.empty(defaultServerUrl)))

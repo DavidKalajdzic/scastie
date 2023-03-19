@@ -20,7 +20,7 @@
             .header {
 
               &:before {
-                border-top-color: $snippets-line-color;     
+                border-top-color: $snippets-line-color;
               }
 
               .update {
@@ -33,6 +33,7 @@
                 }
               }
             }
+
             a {
               .code {
                 background-color: $snippet-background-color;

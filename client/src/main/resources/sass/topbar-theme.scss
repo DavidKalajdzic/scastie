@@ -15,6 +15,7 @@
 
       li.dropdown {
         color: $hover-dropdown-color;
+
         &.selected,
         &:hover {
           background-color: $selected-dropdown-background;

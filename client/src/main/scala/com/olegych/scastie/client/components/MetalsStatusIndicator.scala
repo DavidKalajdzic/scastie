@@ -8,11 +8,9 @@ import vdom.all._
 
 import scalajs.js
 
-final case class MetalsStatusIndicator(
-    metalsStatus: MetalsStatus,
-    toggleMetalsStatus: Reusable[Callback],
-    view: View,
-) {
+final case class MetalsStatusIndicator(metalsStatus: MetalsStatus,
+                                       toggleMetalsStatus: Reusable[Callback],
+                                       view: View) {
   @inline def render: VdomElement = MetalsStatusIndicator.component(this)
 }
 

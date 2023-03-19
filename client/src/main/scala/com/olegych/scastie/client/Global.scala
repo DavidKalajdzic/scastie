@@ -61,7 +61,7 @@ object Global {
     val (instr, runtimeError) = result.map(_.in) match {
       case Some(Left(maybeRuntimeError)) => (Nil, maybeRuntimeError)
       case Some(Right(instrumentations)) => (instrumentations, None)
-      case _                             => (Nil, None)
+      case _ => (Nil, None)
     }
 
     withScope(rawId)(
@@ -77,7 +77,7 @@ object Global {
             .setRunning(false)
             .copy(
               attachedDoms = attachedDoms.map(dom => (dom.getAttribute("uuid"), dom)).toMap
-          )
+            )
       )
     )
   }

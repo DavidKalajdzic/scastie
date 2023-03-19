@@ -6,11 +6,10 @@ import japgolly.scalajs.react._
 import org.scalajs.dom
 import vdom.all._
 
-final case class EmbeddedOverlay(
-                              inputsHasChanged: Boolean,
-                              embeddedSnippetId: Option[SnippetId],
-                              serverUrl: Option[String],
-                              save: Reusable[CallbackTo[Option[SnippetId]]]) {
+final case class EmbeddedOverlay(inputsHasChanged: Boolean,
+                                 embeddedSnippetId: Option[SnippetId],
+                                 serverUrl: Option[String],
+                                 save: Reusable[CallbackTo[Option[SnippetId]]]) {
   @inline def render: VdomElement = EmbeddedOverlay.component(this)
 }
 
@@ -41,7 +40,7 @@ object EmbeddedOverlay {
   }
 
   private val component = ScalaFnComponent
-      .withHooks[EmbeddedOverlay]
-      .renderWithReuse(render)
+    .withHooks[EmbeddedOverlay]
+    .renderWithReuse(render)
 }
 

@@ -24,120 +24,132 @@
     color: $option-color;
 
     line-height: 18px;
+
     label {
-        cursor: pointer;
-        margin-bottom: 0;
+      cursor: pointer;
+      margin-bottom: 0;
     }
+
     * {
-        color: $option-color
+      color: $option-color
     }
-   
+
     .modal-fade-screen {
-        // overlay
-        @include position(fixed, 0px, 0px, 0px, 0px);
-        background-color: rgba(#000, 0.55);
-        opacity: 1;
-        text-align: left;
-        transition: opacity 0.25s ease;
-        visibility: visible;
-        z-index: 99999999999;
-        .modal-bg {
-            @include position(absolute, 0px, 0px, 0px, 0px);
-            cursor: pointer;
-        }
-        .modal-reset {
-            width: 400px;
-            .modal-inner {
-                overflow: hidden;
-                ul {
-                    display: flex;
-                    width: 100%;
-                }
-                .btn {
-                    padding: 15px 15px;
-                    margin: auto;
-                    line-height: 18px;
-                    display:inline-block;
-                    cursor: pointer;
-                    background-color: $modal-button-background;
-                    min-width: 130px;
-                    align-content: center;
-                    text-align: center;
-                    margin-top: 10px;
-                }
-                .btn:hover {
-                    background-color: $modal-button-background-hover;
-                }
-            }
+      // overlay
+      @include position(fixed, 0px, 0px, 0px, 0px);
+      background-color: rgba(#000, 0.55);
+      opacity: 1;
+      text-align: left;
+      transition: opacity 0.25s ease;
+      visibility: visible;
+      z-index: 99999999999;
 
-        }
-
-        .privacy-policy-prompt {
-          width: 600px;
-          .modal-close {
-            display: none;
-          }
-        }
-
-        .modal-login {
-          width: 400px;
-          height: 200px;
-
-          .fa-github {
-            color: #a9a8a7;
-            font-size: 1.6rem;
-            padding-right: 10px;
-          }
-
-          .github-login {
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
-            background-color: #292524;
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            font-size: 16px;
-            border-radius: .375rem;
-            transition-duration: .15s;
-            transition-timing-function: cubic-bezier(.4, 0, .2, 1);
-            transition-property: background-color;
-          }
-          
-          .github-login:hover {
-            background-color: rgba(87,83,78,1)
-          }
-
-          .modal-inner {
-            display: flex;
-            flex-direction: column;
-            align-items:  center;
-            justify-content: space-between;
-            flex-grow: 1;
-          }
-        }
-    }
-    .modal-close {
-        top: calc($modal-padding/1.5);
-        right: calc($modal-padding /2);
-        position: absolute;
-        @include size(1.5em, 1.5em);
-        background: $modal-background;
+      .modal-bg {
+        @include position(absolute, 0px, 0px, 0px, 0px);
         cursor: pointer;
-        &::after, &::before {
-            @include position(absolute, 3px, 3px, 0, 50%);
-            @include size(0.1em, 1em);
-            background: $modal-close-color;
-            content: "";
-            display: block;
-            margin: -3px 0 0 -1px;
-            transform: rotate(45deg);
+      }
+
+      .modal-reset {
+        width: 400px;
+
+        .modal-inner {
+          overflow: hidden;
+
+          ul {
+            display: flex;
+            width: 100%;
+          }
+
+          .btn {
+            padding: 15px 15px;
+            margin: auto;
+            line-height: 18px;
+            display: inline-block;
+            cursor: pointer;
+            background-color: $modal-button-background;
+            min-width: 130px;
+            align-content: center;
+            text-align: center;
+            margin-top: 10px;
+          }
+
+          .btn:hover {
+            background-color: $modal-button-background-hover;
+          }
         }
-        &::before {
-            transform: rotate(-45deg);
+
+      }
+
+      .privacy-policy-prompt {
+        width: 600px;
+
+        .modal-close {
+          display: none;
         }
+      }
+
+      .modal-login {
+        width: 400px;
+        height: 200px;
+
+        .fa-github {
+          color: #a9a8a7;
+          font-size: 1.6rem;
+          padding-right: 10px;
+        }
+
+        .github-login {
+          display: flex;
+          align-items: center;
+          margin-top: 20px;
+          background-color: #292524;
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          font-size: 16px;
+          border-radius: .375rem;
+          transition-duration: .15s;
+          transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+          transition-property: background-color;
+        }
+
+        .github-login:hover {
+          background-color: rgba(87, 83, 78, 1)
+        }
+
+        .modal-inner {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-between;
+          flex-grow: 1;
+        }
+      }
+    }
+
+    .modal-close {
+      top: calc($modal-padding / 1.5);
+      right: calc($modal-padding / 2);
+      position: absolute;
+      @include size(1.5em, 1.5em);
+      background: $modal-background;
+      cursor: pointer;
+
+      &::after, &::before {
+        @include position(absolute, 3px, 3px, 0, 50%);
+        @include size(0.1em, 1em);
+        background: $modal-close-color;
+        content: "";
+        display: block;
+        margin: -3px 0 0 -1px;
+        transform: rotate(45deg);
+      }
+
+      &::before {
+        transform: rotate(-45deg);
+      }
     }
 
     .markdown-body {
@@ -146,105 +158,118 @@
     }
 
     .modal-window {
-        position: relative;
-        display: inline-flex;
-        flex-direction: column;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);  
-        max-width: 60%;
-        max-height: 80%;
-        padding-bottom: 10px;
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 60%;
+      max-height: 80%;
+      padding-bottom: 10px;
 
+      background: $modal-background;
+      border-radius: $base-border-radius;
+      transition: opacity 0.25s ease;
+
+      .modal-header {
         background: $modal-background;
-        border-radius: $base-border-radius;
-        transition: opacity 0.25s ease;
+        padding: 20px 0px 10px 0px;
+        margin: 0px 20px 0px 20px;
+        position: relative;
+        border-radius: $base-border-radius $base-border-radius 0px 0px;
+        border-bottom: 2px solid hsla(210, 18%, 87%, 1);
+      }
 
-        .modal-header {
-            background: $modal-background;
-            padding: 20px 0px 10px 0px;
-            margin: 0px 20px 0px 20px;
-            position: relative;
-            border-radius: $base-border-radius $base-border-radius 0px 0px;
-            border-bottom: 2px solid hsla(210,18%,87%,1);
+      .modal-inner {
+        overflow: auto;
+        padding: 10px 20px 10px 20px;
+        // margin-right: 10px;
+        p {
+          margin: 10px 0 10px 0;
+
+          &.normal {
+            font-family: Lato;
+            font-size: 16px;
+          }
         }
 
-        .modal-inner {
-            overflow: auto;
-            padding: 10px 20px 10px 20px;
-            // margin-right: 10px;
-            p {
-                margin: 10px 0 10px 0;
-                &.normal {
-                    font-family: Lato;
-                    font-size: 16px;
-                }
+        .modal-content {
+          color: $base-font-color;
+          @include media($medium-screen) {
+            columns: 2 8em;
+          }
+        }
+
+        a {
+          color: $modal-link-color;
+        }
+
+        a.cta {
+          color: $base-background-color;
+          display: inline-block;
+          margin-right: 0.5em;
+          margin-top: 1em;
+
+          &:last-child {
+            padding: 0 2em;
+          }
+        }
+
+        .indent {
+          padding-left: 20px;
+        }
+
+        .shortcuts {
+          margin-bottom: 25px;
+
+          table {
+            border: none;
+
+            th {
+              width: 285px;
+              font-family: monospace;
+              font-size: 13px;
+              font-weight: normal;
+              font-style: normal;
+              font-stretch: normal;
+              letter-spacing: normal;
+              color: #27b3d9;
             }
-            .modal-content {
-                color: $base-font-color;
-                @include media($medium-screen) {
-                    columns: 2 8em;
-                }
-            }
-            a {
-                color: $modal-link-color;
-            }
-            a.cta {
-                color: $base-background-color;
+
+            td {
+              &:first-of-type {
+                vertical-align: bottom;
+              }
+
+              span {
+                text-align: center;
+                width: 33px;
+                height: 20px;
+                border-radius: 1px;
+                background-color: #859900;
+                color: #fff;
                 display: inline-block;
-                margin-right: 0.5em;
-                margin-top: 1em;
-                &:last-child {
-                    padding: 0 2em;
-                }
+                margin: 0 5px;
+              }
             }
-            .indent {
-                padding-left: 20px;
-            }
-            .shortcuts {
-                margin-bottom: 25px;
-                table {
-                    border: none;
-                    th {
-                        width: 285px;
-                        font-family: monospace;
-                        font-size: 13px;
-                        font-weight: normal;
-                        font-style: normal;
-                        font-stretch: normal;
-                        letter-spacing: normal;
-                        color: #27b3d9;
-                    }
-                    td {
-                        &:first-of-type {
-                            vertical-align: bottom;
-                        }
-                        span {
-                            text-align: center;
-                            width: 33px;
-                            height: 20px;
-                            border-radius: 1px;
-                            background-color: #859900;
-                            color: #fff;
-                            display: inline-block;
-                            margin: 0 5px;
-                        }
-                    }
-                }
-            }
+          }
         }
-        .modal-state:checked + .modal-fade-screen {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-state:checked + .modal-fade-screen .modal-inner {
-            top: 0.5em;
-        }
+      }
+
+      .modal-state:checked + .modal-fade-screen {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal-state:checked + .modal-fade-screen .modal-inner {
+        top: 0.5em;
+      }
     }
   }
 
   .modal-open {
-      overflow: hidden;
+    overflow: hidden;
   }
 
   @media (max-width: #{$tablet-width}) {

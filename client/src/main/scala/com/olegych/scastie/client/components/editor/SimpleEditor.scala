@@ -11,16 +11,25 @@ import scalajs.js
 import vdom.all._
 import hooks.Hooks.UseStateF
 
-final case class SimpleEditor(
-    readOnly: Boolean,
-    value: String,
-    isDarkTheme: Boolean,
-    onChange: String ~=> Callback,
-) extends Editor {
+final case class SimpleEditor(readOnly: Boolean,
+                              value: String,
+                              isDarkTheme: Boolean,
+                              onChange: String ~=> Callback) extends Editor {
   @inline def render: VdomElement = SimpleEditor.hooksComponent(this)
 }
 
 object SimpleEditor {
+
+  val hooksComponent =
+    ScalaFnComponent
+      .withHooks[SimpleEditor]
+      .useRef(Ref[Element])
+      .useState(new EditorView())
+      .useRef[Option[SimpleEditor]](None)
+      .useLayoutEffectOnMountBy((props, ref, editorView, prevProps) => init(props, ref.value, editorView))
+      .useEffectBy((props, ref, editorRef, prevProps) => updateComponent(props, ref.value, prevProps.value, editorRef))
+      .useEffectBy((props, _, editorRef, prevProps) => prevProps.set(Some(props)))
+      .render((props, ref, _, prevProps) => Editor.render(ref.value))
 
   private def init(props: SimpleEditor, ref: Ref.Simple[Element], editorView: UseStateF[CallbackTo, EditorView]): Callback =
     ref.foreachCB(divRef => {
@@ -51,23 +60,12 @@ object SimpleEditor {
     })
 
   private def updateComponent(
-      props: SimpleEditor,
-      ref: Ref.Simple[Element],
-      prevProps: Option[SimpleEditor],
-      editorView: UseStateF[CallbackTo, EditorView]
-  ): Callback = {
+                               props: SimpleEditor,
+                               ref: Ref.Simple[Element],
+                               prevProps: Option[SimpleEditor],
+                               editorView: UseStateF[CallbackTo, EditorView]
+                             ): Callback = {
     Editor.updateCode(editorView, props) >>
       Editor.updateTheme(ref, prevProps, props)
   }
-
-  val hooksComponent =
-    ScalaFnComponent
-      .withHooks[SimpleEditor]
-      .useRef(Ref[Element])
-      .useState(new EditorView())
-      .useRef[Option[SimpleEditor]](None)
-      .useLayoutEffectOnMountBy((props, ref, editorView, prevProps) => init(props, ref.value, editorView))
-      .useEffectBy((props, ref, editorRef, prevProps) => updateComponent(props, ref.value, prevProps.value, editorRef))
-      .useEffectBy((props, _, editorRef, prevProps) => prevProps.set(Some(props)))
-      .render((props, ref, _, prevProps) => Editor.render(ref.value))
 }

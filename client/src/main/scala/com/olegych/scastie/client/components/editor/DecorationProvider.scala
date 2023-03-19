@@ -60,17 +60,16 @@ object DecorationProvider {
   private def createDecorations(instrumentations: Set[api.Instrumentation], attachedDoms: Map[String, HTMLElement], maxPosititon: Int): DecorationSet = {
     val deco = instrumentations
       .filter(_.position.end < maxPosititon)
-      .map { instrumentation =>
-        {
-          val decoration = Decoration.widget(WidgetDecorationSpec(instrumentation.render match {
-            case AttachedDom(uuid, _)    => new AttachedDomDecoration(uuid, attachedDoms)
-            case Html(a, folded)         => new HTMLDecoration(a)
-            case Value(value, className) => new TypeDecoration(value, className)
-          }).setBlock(!instrumentation.render.isInstanceOf[Value]).setSide(1))
+      .map { instrumentation => {
+        val decoration = Decoration.widget(WidgetDecorationSpec(instrumentation.render match {
+          case AttachedDom(uuid, _) => new AttachedDomDecoration(uuid, attachedDoms)
+          case Html(a, folded) => new HTMLDecoration(a)
+          case Value(value, className) => new TypeDecoration(value, className)
+        }).setBlock(!instrumentation.render.isInstanceOf[Value]).setSide(1))
 
-          decoration.mapMode = MapMode.TrackBefore
-          decoration.range(instrumentation.position.end).asInstanceOf[Range[Decoration]]
-        }
+        decoration.mapMode = MapMode.TrackBefore
+        decoration.range(instrumentation.position.end).asInstanceOf[Range[Decoration]]
+      }
       }
       .toSeq
     val x: js.Array[Range[Decoration]] = deco.toJSArray
@@ -86,7 +85,7 @@ object DecorationProvider {
     transaction.changes.iterChanges((_, _, fromB, toB, _) => {
       transaction.newDoc.sliceString(fromB, toB).lastOption.foreach {
         case '\n' => newNewlines.addAll(List(fromB.toInt))
-        case _    =>
+        case _ =>
       }
     })
 
@@ -113,7 +112,9 @@ object DecorationProvider {
 
   private def updateState(previousValue: DecorationSet, transaction: Transaction): DecorationSet = {
     val (addEffects, filterEffects) = transaction.effects
-      .filter(effect => { effect.is(addTypeDecorations) | effect.is(filterTypeDecorations) })
+      .filter(effect => {
+        effect.is(addTypeDecorations) | effect.is(filterTypeDecorations)
+      })
       .partition(_.is(addTypeDecorations))
 
     addEffects.headOption match {
@@ -137,10 +138,10 @@ object DecorationProvider {
     ).setProvide(v => EditorView.decorations.from(v))
 
   def updateDecorations(
-      editorView: UseStateF[CallbackTo, EditorView],
-      prevProps: Option[CodeEditor],
-      props: CodeEditor
-  ): Callback =
+                         editorView: UseStateF[CallbackTo, EditorView],
+                         prevProps: Option[CodeEditor],
+                         props: CodeEditor
+                       ): Callback =
     Callback {
       val decorations = createDecorations(props.instrumentations, props.attachedDoms, editorView.value.state.doc.length.toInt + 1)
       val addTypesEffect = addTypeDecorations.of(decorations)

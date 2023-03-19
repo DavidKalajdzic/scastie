@@ -13,6 +13,7 @@
 
     .build-settings-container {
       padding: 45px 45px;
+
       .btn {
         width: 90px;
         padding: 10px;
@@ -38,6 +39,7 @@
         display: block;
         position: relative;
         z-index: 1;
+
         &:before {
           border-top-width: 2px;
           border-top-style: solid;
@@ -57,6 +59,7 @@
           width: 100%;
           z-index: -1;
         }
+
         span {
           padding: 0 15px 0 0;
         }
@@ -91,11 +94,13 @@
 
       input[type="radio"] {
         display: none;
+
         & + label.radio {
           font-size: 15px;
           line-height: 18px;
           display: inline-block;
           margin-right: 30px;
+
           &:before {
             line-height: 18px;
             content: " ";
@@ -113,6 +118,7 @@
             box-sizing: content-box;
           }
         }
+
         &:checked + label.radio:before {
           content: " ";
           width: 8px !important;
@@ -127,6 +133,7 @@
         position: relative;
         display: inline-block;
         width: 130px;
+
         &:after {
           content: "\f0d7";
           font-family: FontAwesome;
@@ -136,6 +143,7 @@
           font-size: 13px;
         }
       }
+
       .scala-version {
         display: inline-block;
         width: 140px;
@@ -167,13 +175,16 @@
 
       .search {
         position: relative;
+
         .search-input {
           height: 36px;
           width: 100%;
+
           .search-query {
             display: inline-block;
             width: 100%;
           }
+
           .close {
             position: absolute;
             width: 36px;
@@ -191,28 +202,34 @@
           margin-top: 10px;
           overflow: auto;
           display: none;
+
           i.fa {
             font-size: 20px;
             width: 40px;
             text-align: center;
             vertical-align: middle;
           }
+
           .result {
             padding: 10px;
             display: block;
             cursor: pointer;
             font-size: 15px;
+
             &:not(:last-child) {
               padding-bottom: 10px;
             }
+
             a {
               margin-right: 10px;
             }
+
             .logo {
               width: 30px;
               height: 30px;
               vertical-align: middle;
             }
+
             .artifact {
               margin-left: 20px;
               vertical-align: middle;
@@ -225,36 +242,44 @@
           display: block;
           cursor: pointer;
           font-size: 15px;
+
           &:not(:last-child) {
             padding-bottom: 10px;
           }
+
           i.fa {
             font-size: 20px;
             width: 30px;
             text-align: left;
             vertical-align: middle;
           }
+
           a {
             margin-right: 10px;
             margin-left: 10px;
           }
+
           .logo {
             width: 30px;
             height: 30px;
             vertical-align: middle;
           }
+
           .artifact {
             margin-left: 20px;
             vertical-align: middle;
             width: 250px;
             display: inline-block;
           }
+
           .select-wrapper {
             margin-left: 20px;
+
             &:after {
-                top: 10px;
+              top: 10px;
             }
-           }
+          }
+
           select {
             display: inline-block
           }

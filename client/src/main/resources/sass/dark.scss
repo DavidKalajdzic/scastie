@@ -13,7 +13,7 @@ $editor-background: #15414c;
 $hover-editor-button-color: #859900;
 
 // Drop Down
-$submenu-border-color: rgba(255,255,255,0.05);
+$submenu-border-color: rgba(255, 255, 255, 0.05);
 $submenu-text-color: #fdf6e3;
 $hover-submenu-dropdown-color: #859900;
 $submenu-background-color: #7dc8e5;
@@ -80,6 +80,7 @@ $code-background-color: #171717;
 
   .code .cm-s-solarized.cm-s-dark {
     background-color: $cm-background-color;
+
     .editor-wrapper, .cm-gutters {
       background-color: $cm-background-color;
     }
@@ -96,6 +97,7 @@ $code-background-color: #171717;
   .code, .configuration {
     .cm-s-solarized.cm-s-dark {
       color: $cm-color;
+
       .cm-cursor {
         border-left-color: $cm-cursor;
       }
@@ -104,6 +106,7 @@ $code-background-color: #171717;
       .cm-simplescroll-horizontal div {
         background: $hover-option-color;
       }
+
       .cm-hints {
         background: $snippet-background-color;
       }

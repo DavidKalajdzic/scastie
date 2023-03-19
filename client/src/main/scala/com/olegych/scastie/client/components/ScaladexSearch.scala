@@ -17,13 +17,11 @@ import dom.{HTMLInputElement, HTMLElement}
 import scalajs.js.Thenable.Implicits._
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
 
-final case class ScaladexSearch(
-    removeScalaDependency: ScalaDependency ~=> Callback,
-    updateDependencyVersion: (ScalaDependency, String) ~=> Callback,
-    addScalaDependency: (ScalaDependency, Project) ~=> Callback,
-    librariesFrom: Map[ScalaDependency, Project],
-    scalaTarget: ScalaTarget
-) {
+final case class ScaladexSearch(removeScalaDependency: ScalaDependency ~=> Callback,
+                                updateDependencyVersion: (ScalaDependency, String) ~=> Callback,
+                                addScalaDependency: (ScalaDependency, Project) ~=> Callback,
+                                librariesFrom: Map[ScalaDependency, Project],
+                                scalaTarget: ScalaTarget) {
   @inline def render: VdomElement = ScaladexSearch.component(this)
 }
 
@@ -48,19 +46,19 @@ object ScaladexSearch {
   }
 
   private[ScaladexSearch] case class Selected(
-      project: Project,
-      release: ScalaDependency,
-      options: ReleaseOptions
-  ) {
+                                               project: Project,
+                                               release: ScalaDependency,
+                                               options: ReleaseOptions
+                                             ) {
     def matches(p: Project, artifact: String) = p == project && release.artifact == artifact
   }
 
   private[ScaladexSearch] case class SearchState(
-      query: String,
-      selectedIndex: Int,
-      projects: List[(Project, ScalaTarget)],
-      selecteds: List[Selected]
-  ) {
+                                                  query: String,
+                                                  selectedIndex: Int,
+                                                  projects: List[(Project, ScalaTarget)],
+                                                  selecteds: List[Selected]
+                                                ) {
 
     private val selectedProjectsArtifacts = selecteds
       .map(selected => (selected.project, selected.release.artifact, None, selected.release.target))
@@ -151,7 +149,7 @@ object ScaladexSearch {
             s =>
               s.copy(
                 selectedIndex = clamp(s.search.size, s.selectedIndex + diff)
-            )
+              )
           )
 
         def scrollToSelectedProject =
@@ -216,6 +214,7 @@ object ScaladexSearch {
 
     def updateVersion(selected: Selected)(e: ReactEventFromInput): Callback = {
       val version = e.target.value
+
       def updateDependencyVersionLocal =
         scope.modState(_.updateVersion(selected, version))
 
@@ -292,29 +291,28 @@ object ScaladexSearch {
         response <- dom.fetch(scaladexApiUrl + "/project" + query)
         text <- response.text()
       } yield {
-        Json.fromJson[ReleaseOptions](Json.parse(text)).asOpt.map { options =>
-          {
-            Selected(
-              project = project,
-              release = ScalaDependency(
-                groupId = options.groupId,
-                artifact = artifact,
-                target = target,
-                version = version.getOrElse(options.version),
-              ),
-              options = options,
-            )
-          }
+        Json.fromJson[ReleaseOptions](Json.parse(text)).asOpt.map { options => {
+          Selected(
+            project = project,
+            release = ScalaDependency(
+              groupId = options.groupId,
+              artifact = artifact,
+              target = target,
+              version = version.getOrElse(options.version),
+            ),
+            options = options,
+          )
+        }
         }
       }
     }
   }
 
   private def render(
-      scope: RenderScope[ScaladexSearch, SearchState, ScaladexSearchBackend],
-      props: ScaladexSearch,
-      searchState: SearchState
-  ): VdomElement = {
+                      scope: RenderScope[ScaladexSearch, SearchState, ScaladexSearchBackend],
+                      props: ScaladexSearch,
+                      searchState: SearchState
+                    ): VdomElement = {
     def selectedIndex(index: Int, selected: Int) =
       (cls := "selected").when(index == selected)
 

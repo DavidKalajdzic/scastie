@@ -4,12 +4,10 @@ import com.olegych.scastie.client.View
 import japgolly.scalajs.react._
 import vdom.all._
 
-final case class WorksheetButton(
-    hasWorksheetMode: Boolean,
-    isWorksheetMode: Boolean,
-    toggleWorksheetMode: Reusable[Callback],
-    view: View
-) {
+final case class WorksheetButton(hasWorksheetMode: Boolean,
+                                 isWorksheetMode: Boolean,
+                                 toggleWorksheetMode: Reusable[Callback],
+                                 view: View) {
   @inline def render: VdomElement = WorksheetButton.component(this)
 }
 
@@ -34,8 +32,8 @@ object WorksheetButton {
 
     li(
       title := (if (props.hasWorksheetMode)
-                  s"Turn Worksheet mode $isWorksheetModeToggleLabel (evaluate and print each top level expression)"
-                else "This configuration does not support Worksheet mode"),
+        s"Turn Worksheet mode $isWorksheetModeToggleLabel (evaluate and print each top level expression)"
+      else "This configuration does not support Worksheet mode"),
       isWorksheetModeSelected,
       role := "button",
       cls := "btn editor",

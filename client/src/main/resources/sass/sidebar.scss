@@ -10,8 +10,8 @@
       display: block;
       height: $header-height;
       width: $sidebar-width;
-      
-      line-height: $header-height;   
+
+      line-height: $header-height;
       text-decoration: none;
       text-align: left;
       cursor: default;
@@ -49,6 +49,7 @@
     .actions-bottom {
       position: absolute;
       bottom: 0px;
+
       .btn {
         width: 149px;
       }

@@ -7,7 +7,9 @@ import vdom.all._
 import extra._
 import org.scalajs.dom
 
-final case class TopBar(view: StateSnapshot[View], user: Option[User], openLoginModal: Reusable[Callback]) {
+final case class TopBar(view: StateSnapshot[View],
+                        user: Option[User],
+                        openLoginModal: Reusable[Callback]) {
   @inline def render: VdomElement = TopBar.component(this)
 }
 
@@ -74,17 +76,17 @@ object TopBar {
           ul(
             cls := "subactions",
             li(onClick --> feedback,
-               role := "link",
-               title := "Open Gitter.im Chat to give us feedback",
-               cls := "btn",
-               i(cls := "fa fa-gitter"),
-               span("Scastie's gitter")),
+              role := "link",
+              title := "Open Gitter.im Chat to give us feedback",
+              cls := "btn",
+              i(cls := "fa fa-gitter"),
+              span("Scastie's gitter")),
             li(onClick --> issue,
-               role := "link",
-               title := "Create new issue on GitHub",
-               cls := "btn",
-               i(cls := "fa fa-github"),
-               span("Github issues"))
+              role := "link",
+              title := "Create new issue on GitHub",
+              cls := "btn",
+              i(cls := "fa fa-github"),
+              span("Github issues"))
           )
         ),
         profileButton

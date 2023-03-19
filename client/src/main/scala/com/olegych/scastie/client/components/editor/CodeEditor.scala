@@ -47,7 +47,7 @@ final case class CodeEditor(visible: Boolean,
                             metalsStatus: MetalsStatus,
                             setMetalsStatus: MetalsStatus ~=> Callback,
                             dependencies: Set[api.ScalaDependency])
-    extends Editor {
+  extends Editor {
   @inline def render: VdomElement = CodeEditor.hooksComponent(this)
 }
 
@@ -129,16 +129,16 @@ object CodeEditor {
         props.value == editorView.value.state.doc.toString() && (
         prevProps.get.compilationInfos != props.compilationInfos ||
           prevProps.get.runtimeError != props.runtimeError
-      )
+        )
     )
   }
 
   private def updateComponent(
-      props: CodeEditor,
-      ref: Ref.Simple[Element],
-      prevProps: Option[CodeEditor],
-      editorView: UseStateF[CallbackTo, EditorView]
-  ): Callback = {
+                               props: CodeEditor,
+                               ref: Ref.Simple[Element],
+                               prevProps: Option[CodeEditor],
+                               editorView: UseStateF[CallbackTo, EditorView]
+                             ): Callback = {
     Editor.updateCode(editorView, props) >>
       Editor.updateTheme(ref, prevProps, props) >>
       updateDiagnostics(editorView, prevProps, props) >>

@@ -43,9 +43,9 @@ object MobileBar {
           clear = props.clear,
         ).render,
         //this doesn't work too well, better use browsers 'request desktop site'
-//        DesktopButton(
-//          forceDesktop = props.forceDesktop
-//        ).render
+        //        DesktopButton(
+        //          forceDesktop = props.forceDesktop
+        //        ).render
       )
     )
   }

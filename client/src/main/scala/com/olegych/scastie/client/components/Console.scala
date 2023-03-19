@@ -39,7 +39,7 @@ object Console {
 
     val (users, systems) = props.consoleOutputs.partition {
       case u: ConsoleOutput.UserOutput => true
-      case _                           => false
+      case _ => false
     }
 
     val toShow =

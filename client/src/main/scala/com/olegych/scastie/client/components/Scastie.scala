@@ -11,22 +11,22 @@ import org.scalajs.dom.HTMLScriptElement
 
 import java.util.UUID
 
-final case class Scastie(
-    router: Option[RouterCtl[Page]],
-    private val scastieId: UUID,
-    private val snippetId: Option[SnippetId],
-    private val oldSnippetId: Option[Int],
-    private val embedded: Option[EmbeddedOptions],
-    private val targetType: Option[ScalaTargetType],
-    private val tryLibrary: Option[(ScalaDependency, Project)],
-    private val code: Option[String],
-    private val inputs: Option[Inputs],
-) {
+final case class Scastie(router: Option[RouterCtl[Page]],
+                         private val scastieId: UUID,
+                         private val snippetId: Option[SnippetId],
+                         private val oldSnippetId: Option[Int],
+                         private val embedded: Option[EmbeddedOptions],
+                         private val targetType: Option[ScalaTargetType],
+                         private val tryLibrary: Option[(ScalaDependency, Project)],
+                         private val code: Option[String],
+                         private val inputs: Option[Inputs]) {
 
   @inline def render = Scastie.component(serverUrl, scastieId)(this)
 
   def serverUrl: Option[String] = embedded.map(_.serverUrl)
+
   def isEmbedded: Boolean = embedded.isDefined
+
   //todo not sure how is it different from regular snippet id
   def embeddedSnippetId: Option[SnippetId] = embedded.flatMap(_.snippetId)
 }
@@ -50,6 +50,7 @@ object Scastie {
 
   private def setTitle(state: ScastieState, props: Scastie) = {
     def scastieCode = if (state.inputs.code.isEmpty) "Scastie" else state.inputs.code + " - Scastie"
+
     if (!props.isEmbedded) {
       if (state.inputsHasChanged) {
         Callback(dom.document.title = "* " + scastieCode)
@@ -62,10 +63,10 @@ object Scastie {
   }
 
   private def render(
-      scope: RenderScope[Scastie, ScastieState, ScastieBackend],
-      props: Scastie,
-      state: ScastieState
-  ): VdomElement = {
+                      scope: RenderScope[Scastie, ScastieState, ScastieBackend],
+                      props: Scastie,
+                      state: ScastieState
+                    ): VdomElement = {
     val theme =
       if (state.isDarkTheme) "dark"
       else "light"
@@ -153,9 +154,9 @@ object Scastie {
 
           val setTheme =
             embededOptions.theme match {
-              case Some("dark")  => backend.scope.modState(_.setTheme(dark = true))
+              case Some("dark") => backend.scope.modState(_.setTheme(dark = true))
               case Some("light") => backend.scope.modState(_.setTheme(dark = false))
-              case _             => Callback(())
+              case _ => Callback(())
             }
 
           setInputs >> setTheme
@@ -260,12 +261,12 @@ object Scastie {
 
         val state3 = props.code match {
           case Some(code) => state2.setCode(code)
-          case _          => state2
+          case _ => state2
         }
 
         props.inputs match {
           case Some(inputs) => state3.setInputs(inputs)
-          case _            => state3
+          case _ => state3
         }
       }
       .backend(ScastieBackend(scastieId, serverUrl, _))

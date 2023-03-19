@@ -27,8 +27,11 @@ abstract class EventStream[T: Reads](handler: EventStreamHandler[T]) {
       }
     }
   }
+
   def onOpen(): Unit = handler.onOpen()
+
   def onError(error: String): Unit = handler.onError(error)
+
   def onClose(reason: Option[String]): Unit = handler.onClose(reason)
 
   def close(force: Boolean = false): Unit = {
@@ -41,11 +44,15 @@ abstract class EventStream[T: Reads](handler: EventStreamHandler[T]) {
 
 trait EventStreamHandler[T] {
   def onMessage(msg: T): Boolean
+
   def onOpen(): Unit
+
   def onError(error: String): Unit
+
   def onClose(reason: Option[String]): Unit
 
   def onConnectionError(error: String): Callback
+
   def onConnected(stream: EventStream[T]): Callback
 }
 

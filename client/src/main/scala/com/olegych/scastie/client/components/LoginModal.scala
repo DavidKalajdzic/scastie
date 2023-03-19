@@ -8,12 +8,10 @@ import org.scalajs.dom.window
 import vdom.all._
 
 
-final case class LoginModal(
-  isDarkTheme: Boolean,
-  isClosed: Boolean,
-  close: Reusable[Callback],
-  openPrivacyPolicyModal: Reusable[Callback]
-) {
+final case class LoginModal(isDarkTheme: Boolean,
+                            isClosed: Boolean,
+                            close: Reusable[Callback],
+                            openPrivacyPolicyModal: Reusable[Callback]) {
   @inline def render: VdomElement = LoginModal.component(this)
 }
 

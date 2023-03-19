@@ -12,17 +12,15 @@ import vdom.all._
 import extra.router._
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
 
-final case class CodeSnippets(
-    view: View,
-    user: User,
-    router: RouterCtl[Page],
-    isDarkTheme: Boolean,
-    isShareModalClosed: SnippetId ~=> Boolean,
-    closeShareModal: Reusable[Callback],
-    openShareModal: SnippetId ~=> Callback,
-    loadProfile: Reusable[Future[List[SnippetSummary]]],
-    deleteSnippet: SnippetId ~=> Future[Boolean]
-) {
+final case class CodeSnippets(view: View,
+                              user: User,
+                              router: RouterCtl[Page],
+                              isDarkTheme: Boolean,
+                              isShareModalClosed: SnippetId ~=> Boolean,
+                              closeShareModal: Reusable[Callback],
+                              openShareModal: SnippetId ~=> Callback,
+                              loadProfile: Reusable[Future[List[SnippetSummary]]],
+                              deleteSnippet: SnippetId ~=> Future[Boolean]) {
 
   @inline def render: VdomElement = CodeSnippets.component(this)
 }
@@ -32,8 +30,8 @@ object CodeSnippets {
     Reusability.derive[CodeSnippets]
 
   private[CodeSnippets] class CodeSnippetsBackend(
-      scope: BackendScope[CodeSnippets, List[SnippetSummary]]
-  ) {
+                                                   scope: BackendScope[CodeSnippets, List[SnippetSummary]]
+                                                 ) {
 
     def loadProfile0(): Callback = {
       scope.props.flatMap(
@@ -42,7 +40,7 @@ object CodeSnippets {
             props.loadProfile.map(
               _.map(summaries => scope.modState(_ => summaries))
             )
-        )
+          )
       )
     }
 
@@ -55,13 +53,13 @@ object CodeSnippets {
               .map(
                 deleted => scope.modState(_.filterNot(_ == summary)).when_(deleted)
               )
-        )
+          )
       )
     }
   }
 
   private def renderSnippet(backend: CodeSnippetsBackend, props: CodeSnippets)(
-      summary: SnippetSummary
+    summary: SnippetSummary
   ): VdomElement = {
 
     val page = Page.fromSnippetId(summary.snippetId)
@@ -108,14 +106,14 @@ object CodeSnippets {
   }
 
   private def render(
-      scope: RenderScope[
-        CodeSnippets,
-        List[SnippetSummary],
-        CodeSnippetsBackend
-      ],
-      props: CodeSnippets,
-      summaries: List[SnippetSummary]
-  ): VdomElement = {
+                      scope: RenderScope[
+                        CodeSnippets,
+                        List[SnippetSummary],
+                        CodeSnippetsBackend
+                      ],
+                      props: CodeSnippets,
+                      summaries: List[SnippetSummary]
+                    ): VdomElement = {
 
     val userAvatar =
       div(cls := "avatar")(
@@ -158,7 +156,7 @@ object CodeSnippets {
             summary =>
               div(cls := "group", key := summary.snippetId.base64UUID)(
                 renderSnippet(scope.backend, props)(summary)
-            )
+              )
           )
           .toTagMod
       )

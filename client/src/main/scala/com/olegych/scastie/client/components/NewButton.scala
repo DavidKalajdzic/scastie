@@ -6,8 +6,7 @@ import japgolly.scalajs.react._
 import vdom.all._
 import extra._
 
-final case class NewButton(
-                           isDarkTheme: Boolean,
+final case class NewButton(isDarkTheme: Boolean,
                            isNewSnippetModalClosed: Boolean,
                            openNewSnippetModal: Reusable[Callback],
                            closeNewSnippetModal: Reusable[Callback],

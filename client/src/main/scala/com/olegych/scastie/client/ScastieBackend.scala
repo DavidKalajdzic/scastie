@@ -13,7 +13,9 @@ import org.scalajs.dom.{Position => _, _}
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
-case class ScastieBackend(scastieId: UUID, serverUrl: Option[String], scope: BackendScope[Scastie, ScastieState]) {
+case class ScastieBackend(scastieId: UUID,
+                          serverUrl: Option[String],
+                          scope: BackendScope[Scastie, ScastieState]) {
 
   private val restApiClient =
     new RestApiClient(serverUrl)
@@ -253,7 +255,7 @@ case class ScastieBackend(scastieId: UUID, serverUrl: Option[String], scope: Bac
         def onMessage(status: StatusProgress): Boolean = {
           status match {
             case StatusProgress.KeepAlive => this
-            case _                        => direct.modState(_.addStatus(status))
+            case _ => direct.modState(_.addStatus(status))
           }
           false
         }
@@ -291,7 +293,7 @@ case class ScastieBackend(scastieId: UUID, serverUrl: Option[String], scope: Bac
             restApiClient
               .run(state.inputs)
               .map(connectProgress)
-        )
+          )
       )
     )
 
@@ -375,7 +377,7 @@ case class ScastieBackend(scastieId: UUID, serverUrl: Option[String], scope: Bac
           .fork(EditInputs(snippetId, state.inputs))
           .map {
             case Some(sId) => saveCallback(sId)
-            case None      => Callback(window.alert("Failed to fork"))
+            case None => Callback(window.alert("Failed to fork"))
           }
       )
     }
@@ -387,7 +389,7 @@ case class ScastieBackend(scastieId: UUID, serverUrl: Option[String], scope: Bac
           .update(EditInputs(snippetId, state.inputs))
           .map {
             case Some(sId) => saveCallback(sId)
-            case None      => Callback(window.alert("Failed to update"))
+            case None => Callback(window.alert("Failed to update"))
           }
       )
     }
@@ -407,10 +409,10 @@ case class ScastieBackend(scastieId: UUID, serverUrl: Option[String], scope: Bac
   }
 
   private def loadSnippetBase(
-      fetchSnippet: => Future[Option[FetchResult]],
-      afterLoading: ScastieState => ScastieState = identity,
-      snippetId: Option[SnippetId] = None
-  ): Callback = {
+                               fetchSnippet: => Future[Option[FetchResult]],
+                               afterLoading: ScastieState => ScastieState = identity,
+                               snippetId: Option[SnippetId] = None
+                             ): Callback = {
     scope.state.flatMap { state =>
       if (state.loadSnippet) {
         val loadStateFromApi =
@@ -421,7 +423,7 @@ case class ScastieBackend(scastieId: UUID, serverUrl: Option[String], scope: Bac
                 val connect =
                   snippetId match {
                     case Some(sid) if !isDone => connectProgress(sid)
-                    case _                    => Callback(())
+                    case _ => Callback(())
                   }
                 clearOutputs >> scope.modState { state =>
                   afterLoading(

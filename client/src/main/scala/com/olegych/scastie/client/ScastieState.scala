@@ -35,10 +35,10 @@ object SnippetState {
 }
 
 case class SnippetState(
-    snippetId: Option[SnippetId],
-    loadSnippet: Boolean,
-    scalaJsContent: Option[String],
-)
+                         snippetId: Option[SnippetId],
+                         loadSnippet: Boolean,
+                         scalaJsContent: Option[String],
+                       )
 
 object ScastieState {
   def default(isEmbedded: Boolean): ScastieState = {
@@ -91,53 +91,54 @@ object ScastieState {
 }
 
 case class ScastieState(
-    view: View,
-    isRunning: Boolean,
-    statusStream: Option[EventStream[StatusProgress]],
-    progressStream: Option[EventStream[SnippetProgress]],
-    modalState: ModalState,
-    isDarkTheme: Boolean,
-    isDesktopForced: Boolean,
-    isPresentationMode: Boolean,
-    showLineNumbers: Boolean,
-    consoleState: ConsoleState,
-    inputsHasChanged: Boolean,
-    snippetState: SnippetState,
-    user: Option[User],
-    attachedDoms: Map[String, HTMLElement],
-    inputs: Inputs,
-    outputs: Outputs,
-    status: StatusState,
-    metalsStatus: MetalsStatus = MetalsLoading,
-    isEmbedded: Boolean = false,
-    transient: Boolean = false,
-) {
+                         view: View,
+                         isRunning: Boolean,
+                         statusStream: Option[EventStream[StatusProgress]],
+                         progressStream: Option[EventStream[SnippetProgress]],
+                         modalState: ModalState,
+                         isDarkTheme: Boolean,
+                         isDesktopForced: Boolean,
+                         isPresentationMode: Boolean,
+                         showLineNumbers: Boolean,
+                         consoleState: ConsoleState,
+                         inputsHasChanged: Boolean,
+                         snippetState: SnippetState,
+                         user: Option[User],
+                         attachedDoms: Map[String, HTMLElement],
+                         inputs: Inputs,
+                         outputs: Outputs,
+                         status: StatusState,
+                         metalsStatus: MetalsStatus = MetalsLoading,
+                         isEmbedded: Boolean = false,
+                         transient: Boolean = false,
+                       ) {
   def snippetId: Option[SnippetId] = snippetState.snippetId
+
   def loadSnippet: Boolean = snippetState.loadSnippet
 
   def copyAndSave(
-      attachedDoms: Map[String, HTMLElement] = attachedDoms,
-      view: View = view,
-      isRunning: Boolean = isRunning,
-      statusStream: Option[EventStream[StatusProgress]] = statusStream,
-      progressStream: Option[EventStream[SnippetProgress]] = progressStream,
-      modalState: ModalState = modalState,
-      isDarkTheme: Boolean = isDarkTheme,
-      isPresentationMode: Boolean = isPresentationMode,
-      isDesktopForced: Boolean = isDesktopForced,
-      showLineNumbers: Boolean = showLineNumbers,
-      consoleState: ConsoleState = consoleState,
-      inputsHasChanged: Boolean = inputsHasChanged,
-      snippetId: Option[SnippetId] = snippetId,
-      loadSnippet: Boolean = loadSnippet,
-      scalaJsContent: Option[String] = snippetState.scalaJsContent,
-      user: Option[User] = user,
-      inputs: Inputs = inputs,
-      outputs: Outputs = outputs,
-      status: StatusState = status,
-      metalsStatus: MetalsStatus = metalsStatus,
-      transient: Boolean = transient,
-  ): ScastieState = {
+                   attachedDoms: Map[String, HTMLElement] = attachedDoms,
+                   view: View = view,
+                   isRunning: Boolean = isRunning,
+                   statusStream: Option[EventStream[StatusProgress]] = statusStream,
+                   progressStream: Option[EventStream[SnippetProgress]] = progressStream,
+                   modalState: ModalState = modalState,
+                   isDarkTheme: Boolean = isDarkTheme,
+                   isPresentationMode: Boolean = isPresentationMode,
+                   isDesktopForced: Boolean = isDesktopForced,
+                   showLineNumbers: Boolean = showLineNumbers,
+                   consoleState: ConsoleState = consoleState,
+                   inputsHasChanged: Boolean = inputsHasChanged,
+                   snippetId: Option[SnippetId] = snippetId,
+                   loadSnippet: Boolean = loadSnippet,
+                   scalaJsContent: Option[String] = snippetState.scalaJsContent,
+                   user: Option[User] = user,
+                   inputs: Inputs = inputs,
+                   outputs: Outputs = outputs,
+                   status: StatusState = status,
+                   metalsStatus: MetalsStatus = metalsStatus,
+                   transient: Boolean = transient,
+                 ): ScastieState = {
     val state0 =
       copy(
         view = view,
@@ -501,7 +502,7 @@ case class ScastieState(
 
     def topDef(problem: Problem): Boolean = {
       problem.severity == Error &&
-      problem.message == "expected class or object definition"
+        problem.message == "expected class or object definition"
     }
 
     val useWorksheetModeTip =

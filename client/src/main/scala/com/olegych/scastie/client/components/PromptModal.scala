@@ -4,8 +4,7 @@ import japgolly.scalajs.react._
 
 import vdom.all._
 
-final case class PromptModal(
-                             isDarkTheme: Boolean,
+final case class PromptModal(isDarkTheme: Boolean,
                              modalText: String,
                              modalId: String,
                              isClosed: Boolean,
@@ -37,9 +36,9 @@ object PromptModal {
         ),
         ul(
           li(onClick ==> (
-                 e => e.stopPropagationCB >> props.action >> props.close
-             ),
-             cls := "btn")(
+            e => e.stopPropagationCB >> props.action >> props.close
+            ),
+            cls := "btn")(
             props.actionLabel
           ),
           li(onClick ==> (e => e.stopPropagationCB >> props.close), cls := "btn")(
