@@ -1,13 +1,15 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.sideBar
 
 import com.olegych.scastie.api._
+import com.olegych.scastie.client.components._
+import com.olegych.scastie.client.components.reusableEmpty
 import com.olegych.scastie.client.{StatusState, View}
 import japgolly.scalajs.react._
-import vdom.all._
-import extra._
+import japgolly.scalajs.react.extra._
+import japgolly.scalajs.react.vdom.all._
 
 import scala.scalajs.js
-import js.annotation._
+import scala.scalajs.js.annotation._
 
 @JSImport("@resources/images/icon-scastie.png", JSImport.Default)
 @js.native

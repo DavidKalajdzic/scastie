@@ -1,4 +1,4 @@
-package com.olegych.scastie.client
+package com.olegych.scastie.client.formatters
 
 object HTMLFormatter {
   private val escapeMap = Map('&' -> "&amp;", '"' -> "&quot;", '<' -> "&lt;", '>' -> "&gt;")

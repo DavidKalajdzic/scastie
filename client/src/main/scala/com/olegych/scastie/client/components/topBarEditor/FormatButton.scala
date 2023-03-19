@@ -1,4 +1,4 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.topBarEditor
 
 import com.olegych.scastie.client.components.editor.EditorKeymaps
 import japgolly.scalajs.react._

@@ -1,9 +1,9 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.modals
 
 import japgolly.scalajs.react._
-import scalajs.js
-import vdom.all._
-import com.olegych.scastie.client.components.editor.EditorKeymaps
+import japgolly.scalajs.react.vdom.all._
+
+import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 
 final case class PrivacyPolicyModal(isDarkTheme: Boolean,

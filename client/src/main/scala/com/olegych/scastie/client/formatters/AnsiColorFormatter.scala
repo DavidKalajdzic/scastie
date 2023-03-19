@@ -1,4 +1,4 @@
-package com.olegych.scastie.client
+package com.olegych.scastie.client.formatters
 
 import scala.io.AnsiColor
 

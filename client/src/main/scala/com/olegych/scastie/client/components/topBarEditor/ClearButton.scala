@@ -1,9 +1,8 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.topBarEditor
 
 import com.olegych.scastie.client.components.editor.EditorKeymaps
 import japgolly.scalajs.react._
-
-import vdom.all._
+import japgolly.scalajs.react.vdom.all._
 
 final case class ClearButton(clear: Reusable[Callback]) {
   @inline def render: VdomElement = ClearButton.component(this)

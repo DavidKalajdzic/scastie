@@ -1,9 +1,10 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.sideBar
 
 import com.olegych.scastie.client.View
+import com.olegych.scastie.client.components._
 import japgolly.scalajs.react._
-import vdom.all._
-import extra._
+import japgolly.scalajs.react.extra._
+import japgolly.scalajs.react.vdom.all._
 
 final case class ViewToggleButton(currentView: StateSnapshot[View],
                                   forView: View,

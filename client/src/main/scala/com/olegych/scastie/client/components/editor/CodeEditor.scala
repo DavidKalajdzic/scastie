@@ -1,7 +1,6 @@
 package com.olegych.scastie.client.components.editor
 
 import com.olegych.scastie.api
-import com.olegych.scastie.client.HTMLFormatter
 import com.olegych.scastie.client._
 import japgolly.scalajs.react._
 import org.scalajs.dom
@@ -20,6 +19,7 @@ import typings.codemirrorView.mod._
 import scalajs.js
 import vdom.all._
 import JsUtils._
+import com.olegych.scastie.client.formatters.HTMLFormatter
 import hooks.Hooks.UseStateF
 import js.JSConverters._
 

@@ -1,10 +1,11 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.projectSettings
 
 import com.olegych.scastie.api._
+import com.olegych.scastie.client.components._
 import com.olegych.scastie.client.components.editor.SimpleEditor
+import com.olegych.scastie.client.components.modals.PromptModal
 import japgolly.scalajs.react._
-
-import vdom.all._
+import japgolly.scalajs.react.vdom.all._
 
 final case class BuildSettings(visible: Boolean,
                                librariesFrom: Map[ScalaDependency, Project],

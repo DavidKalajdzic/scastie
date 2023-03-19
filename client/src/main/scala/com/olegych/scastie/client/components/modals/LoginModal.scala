@@ -1,11 +1,9 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.modals
 
+import com.olegych.scastie.client.components._
 import japgolly.scalajs.react._
+import japgolly.scalajs.react.vdom.all._
 import org.scalajs.dom
-import org.scalajs.dom.document
-import org.scalajs.dom.html
-import org.scalajs.dom.window
-import vdom.all._
 
 
 final case class LoginModal(isDarkTheme: Boolean,

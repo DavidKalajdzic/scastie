@@ -1,11 +1,9 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.modals
 
-import com.olegych.scastie.client.components.editor.EditorKeymaps
+import com.olegych.scastie.client.components._
 import japgolly.scalajs.react._
+import japgolly.scalajs.react.vdom.all._
 import org.scalajs.dom
-
-import vdom.all._
-import extra._
 
 
 // scheduled for removal 2023-04-30

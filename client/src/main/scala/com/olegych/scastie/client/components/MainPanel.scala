@@ -3,7 +3,11 @@ package com.olegych.scastie.client.components
 import com.olegych.scastie.client.ScastieBackend
 import com.olegych.scastie.client.ScastieState
 import com.olegych.scastie.client.View
+import com.olegych.scastie.client.components.console.Console
 import com.olegych.scastie.client.components.editor.CodeEditor
+import com.olegych.scastie.client.components.projectSettings.BuildSettings
+import com.olegych.scastie.client.components.topBar.TopBar
+import com.olegych.scastie.client.components.topBarEditor.{EditorTopBar, MobileBar}
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.all._
 

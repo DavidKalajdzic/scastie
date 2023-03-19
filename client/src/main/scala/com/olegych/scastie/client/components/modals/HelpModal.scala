@@ -1,8 +1,9 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.modals
 
-import japgolly.scalajs.react._
-import vdom.all._
+import com.olegych.scastie.client.components._
 import com.olegych.scastie.client.components.editor.EditorKeymaps
+import japgolly.scalajs.react._
+import japgolly.scalajs.react.vdom.all._
 
 final case class HelpModal(isDarkTheme: Boolean,
                            isClosed: Boolean,

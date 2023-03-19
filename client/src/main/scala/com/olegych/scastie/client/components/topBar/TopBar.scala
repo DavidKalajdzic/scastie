@@ -1,10 +1,11 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.topBar
 
 import com.olegych.scastie.api.User
 import com.olegych.scastie.client.View
+import com.olegych.scastie.client.components._
 import japgolly.scalajs.react._
-import vdom.all._
-import extra._
+import japgolly.scalajs.react.extra._
+import japgolly.scalajs.react.vdom.all._
 import org.scalajs.dom
 
 final case class TopBar(view: StateSnapshot[View],

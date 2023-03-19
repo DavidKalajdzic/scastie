@@ -1,10 +1,10 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.topBarEditor
 
+import com.olegych.scastie.client.components._
 import com.olegych.scastie.client.components.editor.EditorKeymaps
+import com.olegych.scastie.client.components.modals.PromptModal
 import japgolly.scalajs.react._
-
-import vdom.all._
-import extra._
+import japgolly.scalajs.react.vdom.all._
 
 final case class NewButton(isDarkTheme: Boolean,
                            isNewSnippetModalClosed: Boolean,

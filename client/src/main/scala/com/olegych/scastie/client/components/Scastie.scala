@@ -2,6 +2,8 @@ package com.olegych.scastie.client.components
 
 import com.olegych.scastie.api._
 import com.olegych.scastie.client._
+import com.olegych.scastie.client.components.modals.{HelpModal, LoginModal, PrivacyPolicyModal, PrivacyPolicyPrompt}
+import com.olegych.scastie.client.components.sideBar.SideBar
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.builder.Lifecycle.RenderScope
 import japgolly.scalajs.react.extra.router._
@@ -62,14 +64,11 @@ object Scastie {
     }
   }
 
-  private def render(
-                      scope: RenderScope[Scastie, ScastieState, ScastieBackend],
-                      props: Scastie,
-                      state: ScastieState
-                    ): VdomElement = {
-    val theme =
-      if (state.isDarkTheme) "dark"
-      else "light"
+  private def render(scope: RenderScope[Scastie, ScastieState, ScastieBackend],
+                     props: Scastie,
+                     state: ScastieState): VdomElement = {
+
+    val theme = if (state.isDarkTheme) "dark" else "light"
 
     val forceDesktopClass =
       (cls := "force-desktop").when(state.isDesktopForced)

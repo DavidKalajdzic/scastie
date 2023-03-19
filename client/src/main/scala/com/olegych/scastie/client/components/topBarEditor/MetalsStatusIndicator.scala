@@ -1,12 +1,11 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.topBarEditor
 
-import com.olegych.scastie.client.{MetalsConfigurationError, MetalsDisabled, MetalsLoading, MetalsReady, MetalsStatus, NetworkError, View}
+import com.olegych.scastie.client._
 import japgolly.scalajs.react._
+import japgolly.scalajs.react.vdom.all._
 
+import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
-import vdom.all._
-
-import scalajs.js
 
 final case class MetalsStatusIndicator(metalsStatus: MetalsStatus,
                                        toggleMetalsStatus: Reusable[Callback],

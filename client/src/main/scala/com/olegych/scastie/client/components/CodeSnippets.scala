@@ -3,13 +3,14 @@ package com.olegych.scastie.client.components
 import com.olegych.scastie.api._
 import com.olegych.scastie.client.Page
 import com.olegych.scastie.client.View
+import com.olegych.scastie.client.components.modals.CopyModal
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.builder.Lifecycle.RenderScope
 
 import scala.concurrent.Future
-
 import vdom.all._
 import extra.router._
+
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
 
 final case class CodeSnippets(view: View,
@@ -29,9 +30,7 @@ object CodeSnippets {
   implicit val reusability: Reusability[CodeSnippets] =
     Reusability.derive[CodeSnippets]
 
-  private[CodeSnippets] class CodeSnippetsBackend(
-                                                   scope: BackendScope[CodeSnippets, List[SnippetSummary]]
-                                                 ) {
+  private[CodeSnippets] class CodeSnippetsBackend(scope: BackendScope[CodeSnippets, List[SnippetSummary]]) {
 
     def loadProfile0(): Callback = {
       scope.props.flatMap(

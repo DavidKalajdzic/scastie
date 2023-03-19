@@ -40,8 +40,7 @@ object ScastieMain {
   def main(): Unit = {
     dom.document.body.className = "scastie"
 
-    val container =
-      dom.document.createElement("div").asInstanceOf[HTMLDivElement]
+    val container = dom.document.createElement("div").asInstanceOf[HTMLDivElement]
     container.className = "scastie"
     dom.document.body.appendChild(container)
 

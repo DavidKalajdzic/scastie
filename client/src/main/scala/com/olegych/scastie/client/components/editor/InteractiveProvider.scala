@@ -2,7 +2,6 @@ package com.olegych.scastie.client.components.editor
 
 import com.olegych.scastie.api
 import com.olegych.scastie.api.EitherFormat.JsEither._
-import com.olegych.scastie.client.HTMLFormatter
 import com.olegych.scastie.client._
 import japgolly.scalajs.react._
 import netscape.javascript.JSObject
@@ -35,6 +34,7 @@ import scala.util.Try
 import scalajs.js
 import vdom.all._
 import JsUtils._
+import com.olegych.scastie.client.formatters.HTMLFormatter
 import hooks.Hooks.UseStateF
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scalajs.js.Thenable.Implicits._

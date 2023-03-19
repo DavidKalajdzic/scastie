@@ -1,8 +1,9 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.topBarEditor
 
 import com.olegych.scastie.client.View
 import japgolly.scalajs.react._
-import vdom.all._
+import japgolly.scalajs.react.vdom.all._
+import com.olegych.scastie.client.components._
 
 final case class WorksheetButton(hasWorksheetMode: Boolean,
                                  isWorksheetMode: Boolean,

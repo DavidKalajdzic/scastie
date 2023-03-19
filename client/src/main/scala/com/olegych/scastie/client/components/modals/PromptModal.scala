@@ -1,8 +1,8 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.modals
 
+import com.olegych.scastie.client.components._
 import japgolly.scalajs.react._
-
-import vdom.all._
+import japgolly.scalajs.react.vdom.all._
 
 final case class PromptModal(isDarkTheme: Boolean,
                              modalText: String,

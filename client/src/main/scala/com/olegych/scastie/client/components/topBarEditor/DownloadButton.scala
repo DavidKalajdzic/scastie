@@ -1,9 +1,9 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.topBarEditor
 
 import com.olegych.scastie.api.SnippetId
 import japgolly.scalajs.react._
-
-import vdom.all._
+import japgolly.scalajs.react.vdom.all._
+import com.olegych.scastie.client.components._
 
 final case class DownloadButton(snippetId: SnippetId) {
   @inline def render: VdomElement = DownloadButton.component(this)

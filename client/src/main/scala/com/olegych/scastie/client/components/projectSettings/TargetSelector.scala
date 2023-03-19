@@ -1,9 +1,8 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.projectSettings
 
 import com.olegych.scastie.api._
 import japgolly.scalajs.react._
-
-import vdom.all._
+import japgolly.scalajs.react.vdom.all._
 
 case class TargetSelector(scalaTarget: ScalaTarget,
                           onChange: ScalaTarget ~=> Callback) {

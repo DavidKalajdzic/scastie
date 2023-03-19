@@ -1,21 +1,21 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.projectSettings
 
-import com.olegych.scastie.api.ScalaTarget.Jvm
-import com.olegych.scastie.api.ScalaTarget.Scala3
+import com.olegych.scastie.api.ScalaTarget.{Jvm, Scala3}
 import com.olegych.scastie.api._
 import com.olegych.scastie.buildinfo.BuildInfo
+import com.olegych.scastie.client.components._
+import com.olegych.scastie.client.components.sideBar.Assets
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.builder.Lifecycle.RenderScope
+import japgolly.scalajs.react.vdom.all._
 import org.scalajs.dom
+import org.scalajs.dom.ext.KeyCode
+import org.scalajs.dom.{HTMLElement, HTMLInputElement}
 import play.api.libs.json.Json
 
 import scala.concurrent.Future
-
-import vdom.all._
-import dom.ext.KeyCode
-import dom.{HTMLInputElement, HTMLElement}
-import scalajs.js.Thenable.Implicits._
-import scalajs.concurrent.JSExecutionContext.Implicits.queue
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+import scala.scalajs.js.Thenable.Implicits._
 
 final case class ScaladexSearch(removeScalaDependency: ScalaDependency ~=> Callback,
                                 updateDependencyVersion: (ScalaDependency, String) ~=> Callback,
