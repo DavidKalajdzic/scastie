@@ -1,6 +1,4 @@
-package com.olegych.scastie.client
-package components
-
+package com.olegych.scastie.client.components
 
 import com.olegych.scastie.client.components.editor.EditorKeymaps
 import japgolly.scalajs.react._

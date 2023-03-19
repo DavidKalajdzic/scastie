@@ -1,9 +1,7 @@
-package com.olegych.scastie
-package client
-package components
+package com.olegych.scastie.client.components
 
 import com.olegych.scastie.api._
-
+import com.olegych.scastie.client.{StatusState, View}
 import japgolly.scalajs.react._
 import vdom.all._
 import extra._

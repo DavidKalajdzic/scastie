@@ -1,12 +1,11 @@
-package com.olegych.scastie
-package client
-package components
+package com.olegych.scastie.client.components
 
+import com.olegych.scastie.client.{MetalsConfigurationError, MetalsDisabled, MetalsLoading, MetalsReady, MetalsStatus, NetworkError, View}
 import japgolly.scalajs.react._
 
 import scala.scalajs.js.annotation.JSImport
-
 import vdom.all._
+
 import scalajs.js
 
 final case class MetalsStatusIndicator(

@@ -1,10 +1,11 @@
-package com.olegych.scastie
-package client
-package components
+package com.olegych.scastie.client.components
 
-import api.{SnippetId, User, ScalaTarget}
-
-import japgolly.scalajs.react._, vdom.all._, extra.router._, extra._
+import com.olegych.scastie.api.{ScalaTarget, SnippetId, User}
+import com.olegych.scastie.client.{MetalsStatus, Page, View}
+import japgolly.scalajs.react._
+import vdom.all._
+import extra.router._
+import extra._
 
 final case class EditorTopBar(clear: Reusable[Callback],
                               closeNewSnippetModal: Reusable[Callback],

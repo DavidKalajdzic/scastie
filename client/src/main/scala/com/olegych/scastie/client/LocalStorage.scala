@@ -1,5 +1,4 @@
-package com.olegych.scastie
-package client
+package com.olegych.scastie.client
 
 import play.api.libs.json.Json
 

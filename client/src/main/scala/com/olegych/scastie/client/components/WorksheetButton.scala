@@ -1,9 +1,7 @@
-package com.olegych.scastie
-package client
-package components
+package com.olegych.scastie.client.components
 
+import com.olegych.scastie.client.View
 import japgolly.scalajs.react._
-
 import vdom.all._
 
 final case class WorksheetButton(

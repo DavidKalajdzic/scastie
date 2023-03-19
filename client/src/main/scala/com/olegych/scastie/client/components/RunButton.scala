@@ -1,9 +1,8 @@
-package com.olegych.scastie.client
-package components
+package com.olegych.scastie.client.components
 
+import com.olegych.scastie.client.View
 import com.olegych.scastie.client.components.editor.EditorKeymaps
 import japgolly.scalajs.react._
-
 import vdom.all._
 
 final case class RunButton(isRunning: Boolean, isStatusOk: Boolean, save: Reusable[Callback], setView: View ~=> Callback, embedded: Boolean) {

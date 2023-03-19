@@ -1,5 +1,4 @@
-package com.olegych.scastie.client
-package components
+package com.olegych.scastie.client.components
 
 import japgolly.scalajs.react._
 import org.scalajs.dom
