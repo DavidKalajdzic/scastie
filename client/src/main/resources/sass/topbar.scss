@@ -3,35 +3,33 @@
 @mixin topbar() {
 
   .topbar {
-    flex-direction: row;
-    text-align: right;
     width: 100%;
     height: $header-height;
-    overflow: auto;
+    display: flex;
+    flex-direction: row;
 
-    .logo {
-      text-decoration: none;
-      display: block;
-      height: $header-height;
-      line-height: $header-height;
-      text-align: left;
-      width: $sidebar-width;
-
-      img {
-        float: left;
-        margin: 21px 10px 21px 18px;
-        width: 24px;
-        height: 28px;
-        line-height: $header-height;
-      }
-
-      h1 {
-        display: inline-block;
-      }
+    :nth-child(2) { // push to the right things after the <h1>Scastie</h1>
+      margin-right: auto;
     }
 
+    img { //Scastie logo
+      float: left;
+      margin: 21px 10px 21px 18px;
+      width: 24px;
+      height: 28px;
+      line-height: $header-height;
+    }
+
+    div h1 { //Scastie title
+      color: white;
+      height: $header-height;
+      line-height: $header-height;
+      vertical-align: middle;
+    }
+
+
     ul.actions {
-      position: absolute;
+      //position: absolute;
       top: 0;
       right: 0;
       display: inline-block;
@@ -132,6 +130,64 @@
         padding: 0px 20px;
       }
     }
+  }
+
+  .topbarr {
+    //text-align: right;
+    width: 100%;
+    height: $header-height;
+    overflow: auto;
+
+    flex-direction: row;
+    //flex-wrap: wrap;
+    //align-content: center;
+    justify-content: space-between;
+
+    //p {
+    //  flex-grow: 1;
+    //  color: green;
+    //  height: 20px;
+    //  width: 100px;
+    //  border: #00acdb 1px dotted;
+    //}
+
+    //.logo-title {
+    //  //text-decoration: none;
+    //  //display: block;
+    //  //height: $header-height;
+    //  //line-height: $header-height;
+    //  //text-align: left;
+    //  width: $sidebar-width;
+    //
+    //  //img {
+    //  //  float: left;
+    //  //  margin: 21px 10px 21px 18px;
+    //  //  width: 24px;
+    //  //  height: 28px;
+    //  //  line-height: $header-height;
+    //  //}
+    //
+    //  h1 {
+    //    color: white;
+    //    //height: $header-height;
+    //    //vertical-align: middle;
+    //  }
+    //}
+    //
+    //
+    //.classg {
+    //  flex-direction: row;
+    //
+    //  width: 100px;
+    //  //display: block;
+    //  //height: $header-height;
+    //  //line-height: $header-height;
+    //  h1 {
+    //    color: white;
+    //  }
+    //}
+    //
+
   }
 
   @include tablet {

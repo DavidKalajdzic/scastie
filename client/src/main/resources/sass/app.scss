@@ -12,6 +12,9 @@
 @import "topbar";
 @import "topbar-theme";
 
+@import "footerbar";
+@import "footerbar-theme";
+
 @import "build-settings";
 @import "build-settings-theme";
 
@@ -79,12 +82,19 @@ h1 {
 @include buildSettings();
 @include status();
 @include topbar();
+@include footerbar();
 
 @mixin appStyles($class) {
+  html {
+    height: 100%;
+  }
   .scastie {
+    height: 100%;
+
     .app.#{$class} {
       color: $text-color;
       background: $background-color;
+      height: 100%;
 
       a {
         color: $link-color;
@@ -98,7 +108,50 @@ h1 {
         }
       }
 
+      .main-grid-container {
+        //background-color: red;
+        height: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: $header-height 1fr $footer-height;
+        //word-break: break-all;
+
+        .main-grid-header {
+          //border: red 5px solid;
+          grid-row-start: 1;
+          grid-row-end: span 1;
+
+          grid-column-start: 1;
+          grid-column-end: span 2;
+        }
+
+        .main-grid-central {
+          grid-row-start: 2;
+          grid-row-end: span 1;
+          overflow: auto; //TODO: move this into the actual text editor only
+          //border: blue 5px dotted;
+
+          display: flex;
+          flex-direction: row;
+
+          .side-bar-thin {
+            background-color: #267CAC;
+            width: 200px;
+          }
+
+          .side-pane {
+            background-color: #5d7c83;
+          }
+        }
+
+        .main-grid-footer {
+          grid-row-start: 3;
+          grid-row-end: span 1;
+        }
+      }
+
       @include topbarTheme($class);
+      @include footerbarTheme($class);
       @include sidebarTheme($class);
       @include snippetTheme($class);
       @include buildSettingsTheme($class);

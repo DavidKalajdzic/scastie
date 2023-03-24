@@ -1,0 +1,36 @@
+@import "commonvars";
+
+@mixin footerbar() {
+
+  .footer-bar {
+    display: flex;
+    flex-direction: row;
+
+    gap: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    :nth-child(2) {
+      margin-right: auto;
+    }
+
+    p {
+      height: $footer-height;
+      line-height: $footer-height;
+      vertical-align: center;
+    }
+  }
+
+
+  @include tablet {
+    .footer-bar {
+      display: none;
+    }
+  }
+
+  @include phone {
+    .footer-bar {
+      display: none;
+    }
+  }
+}

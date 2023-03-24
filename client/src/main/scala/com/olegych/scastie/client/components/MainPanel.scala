@@ -139,12 +139,12 @@ object MainPanel {
         forceDesktop = backend.forceDesktop
       ).render
 
-    val topBar =
-      TopBar(
-        backend.viewSnapshot(state.view),
-        state.user,
-        backend.openLoginModal
-      ).render.unless(props.isEmbedded || state.isPresentationMode)
+//    val topBar =
+//      TopBar(
+//        backend.viewSnapshot(state.view),
+//        state.user,
+//        backend.openLoginModal
+//      ).render.unless(props.isEmbedded || state.isPresentationMode)
 
     val editorTopBar =
       EditorTopBar(
@@ -191,7 +191,7 @@ object MainPanel {
     div(
       cls := "main-panel",
       presentationModeClass,
-      topBar,
+//      topBar,
       editorTopBar,
       div(
         cls := "content",

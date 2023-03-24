@@ -1,0 +1,13 @@
+@import "commonvars";
+
+@mixin footerbarTheme($class) {
+  .footer-bar {
+    background: $topbar-background;
+
+    p {
+      color: white;
+      text-decoration: underline;
+      text-underline-style: dash-dot-dot-heavy;
+    }
+  }
+}

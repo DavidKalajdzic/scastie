@@ -2,14 +2,20 @@ package com.olegych.scastie.client.components
 
 import com.olegych.scastie.api._
 import com.olegych.scastie.client._
+import com.olegych.scastie.client.components.editor.CodeEditor
+import com.olegych.scastie.client.components.footerBar.FooterBar
 import com.olegych.scastie.client.components.modals.{HelpModal, LoginModal, PrivacyPolicyModal, PrivacyPolicyPrompt}
-import com.olegych.scastie.client.components.sideBar.SideBar
-import japgolly.scalajs.react._
+import com.olegych.scastie.client.components.sideBar.{Example, SideBar}
+import com.olegych.scastie.client.components.topBar.TopBar
+import japgolly.scalajs.react.{Callback, _}
 import japgolly.scalajs.react.component.builder.Lifecycle.RenderScope
 import japgolly.scalajs.react.extra.router._
-import japgolly.scalajs.react.vdom.all._
+import japgolly.scalajs.react.vdom.Attr
+import japgolly.scalajs.react.vdom.all.{onClick, _}
+import org.scalajs
 import org.scalajs.dom
-import org.scalajs.dom.HTMLScriptElement
+import org.scalajs.dom.{HTMLDivElement, HTMLScriptElement}
+import org.scalajs.dom.VisibilityState.visible
 
 import java.util.UUID
 
@@ -73,21 +79,46 @@ object Scastie {
     val forceDesktopClass =
       (cls := "force-desktop").when(state.isDesktopForced)
 
+    val topBar = TopBar(
+      scope.backend.viewSnapshot(state.view),
+      state.user,
+      scope.backend.openLoginModal
+    ).render.unless(props.isEmbedded || state.isPresentationMode)
+
+    val footBar = FooterBar(
+      scope.backend.viewSnapshot(state.view),
+      scope.backend.openHelpModal,
+      scope.backend.openPrivacyPolicyModal
+    ).render.unless(props.isEmbedded || state.isPresentationMode)
+
     div(cls := s"app $theme", forceDesktopClass)(
-      SideBar(
-        isDarkTheme = state.isDarkTheme,
-        status = state.status,
-        inputs = state.inputs,
-        toggleTheme = scope.backend.toggleTheme,
-        view = scope.backend.viewSnapshot(state.view),
-        openHelpModal = scope.backend.openHelpModal,
-        openPrivacyPolicyModal = scope.backend.openPrivacyPolicyModal
-      ).render.unless(props.isEmbedded || state.isPresentationMode),
-      MainPanel(
-        state,
-        scope.backend,
-        props
-      ).render,
+      div(cls := "main-grid-container")(
+        div(cls := "main-grid-header")(
+          topBar
+        ),
+        div(cls := "main-grid-central")(
+          div(cls := "side-bar-thin")(p("side bar")),
+          div(cls := "side-pane")(p("side pane")),
+          div(cls := "central-pane")(p("central pane"))
+        ),
+        div(cls := "main-grid-footer")(
+          footBar
+        )
+      ),
+      //      SideBar(
+      //        isDarkTheme = state.isDarkTheme,
+      //        status = state.status,
+      //        inputs = state.inputs,
+      //        toggleTheme = scope.backend.toggleTheme,
+      //        view = scope.backend.viewSnapshot(state.view),
+      //        openHelpModal = scope.backend.openHelpModal,
+      //        openPrivacyPolicyModal = scope.backend.openPrivacyPolicyModal
+      //      ).render.unless(props.isEmbedded || state.isPresentationMode),
+      //      MainPanel(
+      //        state,
+      //        scope.backend,
+      //        props
+      //      ).render,
       HelpModal(
         isDarkTheme = state.isDarkTheme,
         isClosed = state.modalState.isHelpModalClosed,

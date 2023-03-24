@@ -104,10 +104,10 @@ object SideBar {
 
     nav(cls := "sidebar")(
       div(cls := "actions-container")(
-        div(cls := "logo")(
-          img(src := Assets.logo),
-          h1("Scastie")
-        ),
+        //        div(cls := "logo")(
+        //          img(src := Assets.logo),
+        //          h1("Scastie")
+        //        ),
         ul(cls := "actions-top")(
           editorButton,
           buildSettingsButton

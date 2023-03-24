@@ -3,9 +3,10 @@ package com.olegych.scastie.client.components.topBar
 import com.olegych.scastie.api.User
 import com.olegych.scastie.client.View
 import com.olegych.scastie.client.components._
+import com.olegych.scastie.client.components.sideBar.Assets
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.extra._
-import japgolly.scalajs.react.vdom.all._
+import japgolly.scalajs.react.vdom.all.{ul, _}
 import org.scalajs.dom
 
 final case class TopBar(view: StateSnapshot[View],
@@ -65,8 +66,10 @@ object TopBar {
           li(role := "link", onClick --> props.openLoginModal, cls := "btn", i(cls := "fa fa-sign-in"), "Login")
       }
 
-    nav(
-      cls := "topbar",
+    div(cls := "topbar")(
+      img(src := Assets.logo),
+      div(h1("Scastie")),
+
       ul(
         cls := "actions",
         li(
