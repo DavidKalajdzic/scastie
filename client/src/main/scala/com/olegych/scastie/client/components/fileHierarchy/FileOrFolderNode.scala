@@ -9,21 +9,20 @@ import japgolly.scalajs.react.vdom.html_<^._
 import org.scalajs.dom.document
 
 
-final case class FileOrFolderNode(file: FileOrFolder, selected: Boolean = false, depth: Int) {
+final case class FileOrFolderNode(file: FileOrFolder, selectedFile: String, depth: Int, selectFile: String => Callback) {
 
-  @inline def render: VdomElement = FileOrFolderNode.component((file, selected, depth))
+  @inline def render: VdomElement = FileOrFolderNode.component((file, selectedFile, depth, selectFile))
 }
 
 object FileOrFolderNode {
 
 
-  val component = ScalaFnComponent.withHooks[(FileOrFolder, Boolean, Int)]
+  val component = ScalaFnComponent.withHooks[(FileOrFolder, String, Int, String => Callback)]
 
     .useState(true) //isExpanded
 
     .render((props, isExpanded) => {
-      val (file, s, depth) = props
-      val selected = (file.name.equals("File A.1") || file.name.length > 8) && !file.isFolder
+      val (file, s, depth, selectFile) = props
 
       var fafa = "file-o"
       if (file.isFolder) {
@@ -35,21 +34,16 @@ object FileOrFolderNode {
 
       val handleClick = (e: ReactMouseEvent) => {
         e.stopPropagation()
+        selectFile(file.name).runNow()
         if (file.isFolder) {
           isExpanded.modState(x => !x).runNow()
-        } else {
-          // TODO trigger selection
         }
         Callback.empty
       }
 
-      val selectedStyle = TagMod(
-        //        ^.backgroundColor := "gray"
-      )
       <.div(
         <.div(
-          ^.cls := s"hierarchy-list-row ${if (selected) "file-selected" else ""}",
-          selectedStyle.when(selected),
+          ^.cls := s"hierarchy-list-row ${if (file.name.equals(s)) "file-selected" else ""}",
           ^.onClick ==> handleClick,
           ^.key := file.name,
           <.div(
@@ -60,14 +54,13 @@ object FileOrFolderNode {
         ),
 
         <.div(
-          selectedStyle.when(selected),
           if (isExpanded.value) {
             file match {
               case folder: Folder =>
                 folder.files.map {
-                  f: FileOrFolder => FileOrFolderNode(f, depth = depth + 1).render
+                  f: FileOrFolder => FileOrFolderNode(f, s, depth + 1, selectFile).render
                 }.toVdomArray
-              case _: File => <.i()
+              case _: File => EmptyVdom
             }
           } else {
             EmptyVdom
