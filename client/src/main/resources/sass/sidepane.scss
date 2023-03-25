@@ -2,17 +2,19 @@
 
 @mixin sidepane() {
   .side-pane {
-  }
 
-  .hierarchy-list-row {
-    padding: 8px;
+    .hierarchy-list-row {
+      div {
+        draggable: true;
+      }
 
-    div {
-      display: flex;
-      flex-direction: row;
+      padding: 8px;
     }
-  }
 
-  .file-selected {
+    .file-selected {
+    }
+
+    .file-mouse-over {
+    }
   }
 }

@@ -11,6 +11,7 @@ import org.scalajs.dom.document
 trait FileOrFolder {
   val name: String = ""
   val isFolder: Boolean
+
 }
 
 case class File(override val name: String, content: String = "<empty content>") extends FileOrFolder {
@@ -19,6 +20,7 @@ case class File(override val name: String, content: String = "<empty content>") 
 
 case class Folder(override val name: String, files: List[FileOrFolder] = List()) extends FileOrFolder {
   override val isFolder: Boolean = true
+
 }
 
 
@@ -28,7 +30,7 @@ final case class FileHierarchy(rootFolder: Folder) {
 
 object FileHierarchy {
 
-  val initialState: (Folder, String) = {
+  val initialState: (Folder, String, String, String) = {
     (
       Folder("Folder A",
         List(
@@ -46,7 +48,10 @@ object FileHierarchy {
           ))
         )
       ),
-      "File A.B.1") //selection file name
+      "File A.B.1", // selection file name
+      "", // saved drag filename source
+      "" // saved drag filename on over
+    ) //TODO make it a case class instead of tuple
   }
 
 
@@ -56,10 +61,23 @@ object FileHierarchy {
       .render($ => {
 
         val fn: String => Callback = {
-          s => $.hook1.setState($.hook1.value._1, s)
+          s => $.hook1.modState { case (a, _, c, d) => (a, s, c, d) }
+        }
+
+        val fn2: DragInfo => Callback = {
+          di =>
+            if (di.start && !di.end) {
+              $.hook1.modState { case (a, b, c, d) => (a, b, di.f.name, d) }.void
+            } else if (!di.start && di.end) {
+              Callback.log($.hook1.value._3 + " to " + $.hook1.value._4) // TODO move in file hierarchy
+            } else if (!di.start && !di.end) {
+              $.hook1.modState { case (a, b, c, d) => (a, b, c, di.f.name) }.void
+            } else {
+              Callback.throwException(new IllegalArgumentException())
+            }
         }
         <.div(
-          FileOrFolderNode($.hook1.value._1, $.hook1.value._2, 0, fn).render
+          FileOrFolderNode($.hook1.value._1, $.hook1.value._2, 0, fn, fn2).render
         )
       })
 }
