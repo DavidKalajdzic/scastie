@@ -3,6 +3,7 @@ package com.olegych.scastie.client.components
 import com.olegych.scastie.api._
 import com.olegych.scastie.client._
 import com.olegych.scastie.client.components.editor.CodeEditor
+import com.olegych.scastie.client.components.fileHierarchy.{FileHierarchy, Folder}
 import com.olegych.scastie.client.components.footerBar.FooterBar
 import com.olegych.scastie.client.components.modals.{HelpModal, LoginModal, PrivacyPolicyModal, PrivacyPolicyPrompt}
 import com.olegych.scastie.client.components.sideBar.{Example, SideBar}
@@ -98,8 +99,10 @@ object Scastie {
         ),
         div(cls := "main-grid-central")(
           div(cls := "side-bar-thin")(p("side bar")),
-          div(cls := "side-pane")(p("side pane")),
-          div(cls := "central-pane")(p("central pane"))
+          div(cls := "side-pane")(
+            FileHierarchy(Folder("a", List())).render
+          ),
+          div(cls := "central-pane")(p("central pane")),
         ),
         div(cls := "main-grid-footer")(
           footBar

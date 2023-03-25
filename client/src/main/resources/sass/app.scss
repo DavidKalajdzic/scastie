@@ -6,6 +6,9 @@
 @import "sidebar";
 @import "sidebar-theme";
 
+@import "sidepane";
+@import "sidepane-theme";
+
 @import "snippet";
 @import "snippet-theme";
 
@@ -78,6 +81,7 @@ h1 {
 }
 
 @include sidebar();
+@include sidepane();
 @include snippet();
 @include buildSettings();
 @include status();
@@ -140,7 +144,7 @@ h1 {
           }
 
           .side-pane {
-            background-color: #5d7c83;
+            width: 200px;
           }
         }
 
@@ -153,10 +157,35 @@ h1 {
       @include topbarTheme($class);
       @include footerbarTheme($class);
       @include sidebarTheme($class);
+      @include sidepaneTheme($class);
       @include snippetTheme($class);
       @include buildSettingsTheme($class);
       @include statusTheme($class);
     }
+
+    // TODO uncomment this when finished
+    //&:not(.embedded) {
+    //  @include tablet {
+    //    background-color: red;
+    //    .main-grid-container {
+    //      grid-template-rows: 0px 1fr 0px;
+    //
+    //      .main-grid-header {
+    //        display: none;
+    //      }
+    //
+    //      .main-grid-central {
+    //        .side-bar-thin {
+    //          display: none;
+    //        }
+    //
+    //        .side-pane {
+    //          display: none;
+    //        }
+    //      }
+    //    }
+    //  }
+    //}
   }
 }
 

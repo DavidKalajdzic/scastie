@@ -1,0 +1,17 @@
+@import "commonvars";
+
+@mixin sidepaneTheme($class) {
+
+  .side-pane {
+    background-color: #93a1a1;
+  }
+
+  .hierarchy-list-row {
+  }
+
+  .file-selected {
+    background-color: cadetblue;
+    font-weight: bold;
+  }
+
+}
