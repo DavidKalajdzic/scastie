@@ -2,57 +2,21 @@
 
 @mixin sidebar() {
   .sidebar {
-    position: absolute;
+    position: relative;
     width: $sidebar-width;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 
-    .logo {
-      display: block;
-      height: $header-height;
-      width: $sidebar-width;
-
-      line-height: $header-height;
-      text-decoration: none;
-      text-align: left;
-      cursor: default;
-
-      img {
-        float: left;
-        margin: 21px 10px 21px 18px;
-        width: 24px;
-        height: 28px;
-        line-height: 70px;
-      }
-
-      h1 {
-        display: inline-block;
-      }
-    }
-
-    .actions-container {
-      position: relative;
-      overflow: hidden;
-      height: 100%;
+    :nth-child(2) { // makes space between build settings and toggle dark theme buttons
+      margin-bottom: auto;
     }
 
     .btn {
-      padding-left: 20px;
-      line-height: 58px;
-    }
-
-    .actions-top, .actions-bottom {
-      i {
-        margin-right: 5px;
-      }
-    }
-
-    .actions-bottom {
-      position: absolute;
-      bottom: 0px;
-
-      .btn {
-        width: 149px;
-      }
+      width: $sidebar-width;
+      height: $sidebar-width;
+      line-height: $sidebar-width;
+      text-align: center;
     }
   }
 
@@ -67,17 +31,9 @@
       .sidebar {
         width: $sidebar-tablet-width;
 
-        li span {
-          display: none;
-        }
-
         .btn {
           padding-right: 0;
           text-align: center;
-        }
-
-        .logo h1 {
-          display: none;
         }
       }
     }

@@ -2,6 +2,7 @@
 
 @mixin sidepane() {
   .side-pane {
+    background-color: #93a1a1;
 
     .hierarchy-list-row {
       div {
@@ -12,9 +13,12 @@
     }
 
     .file-selected {
+      background-color: steelblue;
+      font-weight: bold;
     }
 
     .file-mouse-over {
+      background-color: cadetblue;
     }
   }
 }

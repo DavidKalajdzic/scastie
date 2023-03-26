@@ -139,8 +139,7 @@ h1 {
           flex-direction: row;
 
           .side-bar-thin {
-            background-color: #267CAC;
-            width: 200px;
+            width: $sidebar-width;
           }
 
           .side-pane {

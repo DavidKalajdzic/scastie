@@ -27,8 +27,7 @@ object ViewToggleButton {
       (cls := "selected").when(props.currentView.value == props.forView),
       cls := "btn"
     )(
-      i(cls := props.faIcon, cls := "fa"),
-      span(props.buttonTitle)
+      i(cls := props.faIcon, cls := "fa")
     )
   }
 

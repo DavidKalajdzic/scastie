@@ -4,23 +4,13 @@
   .sidebar {
     background: $sidebar-background;
 
-    .logo {
-      color: $link-color;
-      background: $topbar-background;
+    .btn {
+      color: $option-color;
 
-    }
-
-    .actions-top {
-      .btn.selected {
+      &.selected {
         background: $selected-option-background;
         color: white;
       }
-
-      color: $option-color;
-    }
-
-    .actions-bottom .btn {
-      color: $option-color;
 
       &.status-down {
         color: red;

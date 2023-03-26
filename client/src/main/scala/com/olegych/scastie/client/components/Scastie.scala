@@ -98,7 +98,17 @@ object Scastie {
           topBar
         ),
         div(cls := "main-grid-central")(
-          div(cls := "side-bar-thin")(p("side bar")),
+          div(cls := "side-bar-thin")(
+            SideBar(
+              isDarkTheme = state.isDarkTheme,
+              status = state.status,
+              inputs = state.inputs,
+              toggleTheme = scope.backend.toggleTheme,
+              view = scope.backend.viewSnapshot(state.view),
+              openHelpModal = scope.backend.openHelpModal,
+              openPrivacyPolicyModal = scope.backend.openPrivacyPolicyModal
+            ).render.unless(props.isEmbedded || state.isPresentationMode)
+          ),
           div(cls := "side-pane")(
             FileHierarchy(Folder("a", List())).render
           ),
