@@ -7,6 +7,7 @@ import com.olegych.scastie.client.components.fileHierarchy.{FileHierarchy, Folde
 import com.olegych.scastie.client.components.footerBar.FooterBar
 import com.olegych.scastie.client.components.modals.{HelpModal, LoginModal, PrivacyPolicyModal, PrivacyPolicyPrompt}
 import com.olegych.scastie.client.components.sideBar.{Example, SideBar}
+import com.olegych.scastie.client.components.tabStrip.TabStrip
 import com.olegych.scastie.client.components.topBar.TopBar
 import japgolly.scalajs.react.{Callback, _}
 import japgolly.scalajs.react.component.builder.Lifecycle.RenderScope
@@ -112,7 +113,9 @@ object Scastie {
           div(cls := "side-pane")(
             FileHierarchy(Folder("a", List())).render
           ),
-          div(cls := "central-pane")(p("central pane")),
+          div(cls := "central-pane")(
+            TabStrip().render
+          ),
         ),
         div(cls := "main-grid-footer")(
           footBar
