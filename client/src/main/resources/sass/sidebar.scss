@@ -12,6 +12,10 @@
       margin-bottom: auto;
     }
 
+    li {
+      list-style-type: none;
+    }
+
     .btn {
       width: $sidebar-width;
       height: $sidebar-width;
