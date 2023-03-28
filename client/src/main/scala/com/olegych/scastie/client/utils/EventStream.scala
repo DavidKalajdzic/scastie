@@ -1,18 +1,10 @@
-package com.olegych.scastie.client
+package com.olegych.scastie.client.utils
 
-import japgolly.scalajs.react.Callback
-import japgolly.scalajs.react.CallbackTo
-import org.scalajs.dom.CloseEvent
-import org.scalajs.dom.Event
-import org.scalajs.dom.EventSource
-import org.scalajs.dom.MessageEvent
-import org.scalajs.dom.WebSocket
-import org.scalajs.dom.window
-import play.api.libs.json.Json
-import play.api.libs.json.Reads
+import japgolly.scalajs.react.{Callback, CallbackTo}
+import org.scalajs.dom._
+import play.api.libs.json.{Json, Reads}
 
-import scala.util.Failure
-import scala.util.Success
+import scala.util.{Failure, Success}
 
 abstract class EventStream[T: Reads](handler: EventStreamHandler[T]) {
   var closing = false

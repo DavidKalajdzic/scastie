@@ -1,8 +1,9 @@
-package com.olegych.scastie.client
+package com.olegych.scastie.client.components.mainComp
 
 import com.olegych.scastie.api._
-import org.scalajs.dom.HTMLElement
-import org.scalajs.dom.{Position => _}
+import com.olegych.scastie.client._
+import com.olegych.scastie.client.utils.{EventStream, LocalStorage}
+import org.scalajs.dom.{HTMLElement, Position => _}
 import play.api.libs.json._
 
 sealed trait MetalsStatus {

@@ -1,4 +1,4 @@
-package com.olegych.scastie.client
+package com.olegych.scastie.client.utils
 
 import com.olegych.scastie.api._
 import org.scalajs.dom
@@ -6,11 +6,10 @@ import org.scalajs.dom.XMLHttpRequest
 import play.api.libs.json._
 
 import scala.concurrent.Future
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+import scala.scalajs.js
+import scala.scalajs.js.Thenable.Implicits._
 import scala.util.Try
-
-import scalajs.concurrent.JSExecutionContext.Implicits.queue
-import scalajs.js.Thenable.Implicits._
-import scalajs.js
 
 class RestApiClient(serverUrl: Option[String]) extends RestApi {
 

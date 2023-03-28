@@ -2,6 +2,7 @@ package com.olegych.scastie.client
 
 import com.olegych.scastie.api.{Inputs, Project, ScalaDependency, ScalaTarget, ScalaTargetType, ScalaVersions, SnippetId, SnippetUserPart}
 import com.olegych.scastie.client.components._
+import com.olegych.scastie.client.components.mainComp.Scastie
 import japgolly.scalajs.react._
 import vdom.all._
 import extra.router._

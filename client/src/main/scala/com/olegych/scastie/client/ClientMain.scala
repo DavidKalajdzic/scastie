@@ -1,13 +1,13 @@
 package com.olegych.scastie.client
 
 import java.util.UUID
-
 import com.olegych.scastie.api.SnippetId
 import com.olegych.scastie.client.components._
+import com.olegych.scastie.client.components.mainComp.{Global, Scastie}
 import japgolly.scalajs.react.component.Generic
 import japgolly.scalajs.react.extra.router._
 import org.scalajs.dom
-import org.scalajs.dom.{HTMLElement, HTMLDivElement, HTMLLinkElement, Node}
+import org.scalajs.dom.{HTMLDivElement, HTMLElement, HTMLLinkElement, Node}
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSExport, _}

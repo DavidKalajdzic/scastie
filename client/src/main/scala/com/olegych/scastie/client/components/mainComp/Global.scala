@@ -1,19 +1,14 @@
-package com.olegych.scastie.client
+package com.olegych.scastie.client.components.mainComp
 
 import com.olegych.scastie.api._
-import com.olegych.scastie.client.components.Scastie
-
-import scala.scalajs.js
-import scala.collection.mutable.{Map => MMap}
-import scala.util.{Try, Failure, Success}
-
-import org.scalajs.dom.HTMLElement
-
 import japgolly.scalajs.react._
-
+import org.scalajs.dom.HTMLElement
 import play.api.libs.json.Json
 
 import java.util.UUID
+import scala.collection.mutable.{Map => MMap}
+import scala.scalajs.js
+import scala.util.{Failure, Success, Try}
 
 object Global {
   type Scope = BackendScope[Scastie, ScastieState]

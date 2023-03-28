@@ -1,23 +1,22 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.mainComp
 
 import com.olegych.scastie.api._
 import com.olegych.scastie.client._
 import com.olegych.scastie.client.components.editor.CodeEditor
+import com.olegych.scastie.client.components._
 import com.olegych.scastie.client.components.fileHierarchy.{FileHierarchy, Folder}
 import com.olegych.scastie.client.components.footerBar.FooterBar
 import com.olegych.scastie.client.components.modals.{HelpModal, LoginModal, PrivacyPolicyModal, PrivacyPolicyPrompt}
-import com.olegych.scastie.client.components.sideBar.{Example, SideBar}
+import com.olegych.scastie.client.components.sideBar.SideBar
 import com.olegych.scastie.client.components.tabStrip.TabStrip
 import com.olegych.scastie.client.components.topBar.TopBar
-import japgolly.scalajs.react.{Callback, _}
+import com.olegych.scastie.client.utils.LocalStorage
 import japgolly.scalajs.react.component.builder.Lifecycle.RenderScope
 import japgolly.scalajs.react.extra.router._
-import japgolly.scalajs.react.vdom.Attr
-import japgolly.scalajs.react.vdom.all.{onClick, _}
-import org.scalajs
+import japgolly.scalajs.react.vdom.all._
+import japgolly.scalajs.react.{Callback, _}
 import org.scalajs.dom
-import org.scalajs.dom.{HTMLDivElement, HTMLScriptElement}
-import org.scalajs.dom.VisibilityState.visible
+import org.scalajs.dom.HTMLScriptElement
 
 import java.util.UUID
 

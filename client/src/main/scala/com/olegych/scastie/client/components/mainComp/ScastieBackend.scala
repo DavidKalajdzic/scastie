@@ -1,15 +1,15 @@
-package com.olegych.scastie.client
-
-import java.util.UUID
+package com.olegych.scastie.client.components.mainComp
 
 import com.olegych.scastie.api._
-import com.olegych.scastie.client.components.Scastie
+import com.olegych.scastie.client._
+import com.olegych.scastie.client.utils.{EventStream, EventStreamHandler, RestApiClient}
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.BackendScope
 import japgolly.scalajs.react.extra._
 import japgolly.scalajs.react.util.Effect.Id
 import org.scalajs.dom.{Position => _, _}
 
+import java.util.UUID
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 

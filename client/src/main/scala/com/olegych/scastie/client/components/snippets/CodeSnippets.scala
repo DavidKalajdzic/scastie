@@ -1,17 +1,16 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.snippets
 
 import com.olegych.scastie.api._
-import com.olegych.scastie.client.Page
-import com.olegych.scastie.client.View
+import com.olegych.scastie.client.components._
 import com.olegych.scastie.client.components.modals.CopyModal
+import com.olegych.scastie.client.{Page, View}
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.builder.Lifecycle.RenderScope
+import japgolly.scalajs.react.extra.router._
+import japgolly.scalajs.react.vdom.all._
 
 import scala.concurrent.Future
-import vdom.all._
-import extra.router._
-
-import scalajs.concurrent.JSExecutionContext.Implicits.queue
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
 final case class CodeSnippets(view: View,
                               user: User,

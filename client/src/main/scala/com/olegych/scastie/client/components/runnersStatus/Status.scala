@@ -1,13 +1,12 @@
-package com.olegych.scastie.client.components
+package com.olegych.scastie.client.components.runnersStatus
 
-import com.olegych.scastie.api.Inputs
-import com.olegych.scastie.api.TaskId
+import com.olegych.scastie.api.{Inputs, TaskId}
 import com.olegych.scastie.client.Page
-import com.olegych.scastie.client.StatusState
+import com.olegych.scastie.client.components._
+import com.olegych.scastie.client.components.mainComp.StatusState
 import japgolly.scalajs.react._
-
-import vdom.all._
-import extra.router._
+import japgolly.scalajs.react.extra.router._
+import japgolly.scalajs.react.vdom.all._
 
 final case class Status(state: StatusState,
                         router: RouterCtl[Page],

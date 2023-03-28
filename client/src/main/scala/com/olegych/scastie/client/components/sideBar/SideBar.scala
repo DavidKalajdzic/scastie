@@ -3,7 +3,8 @@ package com.olegych.scastie.client.components.sideBar
 import com.olegych.scastie.api._
 import com.olegych.scastie.client.components._
 import com.olegych.scastie.client.components.reusableEmpty
-import com.olegych.scastie.client.{StatusState, View}
+import com.olegych.scastie.client.View
+import com.olegych.scastie.client.components.mainComp.StatusState
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.extra._
 import japgolly.scalajs.react.vdom.all._

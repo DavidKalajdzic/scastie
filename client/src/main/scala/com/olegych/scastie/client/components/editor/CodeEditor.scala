@@ -19,8 +19,10 @@ import typings.codemirrorView.mod._
 import scalajs.js
 import vdom.all._
 import JsUtils._
+import com.olegych.scastie.client.components.mainComp.MetalsStatus
 import com.olegych.scastie.client.formatters.HTMLFormatter
 import hooks.Hooks.UseStateF
+
 import js.JSConverters._
 
 final case class CodeEditor(visible: Boolean,

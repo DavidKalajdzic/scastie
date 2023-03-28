@@ -2,12 +2,13 @@ package com.olegych.scastie.client.components.topBarEditor
 
 import com.olegych.scastie.api.{ScalaTarget, SnippetId, User}
 import com.olegych.scastie.client.components.modals.CopyModal
-import com.olegych.scastie.client.{MetalsStatus, Page, View}
+import com.olegych.scastie.client.{Page, View}
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.extra._
 import japgolly.scalajs.react.extra.router._
 import japgolly.scalajs.react.vdom.all._
 import com.olegych.scastie.client.components._
+import com.olegych.scastie.client.components.mainComp.MetalsStatus
 
 
 final case class EditorTopBar(clear: Reusable[Callback],

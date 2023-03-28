@@ -1,9 +1,9 @@
-package com.olegych.scastie.client
+package com.olegych.scastie.client.utils
 
-import play.api.libs.json.Json
-
+import com.olegych.scastie.client.components.mainComp.ScastieState
 import org.scalajs.dom
 import org.scalajs.dom.window.localStorage
+import play.api.libs.json.Json
 
 object LocalStorage {
   private val stateKey = "state"

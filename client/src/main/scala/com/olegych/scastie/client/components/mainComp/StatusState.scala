@@ -1,4 +1,4 @@
-package com.olegych.scastie.client
+package com.olegych.scastie.client.components.mainComp
 
 import com.olegych.scastie.api.SbtRunnerState
 

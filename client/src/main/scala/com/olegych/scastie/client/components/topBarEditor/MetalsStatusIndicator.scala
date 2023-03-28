@@ -1,6 +1,7 @@
 package com.olegych.scastie.client.components.topBarEditor
 
 import com.olegych.scastie.client._
+import com.olegych.scastie.client.components.mainComp.{MetalsConfigurationError, MetalsDisabled, MetalsLoading, MetalsReady, MetalsStatus, NetworkError}
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.all._
 

@@ -30,12 +30,13 @@ import scala.concurrent.duration.Duration
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
-
 import scalajs.js
 import vdom.all._
 import JsUtils._
+import com.olegych.scastie.client.components.mainComp.{MetalsConfigurationError, MetalsDisabled, MetalsLoading, MetalsReady, NetworkError}
 import com.olegych.scastie.client.formatters.HTMLFormatter
 import hooks.Hooks.UseStateF
+
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scalajs.js.Thenable.Implicits._
 import js.JSConverters._

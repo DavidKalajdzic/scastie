@@ -1,7 +1,8 @@
 package com.olegych.scastie.client
 
 import com.olegych.scastie.api._
-
+import com.olegych.scastie.client.components.mainComp.{ConsoleState, MetalsStatus, ModalState, ScastieBackend, ScastieState, SnippetState, StatusState}
+import com.olegych.scastie.client.utils.EventStream
 import japgolly.scalajs.react.Reusability
 import japgolly.scalajs.react.Reusable
 import japgolly.scalajs.react.Callback
