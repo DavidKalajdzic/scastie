@@ -97,25 +97,7 @@ object Scastie {
         div(cls := "main-grid-header")(
           topBar
         ),
-        div(cls := "main-grid-central")(
-          div(cls := "side-bar-thin")(
-            SideBar(
-              isDarkTheme = state.isDarkTheme,
-              status = state.status,
-              inputs = state.inputs,
-              toggleTheme = scope.backend.toggleTheme,
-              view = scope.backend.viewSnapshot(state.view),
-              openHelpModal = scope.backend.openHelpModal,
-              openPrivacyPolicyModal = scope.backend.openPrivacyPolicyModal
-            ).render.unless(props.isEmbedded || state.isPresentationMode)
-          ),
-          div(cls := "side-pane")(
-            FileHierarchy(Folder("a", List())).render
-          ),
-          div(cls := "central-pane")(
-            TabStrip().render
-          ),
-        ),
+        CentralPanel(scope, props, state).render,
         div(cls := "main-grid-footer")(
           footBar
         )

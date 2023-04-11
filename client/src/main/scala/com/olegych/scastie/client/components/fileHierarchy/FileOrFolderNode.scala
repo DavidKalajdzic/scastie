@@ -10,7 +10,7 @@ import org.scalajs.dom.document
 
 case class DragInfo(start: Boolean, end: Boolean, f: FileOrFolder)
 
-final case class FileOrFolderNode(file: FileOrFolder, selectedFile: String, depth: Int, selectFile: String => Callback, dragStartOrEnd: DragInfo => Callback) {
+final case class FileOrFolderNode(file: FileOrFolder, selectedFile: String, depth: Int, selectFile: File => Callback, dragStartOrEnd: DragInfo => Callback) {
 
   @inline def render: VdomElement = FileOrFolderNode.component((file, selectedFile, depth, selectFile, dragStartOrEnd))
 }
@@ -18,12 +18,12 @@ final case class FileOrFolderNode(file: FileOrFolder, selectedFile: String, dept
 object FileOrFolderNode {
 
 
-  val component = ScalaFnComponent.withHooks[(FileOrFolder, String, Int, String => Callback, DragInfo => Callback)]
+  val component = ScalaFnComponent.withHooks[(FileOrFolder, String, Int, File => Callback, DragInfo => Callback)]
 
     .useState(true) //isExpanded
     .useState(false) //isMouseOver
 
-    .render((props, isExpanded, isMouseOver) => {
+    .render((props, isExpanded: UseState[Boolean], isMouseOver: UseState[Boolean]) => {
       val (file, s, depth, selectFile, dragStartOrEnd) = props
 
       var fafa = "file-o"
@@ -36,9 +36,10 @@ object FileOrFolderNode {
 
       val handleClick = (e: ReactMouseEvent) => {
         e.stopPropagation()
-        selectFile(file.path).runNow()
         if (file.isFolder) {
           isExpanded.modState(x => !x).runNow()
+        } else {
+          selectFile(file.asInstanceOf[File]).runNow()
         }
         Callback.empty
       }
@@ -74,8 +75,7 @@ object FileOrFolderNode {
           <.div(
             ^.paddingLeft := s"${16 * depth}px",
             <.i(^.className := s"fa fa-${fafa}"),
-            file.name,
-            " ("+file.path+")"
+            file.name
           )
         ),
 

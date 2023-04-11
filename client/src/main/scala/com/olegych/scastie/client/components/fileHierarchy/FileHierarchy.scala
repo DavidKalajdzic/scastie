@@ -9,8 +9,8 @@ import japgolly.scalajs.react.vdom.html_<^._
 import org.scalajs.dom.document
 
 
-final case class FileHierarchy(rootFolder: Folder) {
-  @inline def render: VdomElement = FileHierarchy.component()
+final case class FileHierarchy(rootFolder: Folder, openFile: File => Callback) {
+  @inline def render: VdomElement = FileHierarchy.component((rootFolder, openFile))
 }
 
 object FileHierarchy {
@@ -24,31 +24,36 @@ object FileHierarchy {
   case class FileHierarchyState(root: Folder, selectedFile: String, dragSrc: String, dragOver: String)
 
   val initialState = FileHierarchyState(
-    root = recomputePaths(
-      Folder("root", isRoot = true)
-        .add2("i.txt")
-        .add2("j.txt")
-        .add2("A/k.txt")
-        .add2("B", isFolder = true)),
+    root = Folder("root", isRoot = true)
+      .add(File("ClientMain.scala", "client main content"))
+      .add(File("LocalStorage.scala", "local storage content"))
+      .add(Folder("awesomeFolder")
+        .add(File("Routing.scala", "rounting content"))
+        .add(File("data.txt", "data content"))
+      )
+      .add(Folder("other")),
     selectedFile = "root",
     dragSrc = "",
     dragOver = "")
 
 
   val component =
-    ScalaFnComponent.withHooks[Unit]
-      .useState(initialState)
-      .render($ => {
-        val selectFile: String => Callback = {
-          s =>
-            $.hook1.modState(_.copy(selectedFile = s))
+    ScalaFnComponent.withHooks[(Folder, File => Callback)]
+      .useState(initialState) //TODO remove this local state (fhs), it was lifted up to parent
+      .render((props, fhs) => {
+        val rootFolder = props._1
+        val openFile = props._2
+
+        val selectFile: File => Callback = {
+          s => openFile(s)
+          //            fhs.modState(_.copy(selectedFile = s))
         }
         val dragInfoUpdate: DragInfo => Callback = {
           di =>
             if (di.start && !di.end) {
-              $.hook1.modState(_.copy(dragSrc = di.f.path))
+              fhs.modState(_.copy(dragSrc = di.f.path))
             } else if (!di.start && di.end) {
-              $.hook1.modState {
+              fhs.modState {
                 case FileHierarchyState(root, selectedFile, dragSrc, dragOver) =>
                   val srcPath = dragSrc
                   val dstPath = dragOver
@@ -60,13 +65,15 @@ object FileHierarchy {
               }.runNow()
               Callback.empty
             } else if (!di.start && !di.end) {
-              $.hook1.modState(_.copy(dragOver = di.f.path))
+              fhs.modState(_.copy(dragOver = di.f.path))
             } else {
               Callback.throwException(new IllegalArgumentException())
             }
         }
         <.div(
-          FileOrFolderNode($.hook1.value.root, $.hook1.value.selectedFile, 0, selectFile, dragInfoUpdate).render
+          FileOrFolderNode(
+            fhs.value.root // TODO use : rootFolder
+            , fhs.value.selectedFile, 0, selectFile, dragInfoUpdate).render
         )
       })
 }

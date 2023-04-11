@@ -1,6 +1,7 @@
 package com.olegych.scastie.client.components.fileHierarchy
 
-import com.olegych.scastie.client.components.fileHierarchy.FileOrFolderUtils.prependPath
+import com.olegych.scastie.client.components.fileHierarchy.FileOrFolderUtils.{prependPath, recomputePaths}
+import play.api.libs.json.{Json, OFormat}
 
 sealed trait FileOrFolder {
   val name: String
@@ -9,9 +10,17 @@ sealed trait FileOrFolder {
   val isRoot: Boolean
 }
 
-case class File(override val name: String, content: String = "<empty content>", override val path: String = "") extends FileOrFolder {
+object FileOrFolder {
+  implicit val format: OFormat[FileOrFolder] = Json.format[FileOrFolder]
+}
+
+
+case class File(override val name: String, content: String = "", override val path: String = "") extends FileOrFolder {
   override val isFolder: Boolean = false
   override val isRoot: Boolean = false
+}
+object File {
+  implicit val format: OFormat[File] = Json.format[File]
 }
 
 case class Folder(override val name: String, children: List[FileOrFolder] = List(), override val path: String = "", override val isRoot: Boolean = false) extends FileOrFolder {
@@ -42,6 +51,10 @@ case class Folder(override val name: String, children: List[FileOrFolder] = List
         copy(children = children :+ folder.add2(tail.mkString("/"), isFolder))
     }
   }
+}
+
+object Folder {
+  implicit val format: OFormat[Folder] = Json.format[Folder]
 }
 
 object FileOrFolderUtils {
@@ -125,6 +138,13 @@ object FileOrFolderUtils {
       case Folder(name, files, path, ir) =>
         val nonEmptyPath = if (path.isEmpty) name else path
         Folder(name, files.map(x => prependPath(p + "/" + name, x)), p + "/" + nonEmptyPath)
+    }
+  }
+
+  def allFiles(root: Folder): List[File] = {
+    root.children.flatMap {
+      case f: File => List(f)
+      case l: Folder => allFiles(l)
     }
   }
 }
