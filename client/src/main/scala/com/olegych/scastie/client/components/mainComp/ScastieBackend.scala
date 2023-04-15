@@ -27,8 +27,21 @@ case class ScastieBackend(scastieId: UUID,
     Callback(Global.subscribe(scope, scastieId))
   }
 
-  val codeChange: String ~=> Callback =
-    Reusable.fn(code => scope.modState(_.setCode(code)))
+  val selectedFileCodeChange: String ~=> Callback =
+    Reusable.fn(newContent => {
+      scope.modState(_.changeSelectedFileContent(newContent))
+    })
+
+  val selectedFileCode: Reusable[CallbackTo[String]] = {
+    Reusable.always {
+      scope.state.map { state =>
+        val selectedTabContent: Option[String] = state.tabStripState.selectedTab.flatMap { tab =>
+          FileOrFolderUtils.allFiles(state.inputs.code).find(_.path.equals(tab.tabId)).map(_.content)
+        }
+        selectedTabContent.getOrElse("No selection")
+      }
+    }
+  }
 
   val sbtConfigChange: String ~=> Callback = {
     Reusable.fn(newConfig => scope.modState(_.setSbtConfigExtra(newConfig)))
@@ -54,7 +67,7 @@ case class ScastieBackend(scastieId: UUID,
       val setData = scope.state.map(state => {
         state
           .copy(isDesktopForced = false)
-          .setInputs(Inputs.default.copy(code = ""))
+          .setInputs(Inputs.default.copy(code = Folder.singleton("")))
           .clearOutputs
           .clearSnippetId
           .setChangedInputs
@@ -70,7 +83,7 @@ case class ScastieBackend(scastieId: UUID,
     scope.modState(_.clearOutputs)
 
   def clearCode: Callback =
-    scope.modState(_.setCode(""))
+    scope.modState(_.setRootFolder(Folder.singleton("")))
 
   val setViewReused: View ~=> Callback =
     Reusable.fn(setView _)
@@ -351,22 +364,21 @@ case class ScastieBackend(scastieId: UUID,
   val saveOrUpdate: Reusable[Callback] =
     Reusable.always(
       scope.props.flatMap { props =>
-        scope.state
-          .flatMap { state =>
-            if (props.isEmbedded) {
-              run
-            } else {
-              state.snippetId match {
-                case Some(snippetId) =>
-                  if (snippetId.isOwnedBy(state.user)) {
-                    update0(snippetId)
-                  } else {
-                    fork0(snippetId)
-                  }
-                case None => save0
-              }
+        scope.state.flatMap { state =>
+          if (props.isEmbedded) {
+            run
+          } else {
+            state.snippetId match {
+              case Some(snippetId) =>
+                if (snippetId.isOwnedBy(state.user)) {
+                  update0(snippetId)
+                } else {
+                  fork0(snippetId)
+                }
+              case None => save0
             }
           }
+        }
       }
     )
 
@@ -425,7 +437,7 @@ case class ScastieBackend(scastieId: UUID,
                     case Some(sid) if !isDone => connectProgress(sid)
                     case _ => Callback(())
                   }
-                clearOutputs >> scope.modState { state =>
+                clearOutputs >> scope.modState { state: ScastieState =>
                   afterLoading(
                     state
                       .setInputs(inputs)
@@ -434,7 +446,7 @@ case class ScastieBackend(scastieId: UUID,
                   )
                 } >> connect
               case _ =>
-                scope.modState(_.setCode(s"//snippet not found"))
+                scope.modState(_.setRootFolder(Folder.singleton(s"//snippet not found")))
             }
           )
 
@@ -464,13 +476,13 @@ case class ScastieBackend(scastieId: UUID,
     scope.state.flatMap { state =>
       Callback.future {
         restApiClient
-          .format(FormatRequest(state.inputs.code, state.inputs.isWorksheetMode, state.inputs.target))
+          .format(FormatRequest(state.inputs.code.childHeadFileContent, state.inputs.isWorksheetMode, state.inputs.target)) // TODO format only the selected file
           .map {
             case FormatResponse(Right(formattedCode)) =>
               scope.modState { s =>
                 // avoid overriding user's code if he/she types while it's formatting
                 if (s.inputs.code == state.inputs.code)
-                  s.clearOutputsPreserveConsole.setCode(formattedCode)
+                  s.clearOutputsPreserveConsole.changeSelectedFileContent(formattedCode)
                 else s
               }
             case FormatResponse(Left(error)) =>

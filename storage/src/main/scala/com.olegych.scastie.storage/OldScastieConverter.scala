@@ -49,7 +49,7 @@ object OldScastieConverter {
       val start = blockStartPos + blockStart.length
 
       val sbtConfig = content.slice(start, start + blockEndPos - start)
-      val code = content.drop(blockEndPos + blockEnd.length)
+      val code: String = content.drop(blockEndPos + blockEnd.length)
 
       val converterFn =
         sbtConfig.split("\n").foldLeft(Converter.nil) {
@@ -57,9 +57,9 @@ object OldScastieConverter {
             convertLine(line)(converter)
         }
 
-      converterFn(Inputs.default).copy(code = code.trim)
+      converterFn(Inputs.default).copy(code = Folder.singleton(code.trim)) // TODO CODE
     } else {
-      Inputs.default.copy(code = content.trim)
+      Inputs.default.copy(code = Folder.singleton(content.trim)) // TODO CODE
     }
   }
 

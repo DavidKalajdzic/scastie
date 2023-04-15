@@ -20,8 +20,8 @@ case class InstrumentationFailureReport(message: String, line: Option[Int]) {
 object InstrumentedInputs {
   def apply(inputs0: Inputs): Either[InstrumentationFailureReport, InstrumentedInputs] = {
     if (inputs0.isWorksheetMode) {
-      val instrumented = Instrument(inputs0.code, inputs0.target).map { instrumentedCode =>
-        inputs0.copy(code = instrumentedCode)
+      val instrumented = Instrument(inputs0.code.childHeadFileContent, inputs0.target).map { instrumentedCode => // TODO CODE
+        inputs0.copy(code = Folder.singleton(instrumentedCode)) // TODO CODE
       }
 
       instrumented match {

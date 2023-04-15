@@ -2,6 +2,8 @@ package com.olegych.scastie.client.components.mainComp
 
 import com.olegych.scastie.api._
 import com.olegych.scastie.client._
+import com.olegych.scastie.client.components.tabStrip.TabStrip
+import com.olegych.scastie.client.components.tabStrip.TabStrip._
 import com.olegych.scastie.client.utils.{EventStream, LocalStorage}
 import org.scalajs.dom.{HTMLElement, Position => _}
 import play.api.libs.json._
@@ -55,6 +57,7 @@ object ScastieState {
       isDesktopForced = false,
       isPresentationMode = false,
       showLineNumbers = true,
+      tabStripState = TabStripState(None, List()),
       consoleState = ConsoleState.default,
       inputsHasChanged = false,
       snippetState = SnippetState(
@@ -86,12 +89,15 @@ object ScastieState {
   implicit val dontSerializeMetalsStatus: Format[MetalsStatus] =
     dontSerialize[MetalsStatus](MetalsLoading)
 
+  implicit val formatTabStripState: OFormat[TabStripState] =
+    Json.format[TabStripState]
+
   implicit val formatScastieState: OFormat[ScastieState] =
     Json.format[ScastieState]
 
 }
 
-case class ScastieState(view: View,
+case class ScastieState(view: View, // which view to display
                         isRunning: Boolean,
                         statusStream: Option[EventStream[StatusProgress]],
                         progressStream: Option[EventStream[SnippetProgress]],
@@ -100,8 +106,9 @@ case class ScastieState(view: View,
                         isDesktopForced: Boolean,
                         isPresentationMode: Boolean,
                         showLineNumbers: Boolean,
+                        tabStripState: TabStripState,
                         consoleState: ConsoleState,
-                        inputsHasChanged: Boolean,
+                        inputsHasChanged: Boolean, // adding a little start in the browser title to indicate that the inputs have changed and is not saved
                         snippetState: SnippetState,
                         user: Option[User],
                         attachedDoms: Map[String, HTMLElement],
@@ -125,6 +132,7 @@ case class ScastieState(view: View,
                   isPresentationMode: Boolean = isPresentationMode,
                   isDesktopForced: Boolean = isDesktopForced,
                   showLineNumbers: Boolean = showLineNumbers,
+                  tabStripState: TabStripState = tabStripState,
                   consoleState: ConsoleState = consoleState,
                   inputsHasChanged: Boolean = inputsHasChanged,
                   snippetId: Option[SnippetId] = snippetId,
@@ -147,6 +155,7 @@ case class ScastieState(view: View,
         isDesktopForced = isDesktopForced,
         isPresentationMode = isPresentationMode,
         showLineNumbers = showLineNumbers,
+        tabStripState = tabStripState,
         consoleState = consoleState,
         inputsHasChanged = inputsHasChanged,
         snippetState = SnippetState(
@@ -326,7 +335,25 @@ case class ScastieState(view: View,
   def setUser(user: Option[User]): ScastieState =
     copyAndSave(user = user)
 
-  def setCode(code: String): ScastieState = {
+  def changeSelectedFileContent(newContent: String): ScastieState = {
+    tabStripState.selectedTab match {
+      case Some(Tab(tabId, title)) =>
+        val selectedFile = FileOrFolderUtils.find(inputs.code, tabId)
+        selectedFile match {
+          case Some(file:File) => replaceFile(file.copy(content = newContent))
+          case _ => this
+        }
+      case None =>
+        this
+    }
+  }
+
+  private def replaceFile(f: File): ScastieState = {
+    val updatedCode: Folder = FileOrFolderUtils.updateFile(inputs.code, f)
+    setRootFolder(updatedCode)
+  }
+
+  def setRootFolder(code: Folder): ScastieState = {
     if (inputs.code != code) {
       copyAndSave(
         inputs = inputs.copy(code = code),
@@ -337,10 +364,11 @@ case class ScastieState(view: View,
     }
   }
 
-  def setInputs(inputs: Inputs): ScastieState =
+  def setInputs(inputs: Inputs): ScastieState = {
     copyAndSave(
       inputs = inputs
     )
+  }
 
   def setSbtConfigExtra(config: String): ScastieState =
     copyAndSave(

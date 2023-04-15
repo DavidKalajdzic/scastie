@@ -4,7 +4,7 @@ import com.olegych.scastie.api._
 import com.olegych.scastie.client._
 import com.olegych.scastie.client.components.editor.CodeEditor
 import com.olegych.scastie.client.components._
-import com.olegych.scastie.client.components.fileHierarchy.{FileHierarchy, Folder}
+import com.olegych.scastie.client.components.fileHierarchy.FileHierarchy
 import com.olegych.scastie.client.components.footerBar.FooterBar
 import com.olegych.scastie.client.components.modals.{HelpModal, LoginModal, PrivacyPolicyModal, PrivacyPolicyPrompt}
 import com.olegych.scastie.client.components.sideBar.SideBar
@@ -14,7 +14,7 @@ import com.olegych.scastie.client.utils.LocalStorage
 import japgolly.scalajs.react.component.builder.Lifecycle.RenderScope
 import japgolly.scalajs.react.extra.router._
 import japgolly.scalajs.react.vdom.all._
-import japgolly.scalajs.react.{Callback, _}
+import japgolly.scalajs.react._
 import org.scalajs.dom
 import org.scalajs.dom.HTMLScriptElement
 
@@ -25,10 +25,11 @@ final case class Scastie(router: Option[RouterCtl[Page]],
                          private val snippetId: Option[SnippetId],
                          private val oldSnippetId: Option[Int],
                          private val embedded: Option[EmbeddedOptions],
-                         private val targetType: Option[ScalaTargetType],
+                         private val targetType: Option[ScalaTargetType], // target user can pass from url
                          private val tryLibrary: Option[(ScalaDependency, Project)],
-                         private val code: Option[String],
-                         private val inputs: Option[Inputs]) {
+                         private val code: Option[String], // code user can pass from url
+                         private val inputs: Option[Inputs] //  inputs user can pass from url // TODO accept old inputs as well, so links are not broken
+                        ) {
 
   @inline def render = Scastie.component(serverUrl, scastieId)(this)
 
@@ -253,31 +254,39 @@ object Scastie {
   private def component(serverUrl: Option[String], scastieId: UUID) =
     ScalaComponent
       .builder[Scastie]("Scastie")
-      .initialStateFromProps { props =>
-        val state = {
-          val loadedState = ScastieState.default(props.isEmbedded).copy(inputs = Inputs.default.copy(code = ""))
-          if (!props.isEmbedded) {
-            loadedState
-          } else {
+      .initialStateFromProps { props: Scastie =>
+        // we can set those props from the url
+        // for example /?target=DOTTY&code=println(42)
+        // or /try?g=com.typesafe.play&a=play&v=2.8.12&t=JVM&sv=2.13&o=playframework&r=playframework
+        // for more, see TargetTypePage, TryLibraryPage, ...
+
+        // start with the default state
+        val state0 = {
+          val loadedState = ScastieState.default(props.isEmbedded).copy(inputs = Inputs.default)
+          if (props.isEmbedded) {
             loadedState.setCleanInputs.clearOutputs
+          } else {
+            loadedState
           }
         }
 
-        val state1 =
+        // modify target
+        val state1 = {
           props.targetType match {
             case Some(targetType) => {
-              val state0 =
-                state.setTarget(targetType.defaultScalaTarget)
+              val s = state0.setTarget(targetType.defaultScalaTarget)
 
               if (targetType == ScalaTargetType.Scala3) {
-                state0.setCode(ScalaTarget.Scala3.defaultCode)
+                s.setRootFolder(Folder.singleton(ScalaTarget.Scala3.defaultCode))
               } else {
-                state0
+                s
               }
             }
-            case _ => state
+            case _ => state0
           }
+        }
 
+        // set library dependencies
         val state2 = props.tryLibrary match {
           case Some(dependency) =>
             state1
@@ -286,12 +295,14 @@ object Scastie {
           case _ => state1
         }
 
+        // modify initial code
         val state3 = props.code match {
-          case Some(code) => state2.setCode(code)
+          case Some(code) => state2.setRootFolder(Folder.singleton(code))
           case _ => state2
         }
 
-        props.inputs match {
+        // modify inputs
+        props.inputs match { // the inputs passed from url (in routing see : InputsPage)
           case Some(inputs) => state3.setInputs(inputs)
           case _ => state3
         }

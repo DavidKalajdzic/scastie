@@ -72,7 +72,7 @@ object MainPanel {
         isWorksheetMode = state.inputs.isWorksheetMode,
         isEmbedded = props.isEmbedded,
         showLineNumbers = state.showLineNumbers,
-        value = state.inputs.code,
+        value = state.inputs.code.childHeadFileContent,
         attachedDoms = state.attachedDoms,
         instrumentations = state.outputs.instrumentations,
         compilationInfos = state.outputs.compilationInfos,
@@ -85,7 +85,7 @@ object MainPanel {
         toggleLineNumbers = backend.toggleLineNumbers,
         togglePresentationMode = backend.togglePresentationMode,
         formatCode = backend.formatCode,
-        codeChange = backend.codeChange,
+        codeChange = Reusable.always(_ => Callback.empty), //TODO CODE add support in backend to change code if no file is selected
         target = state.inputs.target,
         metalsStatus = state.metalsStatus,
         setMetalsStatus = backend.setMetalsStatus,
@@ -140,12 +140,12 @@ object MainPanel {
         forceDesktop = backend.forceDesktop
       ).render
 
-//    val topBar =
-//      TopBar(
-//        backend.viewSnapshot(state.view),
-//        state.user,
-//        backend.openLoginModal
-//      ).render.unless(props.isEmbedded || state.isPresentationMode)
+    //    val topBar =
+    //      TopBar(
+    //        backend.viewSnapshot(state.view),
+    //        state.user,
+    //        backend.openLoginModal
+    //      ).render.unless(props.isEmbedded || state.isPresentationMode)
 
     val editorTopBar =
       EditorTopBar(
@@ -192,7 +192,7 @@ object MainPanel {
     div(
       cls := "main-panel",
       presentationModeClass,
-//      topBar,
+      //      topBar,
       editorTopBar,
       div(
         cls := "content",

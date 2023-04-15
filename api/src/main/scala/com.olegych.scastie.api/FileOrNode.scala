@@ -1,6 +1,6 @@
-package com.olegych.scastie.client.components.fileHierarchy
+package com.olegych.scastie.api
 
-import com.olegych.scastie.client.components.fileHierarchy.FileOrFolderUtils.{prependPath, recomputePaths}
+import com.olegych.scastie.api.FileOrFolderUtils.prependPath
 import play.api.libs.json.{Json, OFormat}
 
 sealed trait FileOrFolder {
@@ -19,6 +19,7 @@ case class File(override val name: String, content: String = "", override val pa
   override val isFolder: Boolean = false
   override val isRoot: Boolean = false
 }
+
 object File {
   implicit val format: OFormat[File] = Json.format[File]
 }
@@ -51,10 +52,30 @@ case class Folder(override val name: String, children: List[FileOrFolder] = List
         copy(children = children :+ folder.add2(tail.mkString("/"), isFolder))
     }
   }
+
+  def isEmpty: Boolean = {
+    children.isEmpty
+  }
+
+  def take(i: Int): String = {
+    children.head.asInstanceOf[File].content.take(i)
+  }
+
+  def split(nl: String): Array[String] = {
+    children.head.asInstanceOf[File].content.split(nl)
+  }
+
+  def childHeadFileContent: String = {
+    children.head.asInstanceOf[File].content
+  }
 }
 
 object Folder {
   implicit val format: OFormat[Folder] = Json.format[Folder]
+
+  def singleton(code: String): Folder = {
+    Folder("root", List(File("code.scala", code, "/root/code.scala")), "/root", isRoot = true)
+  }
 }
 
 object FileOrFolderUtils {
@@ -146,5 +167,21 @@ object FileOrFolderUtils {
       case f: File => List(f)
       case l: Folder => allFiles(l)
     }
+  }
+
+  def setFileContent(root: Folder, newFileContent: File): Folder = {
+    root.copy(children = root.children.map {
+      case f: File if f.path == newFileContent.path => f.copy(content = newFileContent.content)
+      case f: File => f
+      case l: Folder => setFileContent(l, newFileContent)
+    })
+  }
+
+  def updateFile(root: Folder, newFile: File): Folder = {
+    root.copy(children = root.children.map {
+      case f: File if f.path == newFile.path => newFile
+      case f: File => f
+      case l: Folder => updateFile(l, newFile)
+    })
   }
 }

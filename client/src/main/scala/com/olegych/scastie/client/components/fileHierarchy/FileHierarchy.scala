@@ -1,7 +1,8 @@
 package com.olegych.scastie.client.components.fileHierarchy
 
-import com.olegych.scastie.client.components.fileHierarchy.FileOrFolderUtils.{find, insert, move, prependPath, recomputePaths, remove}
-import japgolly.scalajs.react.{Callback, CtorType, callback, _}
+import com.olegych.scastie.api.{File, Folder}
+import com.olegych.scastie.api.FileOrFolderUtils.{find, insert, move, prependPath, recomputePaths, remove}
+import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.ScalaFn.Component
 import japgolly.scalajs.react.hooks.HookCtx
 import japgolly.scalajs.react.hooks.Hooks.UseState
@@ -45,9 +46,9 @@ object FileHierarchy {
         val openFile = props._2
 
         val selectFile: File => Callback = {
-          s => openFile(s)
-          //            fhs.modState(_.copy(selectedFile = s))
+          (f: File) => openFile(f)// >> fhs.modState(_.copy(selectedFile = f.path))
         }
+
         val dragInfoUpdate: DragInfo => Callback = {
           di =>
             if (di.start && !di.end) {
@@ -71,9 +72,7 @@ object FileHierarchy {
             }
         }
         <.div(
-          FileOrFolderNode(
-            fhs.value.root // TODO use : rootFolder
-            , fhs.value.selectedFile, 0, selectFile, dragInfoUpdate).render
+          FileOrFolderNode(rootFolder, fhs.value.selectedFile, 0, selectFile, dragInfoUpdate).render
         )
       })
 }

@@ -99,7 +99,7 @@ class FrontPageRoutes(dispatchActor: ActorRef, production: Boolean, hostname: St
           } yield
             (r, c, s) match {
               case (r: RouteResult.Complete, List(c), Some(s)) if r.response.status.intValue() == 200 =>
-                val code = StringEscapeUtils.escapeHtml4(s.inputs.code)
+                val code: String = StringEscapeUtils.escapeHtml4(s.inputs.code.childHeadFileContent) // TODO CODE what is this?
                 r.copy(
                   response = r.response.withEntity(
                     HttpEntity.Strict(

@@ -1,6 +1,6 @@
 package com.olegych.scastie.client.components.tabStrip
 
-import com.olegych.scastie.client.components.fileHierarchy.File
+import com.olegych.scastie.api.File
 import com.olegych.scastie.client.components.tabStrip.TabStrip.TabStripState
 import japgolly.scalajs.react.{Callback, CtorType, callback, _}
 import japgolly.scalajs.react.component.ScalaFn.Component
@@ -12,35 +12,48 @@ import org.scalajs.dom.document
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.hooks._
 import japgolly.scalajs.react.vdom.html_<^._
+import play.api.libs.json.{Json, OFormat}
 
-final case class TabStrip(tabs: TabStripState, changeSelection: File => Callback, closeTab: File => Callback) {
-  @inline def render: VdomElement = TabStrip.TabStripComponent(tabs, changeSelection, closeTab)
+final case class TabStrip(tabStripState: TabStripState, changeSelection: TabStrip.Tab => Callback, closeTab: TabStrip.Tab => Callback) {
+  @inline def render: VdomElement = TabStrip.TabStripComponent(tabStripState, changeSelection, closeTab)
 }
 
 object TabStrip {
 
-  case class TabStripState(selectedTab: File, activeTabs: List[File])
+  case class Tab(tabId: String, title: String)
 
-  private val TabStripComponent = ScalaFnComponent.withHooks[(TabStripState, File => Callback, File => Callback)]
+  object Tab {
+    def fromFile(file: File): Tab = Tab(file.path, file.name)
+
+    implicit val format: OFormat[Tab] = Json.format[Tab]
+  }
+
+  case class TabStripState(selectedTab: Option[Tab], activeTabs: List[Tab])
+
+  private val TabStripComponent = ScalaFnComponent.withHooks[(TabStripState, Tab => Callback, Tab => Callback)]
     .render($ => {
-      val tabs: List[File] = $._1.activeTabs
-      val selectedTab: File = $._1.selectedTab
+      val tabs: List[Tab] = $._1.activeTabs
+      val selectedTab: Option[Tab] = $._1.selectedTab
       val changeSelection = $._2
       val closeTab = $._3
 
-      val handleTabClickCb: File => Callback = {
+      val handleTabClickCb: Tab => Callback = {
         file => changeSelection(file)
       }
 
-      <.div(
-        ^.className := "tab-strip",
-        tabs.map { file: File =>
-          renderTab(
-            file.name,
-            file.path,
-            file.path.equals(selectedTab.path)
-          )(handleTabClickCb(file), closeTab(file))
-        }.toVdomArray
+      <.div()(
+
+        <.div(
+          ^.className := "tab-strip",
+          tabs.map { tab: Tab =>
+            renderTab(
+              tab.title,
+              tab.tabId,
+              tab.tabId.equals(selectedTab.getOrElse(Tab("", "")).tabId)
+            )(handleTabClickCb(tab), closeTab(tab))
+          }.toVdomArray
+        ),
+        <.p($._1.toString)
       )
     }
 

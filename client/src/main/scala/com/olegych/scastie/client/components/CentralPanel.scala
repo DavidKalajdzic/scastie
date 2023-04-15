@@ -1,15 +1,17 @@
 package com.olegych.scastie.client.components
 
-import com.olegych.scastie.api.Inputs
+import com.olegych.scastie.api.{File, FileOrFolder, FileOrFolderUtils, Folder, Inputs, SnippetId}
 import com.olegych.scastie.client.View
 import com.olegych.scastie.client.components.editor.CodeEditor
-import com.olegych.scastie.client.components.fileHierarchy.FileOrFolderUtils.recomputePaths
-import com.olegych.scastie.client.components.fileHierarchy.{File, FileHierarchy, FileOrFolder, FileOrFolderUtils, Folder}
+import com.olegych.scastie.api.FileOrFolderUtils.recomputePaths
+import com.olegych.scastie.client.components.console.Console
+import com.olegych.scastie.client.components.fileHierarchy.FileHierarchy
 import com.olegych.scastie.client.components.mainComp.{MetalsStatus, Scastie, ScastieBackend, ScastieState}
 import com.olegych.scastie.client.components.sideBar.SideBar
 import com.olegych.scastie.client.components.tabStrip.TabStrip
-import com.olegych.scastie.client.components.tabStrip.TabStrip.TabStripState
-import japgolly.scalajs.react.{Callback, CtorType, callback, _}
+import com.olegych.scastie.client.components.tabStrip.TabStrip._
+import com.olegych.scastie.client.components.topBarEditor.EditorTopBar
+import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.ScalaFn.Component
 import japgolly.scalajs.react.component.builder.Lifecycle.RenderScope
 import japgolly.scalajs.react.hooks.HookCtx
@@ -27,67 +29,47 @@ final case class CentralPanel(scope: RenderScope[Scastie, ScastieState, ScastieB
 
 
 object CentralPanel {
-  private val initialRoot: Folder = (
-    Folder("root", isRoot = true)
-      .add(File("ClientMain.scala", "client main content"))
-      .add(File("LocalStorage.scala", "local storage content"))
-      .add(Folder("awesomeFolder")
-        .add(File("Routing.scala", "rounting content"))
-        .add(File("data.txt", "data content"))
-      )
-      .add(Folder("other"))
-    )
-
-  private val initialTabStripState: TabStripState = TabStripState(File("null file"), List())
 
   val component = ScalaFnComponent.withHooks[(RenderScope[Scastie, ScastieState, ScastieBackend], Scastie, ScastieState)]
-
-    .useState(initialRoot)
-    .useState(initialTabStripState)
-    .useState("testTEXT")
     .render($ => {
-      val (scope: RenderScope[Scastie, ScastieState, ScastieBackend], props: Scastie, state: ScastieState) = $.props.asInstanceOf[(RenderScope[Scastie, ScastieState, ScastieBackend], Scastie, ScastieState)]
+      val (scope: RenderScope[Scastie, ScastieState, ScastieBackend], props: Scastie, state: ScastieState) = $
       val backend = scope.backend
-      val rootFolder: UseState[Folder] = $.hook1
-      val tabStrip: UseState[TabStripState] = $.hook2
-      val testTEXT: UseState[String] = $.hook3
 
-      val tabStripSelectionChange: File => Callback = {
-        (newSelection: File) =>
-          tabStrip.modState { case TabStripState(prevSelection, activeTabs) => TabStripState(newSelection, activeTabs) }
+      val tabStripSelectionChange: Tab => Callback = {
+        (newSelection: Tab) =>
+          scope.modState(_.copy(tabStripState = TabStripState(Some(newSelection), state.tabStripState.activeTabs)))
       }
 
-      val tabStripCloseTab: File => Callback = {
-        (closeAtIndex: File) =>
-          tabStrip.modState {
+      val tabStripCloseTab: Tab => Callback = {
+        (tabToClose: Tab) =>
+          scope.modState(_.copy(tabStripState = scope.state.tabStripState match {
             case TabStripState(prevSelection, activeTabs) =>
-              val closeIdx = activeTabs.indexOf(closeAtIndex)
-              val newTabs = activeTabs.filterNot(_.path.equals(closeAtIndex.path))
+              val closeIdx = activeTabs.indexOf(tabToClose)
+              val newTabs = activeTabs.filterNot(_.equals(tabToClose))
               val newSelection = {
-                if (newTabs.isEmpty) {
-                  prevSelection
-                } else if (newTabs.size <= closeIdx) {
-                  newTabs.last
-                } else {
-                  newTabs(closeIdx)
-                }
+                if (newTabs.isEmpty) None
+                else if (newTabs.size <= closeIdx) Some(newTabs.last)
+                else Some(newTabs(closeIdx))
               }
               TabStripState(newSelection, newTabs)
           }
+          ))
       }
 
       val openFile: File => Callback = {
         (f: File) =>
-          testTEXT.modState { case s => f.content }.runNow() //TODO continue
-          tabStrip.modState { case TabStripState(_, activeTabs) =>
-            if (activeTabs.contains(f)) {
-              TabStripState(f, activeTabs)
-            } else {
-              TabStripState(f, activeTabs ::: List(f))
-            }
-          }
+          val tab: Tab = Tab.fromFile(f)
+          scope.modState((ss: ScastieState, s: Scastie) => {
+            val activeTabs = ss.tabStripState.activeTabs
+            ss.copy(tabStripState =
+              if (activeTabs.contains(tab)) {
+                TabStripState(Some(tab), activeTabs)
+              } else {
+                TabStripState(Some(tab), activeTabs ::: List(tab))
+              }
+            )
+          })
       }
-
 
       <.div(cls := "main-grid-central",
         <.div(cls := "side-bar-thin",
@@ -102,10 +84,37 @@ object CentralPanel {
           ).render.unless(props.isEmbedded || state.isPresentationMode)
         ),
         <.div(cls := "side-pane",
-          FileHierarchy(rootFolder.value, openFile).render
+          FileHierarchy(scope.state.inputs.code, openFile).render
         ),
         <.div(cls := "central-pane",
-          TabStrip(tabStrip.value, tabStripSelectionChange, tabStripCloseTab).render,
+          TabStrip(state.tabStripState, tabStripSelectionChange, tabStripCloseTab).render,
+
+          EditorTopBar(
+            clear = backend.clear,
+            closeNewSnippetModal = backend.closeNewSnippetModal,
+            closeEmbeddedModal = backend.closeEmbeddedModal,
+            openEmbeddedModal = backend.openEmbeddedModal,
+            formatCode = backend.formatCode,
+            newSnippet = backend.newSnippet,
+            openNewSnippetModal = backend.openNewSnippetModal,
+            save = backend.saveOrUpdate,
+            toggleWorksheetMode = backend.toggleWorksheetMode,
+            router = props.router,
+            inputsHasChanged = state.inputsHasChanged,
+            isDarkTheme = state.isDarkTheme,
+            isNewSnippetModalClosed = state.modalState.isNewSnippetModalClosed,
+            isEmbeddedModalClosed = state.modalState.isEmbeddedClosed,
+            isRunning = state.isRunning,
+            isStatusOk = false,
+            snippetId = state.snippetId,
+            user = state.user,
+            view = backend.viewSnapshot(state.view),
+            isWorksheetMode = state.inputs.isWorksheetMode,
+            metalsStatus = state.metalsStatus,
+            toggleMetalsStatus = backend.toggleMetalsStatus,
+            scalaTarget = state.inputs.target
+          ).render.unless(props.isEmbedded || state.isPresentationMode),
+
           CodeEditor(
             visible = true, //TODO use backend
             isDarkTheme = state.isDarkTheme,
@@ -113,27 +122,38 @@ object CentralPanel {
             isWorksheetMode = state.inputs.isWorksheetMode,
             isEmbedded = props.isEmbedded,
             showLineNumbers = state.showLineNumbers,
-            value = testTEXT.value, //state.inputs.code,
+            value = backend.selectedFileCode.runNow(),
             attachedDoms = state.attachedDoms,
             instrumentations = state.outputs.instrumentations,
             compilationInfos = state.outputs.compilationInfos,
             runtimeError = state.outputs.runtimeError,
-            saveOrUpdate = Reusable.always(Callback.empty), //backend.saveOrUpdate,
-            clear = Reusable.always(Callback.empty), //backend.clear,
+            saveOrUpdate = backend.saveOrUpdate,
+            clear = backend.clear,
             openNewSnippetModal = backend.openNewSnippetModal,
             toggleHelp = backend.toggleHelpModal,
             toggleConsole = backend.toggleConsole,
             toggleLineNumbers = backend.toggleLineNumbers,
             togglePresentationMode = backend.togglePresentationMode,
-            formatCode = Reusable.always(Callback.empty), //backend.formatCode,
-            codeChange = Reusable.always(_ => Callback.empty), //backend.codeChange,
+            formatCode = backend.formatCode,
+            codeChange = backend.selectedFileCodeChange,
             target = state.inputs.target,
             metalsStatus = state.metalsStatus,
-            setMetalsStatus = Reusable.always(_ => Callback.empty), //backend.setMetalsStatus,
+            setMetalsStatus = backend.setMetalsStatus,
             dependencies = state.inputs.libraries
-          ).render
-        )
-      )
+          ).render,
 
+          Console(
+            isOpen = state.consoleState.consoleIsOpen,
+            isRunning = state.isRunning,
+            isEmbedded = props.isEmbedded,
+            consoleOutputs = state.outputs.consoleOutputs,
+            run = backend.run,
+            setView = backend.setViewReused,
+            close = backend.closeConsole,
+            open = backend.openConsole
+          ).render
+        ),
+        <.p(state.inputs.code.toString)
+      )
     })
 }

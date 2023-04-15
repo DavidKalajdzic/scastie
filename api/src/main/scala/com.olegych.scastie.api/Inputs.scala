@@ -6,31 +6,32 @@ import com.olegych.scastie.buildinfo.BuildInfo
 import System.{lineSeparator => nl}
 
 sealed trait BaseInputs {
-  def code: String
+  def code: Folder
+
   def target: ScalaTarget
 }
 
-case class ShortInputs(code: String, target: ScalaTarget) extends BaseInputs
+case class ShortInputs(code: Folder, target: ScalaTarget) extends BaseInputs
 
 object ShortInputs {
   implicit val formatShortInputs: OFormat[ShortInputs] = Json.format[ShortInputs]
 }
 
 object Inputs {
-  val defaultCode = """List("Hello", "World").mkString("", ", ", "!")"""
 
   def default: Inputs = Inputs(
     _isWorksheetMode = true,
-    code = defaultCode,
+    code = Folder.singleton(""),
     target = ScalaTarget.Scala3.default,
     libraries = Set(),
     librariesFromList = List(),
-    sbtConfigExtra = """|scalacOptions ++= Seq(
-                        |  "-deprecation",
-                        |  "-encoding", "UTF-8",
-                        |  "-feature",
-                        |  "-unchecked"
-                        |)""".stripMargin,
+    sbtConfigExtra =
+      """|scalacOptions ++= Seq(
+         |  "-deprecation",
+         |  "-encoding", "UTF-8",
+         |  "-feature",
+         |  "-unchecked"
+         |)""".stripMargin,
     sbtConfigSaved = None,
     sbtPluginsConfigExtra = "",
     sbtPluginsConfigSaved = None,
@@ -59,18 +60,18 @@ object Inputs {
 }
 
 case class Inputs(
-    _isWorksheetMode: Boolean,
-    code: String,
-    target: ScalaTarget,
-    libraries: Set[ScalaDependency],
-    librariesFromList: List[(ScalaDependency, Project)],
-    sbtConfigExtra: String,
-    sbtConfigSaved: Option[String],
-    sbtPluginsConfigExtra: String,
-    sbtPluginsConfigSaved: Option[String],
-    isShowingInUserProfile: Boolean,
-    forked: Option[SnippetId] = None
-) extends BaseInputs {
+                   _isWorksheetMode: Boolean,
+                   code: Folder,
+                   target: ScalaTarget,
+                   libraries: Set[ScalaDependency],
+                   librariesFromList: List[(ScalaDependency, Project)],
+                   sbtConfigExtra: String,
+                   sbtConfigSaved: Option[String],
+                   sbtPluginsConfigExtra: String,
+                   sbtPluginsConfigSaved: Option[String],
+                   isShowingInUserProfile: Boolean,
+                   forked: Option[SnippetId] = None
+                 ) extends BaseInputs {
   val isWorksheetMode = _isWorksheetMode && target.hasWorksheetMode
   val librariesFrom: Map[ScalaDependency, Project] = librariesFromList.toMap
 
@@ -109,7 +110,7 @@ case class Inputs(
     }
   }
 
-  lazy val isDefault: Boolean = copy(code = "").withSavedConfig == Inputs.default.copy(code = "").withSavedConfig
+  lazy val isDefault: Boolean = copy(code = Folder.singleton("")).withSavedConfig == Inputs.default.copy(code = Folder.singleton("")).withSavedConfig
 
   def modifyConfig(inputs: Inputs => Inputs): Inputs = inputs(this).copy(sbtConfigSaved = None, sbtPluginsConfigSaved = None)
 

@@ -86,11 +86,11 @@ class ContainerTest extends AnyFunSuite with BeforeAndAfterAll with OptionValues
 
   test("fork") {
     val inputs =
-      Inputs.default.copy(code = "source", isShowingInUserProfile = true)
+      Inputs.default.copy(code = Folder.singleton("source"), isShowingInUserProfile = true)
     val snippetId = testContainer.save(inputs, user = None).await
 
     val forkedInputs =
-      Inputs.default.copy(code = "forked", isShowingInUserProfile = true)
+      Inputs.default.copy(code = Folder.singleton("forked"), isShowingInUserProfile = true)
     val forkedSnippetId =
       testContainer.fork(snippetId, forkedInputs, user = None).await
 
@@ -103,12 +103,12 @@ class ContainerTest extends AnyFunSuite with BeforeAndAfterAll with OptionValues
   test("update") {
     val user = UserLogin("github-user-update" + Random.nextInt())
     val inputs1 =
-      Inputs.default.copy(code = "inputs1").copy(isShowingInUserProfile = true)
+      Inputs.default.copy(code = Folder.singleton("inputs1")).copy(isShowingInUserProfile = true)
     val snippetId1 = testContainer.save(inputs1, Some(user)).await
     assert(snippetId1.user.get.update == 0)
 
     val inputs2 =
-      Inputs.default.copy(code = "inputs2").copy(isShowingInUserProfile = true)
+      Inputs.default.copy(code = Folder.singleton("inputs2")).copy(isShowingInUserProfile = true)
     val snippetId2 = testContainer.update(snippetId1, inputs2).await.get
     assert(snippetId2.user.get.update == 1, "we get a new update id")
 
@@ -126,20 +126,20 @@ class ContainerTest extends AnyFunSuite with BeforeAndAfterAll with OptionValues
     val user = UserLogin("github-user-list" + Random.nextInt())
     val user2 = UserLogin("github-user-list2" + Random.nextInt())
 
-    val inputs1 = Inputs.default.copy(code = "inputs1")
+    val inputs1 = Inputs.default.copy(code = Folder.singleton("inputs1"))
     testContainer.save(inputs1, Some(user)).await
 
-    val inputs2 = Inputs.default.copy(code = "inputs2")
+    val inputs2 = Inputs.default.copy(code = Folder.singleton("inputs2"))
     testContainer.save(inputs2, Some(user)).await
 
-    val inputs3 = Inputs.default.copy(code = "inputs3")
+    val inputs3 = Inputs.default.copy(code = Folder.singleton("inputs3"))
     testContainer.save(inputs3, Some(user)).await
 
-    val user2inputs = Inputs.default.copy(code = "inputs3")
+    val user2inputs = Inputs.default.copy(code = Folder.singleton("inputs3"))
     testContainer.save(user2inputs, Some(user2)).await
 
     val inputs4 =
-      Inputs.default.copy(code = "inputs4", isShowingInUserProfile = false)
+      Inputs.default.copy(code = Folder.singleton("inputs4"), isShowingInUserProfile = false)
     testContainer.create(inputs4, Some(user)).await
 
     val snippets = testContainer.listSnippets(user).await
@@ -151,16 +151,16 @@ class ContainerTest extends AnyFunSuite with BeforeAndAfterAll with OptionValues
   test("delete") {
     val user = UserLogin("github-user-delete" + Random.nextInt())
 
-    val inputs1 = Inputs.default.copy(code = "inputs1")
+    val inputs1 = Inputs.default.copy(code = Folder.singleton("inputs1"))
     val snippetId1 = testContainer.save(inputs1, Some(user)).await
 
-    val inputs1U = Inputs.default.copy(code = "inputs1 updated")
+    val inputs1U = Inputs.default.copy(code = Folder.singleton("inputs1 updated"))
     testContainer.update(snippetId1, inputs1U).await.get
 
-    val inputs2 = Inputs.default.copy(code = "inputs2")
+    val inputs2 = Inputs.default.copy(code = Folder.singleton("inputs2"))
     val snippetId2 = testContainer.save(inputs2, Some(user)).await
 
-    val inputs2U = Inputs.default.copy(code = "inputs2 updated")
+    val inputs2U = Inputs.default.copy(code = Folder.singleton("inputs2 updated"))
     val snippetId2U = testContainer.update(snippetId2, inputs2U).await.get
 
     assert(testContainer.listSnippets(user).await.size == 2)
@@ -186,13 +186,13 @@ class ContainerTest extends AnyFunSuite with BeforeAndAfterAll with OptionValues
   test("deleteAllSnippets") {
     val user = UserLogin("github-user-delete" + Random.nextInt())
 
-    val inputs1 = Inputs.default.copy(code = "inputs1")
+    val inputs1 = Inputs.default.copy(code = Folder.singleton("inputs1"))
     val snippetId1 = testContainer.save(inputs1, Some(user)).await
 
-    val inputs2 = Inputs.default.copy(code = "inputs2")
+    val inputs2 = Inputs.default.copy(code = Folder.singleton("inputs2"))
     val snippetId2 = testContainer.save(inputs2, Some(user)).await
 
-    val inputs2U = Inputs.default.copy(code = "inputs2 updated")
+    val inputs2U = Inputs.default.copy(code = Folder.singleton("inputs2 updated"))
     val snippetId2U = testContainer.update(snippetId2, inputs2U).await.get
 
     assert(testContainer.listSnippets(user).await.size == 2)

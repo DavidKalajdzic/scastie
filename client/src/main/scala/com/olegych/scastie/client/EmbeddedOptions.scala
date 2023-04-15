@@ -1,6 +1,6 @@
 package com.olegych.scastie.client
 
-import com.olegych.scastie.api.{Inputs, SnippetId, SnippetUserPart, ScalaTarget, ScalaTargetType}
+import com.olegych.scastie.api.{Folder, Inputs, ScalaTarget, ScalaTargetType, SnippetId, SnippetUserPart}
 
 import scala.scalajs.js
 import scala.scalajs.js.UndefOr
@@ -41,7 +41,7 @@ case class EmbeddedOptions(snippetId: Option[SnippetId],
 
   def setCode(code: String): EmbeddedOptions = {
     val inputs0 = inputs.getOrElse(Inputs.default)
-    copy(inputs = Some(inputs0.copy(code = code)))
+    copy(inputs = Some(inputs0.copy(code = Folder.singleton(code)))) // TODO CODE
   }
 }
 
@@ -56,9 +56,7 @@ object EmbeddedOptions {
     )
   }
 
-  private def extractSnippetId(
-                                options: SharedEmbeddedOptions
-                              ): Option[SnippetId] = {
+  private def extractSnippetId(options: SharedEmbeddedOptions): Option[SnippetId] = {
     import options._
 
     base64UUID.toOption.map(
@@ -71,9 +69,7 @@ object EmbeddedOptions {
     )
   }
 
-  def fromJsRessource(
-                       defaultServerUrl: String
-                     )(options: EmbeddedResourceOptionsJs): EmbeddedOptions = {
+  def fromJsRessource(defaultServerUrl: String)(options: EmbeddedResourceOptionsJs): EmbeddedOptions = {
 
     import options._
 
@@ -94,9 +90,7 @@ object EmbeddedOptions {
     )
   }
 
-  def fromJs(
-              defaultServerUrl: String
-            )(options: EmbeddedOptionsJs): EmbeddedOptions = {
+  def fromJs(defaultServerUrl: String)(options: EmbeddedOptionsJs): EmbeddedOptions = {
     import options._
 
     val scalaTarget =
@@ -165,14 +159,14 @@ object EmbeddedOptions {
             .map(_.targetType == ScalaTargetType.Scala3)
             .getOrElse(false)
 
-        val defaultCode =
-          if (isScala3) ScalaTarget.Scala3.defaultCode
+        val defaultCode: Folder =
+          if (isScala3) Folder.singleton(ScalaTarget.Scala3.defaultCode)
           else default.code
 
         val inputs0 =
           default.copy(
             _isWorksheetMode = isWorksheetMode.getOrElse(default.isWorksheetMode),
-            code = code.getOrElse(defaultCode),
+            code = if (code.isDefined) Folder.singleton(code.get) else defaultCode,
             target = scalaTarget.getOrElse(default.target),
             sbtConfigExtra = sbtConfig.getOrElse(default.sbtConfigExtra)
           )

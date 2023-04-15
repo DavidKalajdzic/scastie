@@ -30,7 +30,7 @@ class Routing(defaultServerUrl: String) {
     val inputs = queryToMap.pmap { map =>
       map.get("inputs").flatMap { inputs =>
         Json
-          .fromJson[Inputs](Json.parse(inputs))
+          .fromJson[Inputs](Json.parse(inputs)) // TODO accept old inputs as well, so links are not broken
           .fold({ e =>
             println(s"failed to parse ${inputs}")
             println(e)

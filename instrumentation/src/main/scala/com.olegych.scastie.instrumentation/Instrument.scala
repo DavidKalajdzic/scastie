@@ -1,7 +1,7 @@
 package com.olegych.scastie.instrumentation
 
 import com.olegych.scastie.api.ScalaTarget._
-import com.olegych.scastie.api.{Inputs, Instrumentation, ScalaTarget, ScalaTargetType}
+import com.olegych.scastie.api.{File, Folder, Inputs, Instrumentation, ScalaTarget, ScalaTargetType}
 
 import scala.collection.immutable.Seq
 import scala.meta._
@@ -158,6 +158,10 @@ object Instrument {
         }
       case _ => false
     }
+  }
+
+  def apply(code: Folder, target: ScalaTarget): Either[InstrumentationFailure, String] = { // TODO CODE
+      apply(code.childHeadFileContent, target)
   }
 
   def apply(code: String, target: ScalaTarget): Either[InstrumentationFailure, String] = {

@@ -1,5 +1,6 @@
 package com.olegych.scastie.client.components.fileHierarchy
 
+import com.olegych.scastie.api.{File, FileOrFolder, Folder}
 import japgolly.scalajs.react.{Callback, CtorType, callback, _}
 import japgolly.scalajs.react.component.ScalaFn.Component
 import japgolly.scalajs.react.hooks.HookCtx

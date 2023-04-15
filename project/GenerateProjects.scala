@@ -8,12 +8,13 @@ class GenerateProjects(sbtTargetDir: Path) {
 
   val projects: List[GeneratedProject] = {
     val defaultWithMain = Inputs.default.copy(
-      code = """|object Main {
-                |  def main(args: Array[String]): Unit = {
-                |    println("Hello, World!")
-                |  }
-                |}
-                |""".stripMargin
+      code = Folder.singleton(
+        """|object Main {
+           |  def main(args: Array[String]): Unit = {
+           |    println("Hello, World!")
+           |  }
+           |}
+           |""".stripMargin)
     )
 
     def scala(version: String): Inputs = defaultWithMain.copy(
@@ -28,7 +29,7 @@ class GenerateProjects(sbtTargetDir: Path) {
     )
 
     val scalaJs = Inputs.default.copy(
-      code = """@_root_.scala.scalajs.js.annotation.JSExportTopLevel("ScastiePlaygroundMain") class Test""".stripMargin,
+      code = Folder.singleton("""@_root_.scala.scalajs.js.annotation.JSExportTopLevel("ScastiePlaygroundMain") class Test""".stripMargin),
       target = ScalaTarget.Js.default,
     )
 
@@ -54,7 +55,7 @@ class GeneratedProject(inputs: Inputs, sbtDir: Path) {
   private val buildFile = sbtDir.resolve("build.sbt")
   private val projectDir = sbtDir.resolve("project")
   private val pluginFile = projectDir.resolve("plugins.sbt")
-  private val codeFile = sbtDir.resolve("src/main/scala/main.scala")
+  //  private val codeFile = sbtDir.resolve("src/main/scala/main.scala")
 
   def generateSbtProject(): Unit = {
     Files.createDirectories(projectDir)
@@ -67,8 +68,11 @@ class GeneratedProject(inputs: Inputs, sbtDir: Path) {
     Files.write(buildFile, inputs.sbtConfig.getBytes)
     Files.write(pluginFile, inputs.sbtPluginsConfig.getBytes)
 
-    Files.createDirectories(codeFile.getParent)
-    Files.write(codeFile, inputs.code.getBytes)
+    FileOrFolderUtils.allFiles(inputs.code).foreach(f => {
+      val path = sbtDir.resolve("src/main/scala" + f.path)
+      Files.createDirectories(path.getParent)
+      Files.write(path, f.content.getBytes) // TODO CODE (not sure to know what generateSbtProject is usefull for? only used by docker...
+    })
   }
 
   def runCmd(dest: String): String = {

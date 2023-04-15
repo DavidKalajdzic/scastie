@@ -116,7 +116,7 @@ class LoadBalancerRecoveryTest()
           |  }
           |}""".stripMargin
 
-    val inputs = Inputs.default.copy(code = wrapped, _isWorksheetMode = false)
+    val inputs = Inputs.default.copy(code = Folder.singleton(wrapped), _isWorksheetMode = false)
 
     val task = RunSnippet(
       InputsWithIpAndUser(inputs, UserTrace("ip-" + id, None))

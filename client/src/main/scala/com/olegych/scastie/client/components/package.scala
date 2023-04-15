@@ -2,6 +2,8 @@ package com.olegych.scastie.client
 
 import com.olegych.scastie.api._
 import com.olegych.scastie.client.components.mainComp.{ConsoleState, MetalsStatus, ModalState, ScastieBackend, ScastieState, SnippetState, StatusState}
+import com.olegych.scastie.client.components.tabStrip.TabStrip
+import com.olegych.scastie.client.components.tabStrip.TabStrip.TabStripState
 import com.olegych.scastie.client.utils.EventStream
 import japgolly.scalajs.react.Reusability
 import japgolly.scalajs.react.Reusable
@@ -93,6 +95,21 @@ package object components {
 
   implicit val metalsStatusReuse: Reusability[MetalsStatus] =
     Reusability.byRefOr_==
+
+  implicit val fileReuse: Reusability[File] =
+    Reusability.derive[File]
+
+  implicit val folderReuse: Reusability[Folder] =
+    Reusability.derive[Folder]
+
+  implicit val fileOrFolderReuse: Reusability[FileOrFolder] =
+    Reusability.derive[FileOrFolder]
+
+  implicit val tabReuse: Reusability[TabStrip.Tab] =
+    Reusability.derive[TabStrip.Tab]
+
+  implicit val tabStripReuse: Reusability[TabStripState] =
+    Reusability.derive[TabStripState]
 
   implicit val scastieStateReuse: Reusability[ScastieState] =
     Reusability.derive[ScastieState]

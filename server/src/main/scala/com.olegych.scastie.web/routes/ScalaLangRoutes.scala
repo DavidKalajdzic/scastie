@@ -35,7 +35,7 @@ class ScalaLangRoutes(
             entity(as[String]) { code =>
               val inputs =
                 InputsWithIpAndUser(
-                  Inputs.default.copy(code = code),
+                  Inputs.default.copy(code = Folder.singleton(code)), // TODO CODE
                   UserTrace(
                     remoteAddress.toString,
                     None
