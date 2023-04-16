@@ -71,6 +71,34 @@ object CentralPanel {
           })
       }
 
+      val moveFileOrFolder: (FileOrFolder, String) => Callback = {
+        (f, dstFolderPath) =>
+          // move f
+          scope.modState((ss: ScastieState, s: Scastie) => {
+            val currRoot = ss.inputs.code
+            val newRoot = FileOrFolderUtils.move(currRoot, f.path, dstFolderPath)
+            ss.setRootFolder(newRoot)
+          }).runNow()
+
+          // update tab that had file f opened, or a child in folder f opened
+          scope.modState((ss: ScastieState, s: Scastie) => {
+            def updateTab(tab: Tab): Tab = {
+              if (tab.tabId.equals(f.path))
+                tab.copy(tabId = dstFolderPath + "/" + f.name)
+              else tab
+            }
+
+            def isInF(tab: Tab): Boolean =
+              f.isFolder && FileOrFolderUtils.find(f.asInstanceOf[Folder], tab.tabId).nonEmpty
+
+            ss.copy(tabStripState = ss.tabStripState match {
+              case TabStripState(selectedTab, activeTabs) =>
+                TabStripState(selectedTab.filterNot(isInF).map(updateTab), activeTabs.filterNot(isInF).map(updateTab))
+            })
+          }).runNow()
+          Callback.empty
+      }
+
       <.div(cls := "main-grid-central",
         <.div(cls := "side-bar-thin",
           SideBar(
@@ -84,7 +112,7 @@ object CentralPanel {
           ).render.unless(props.isEmbedded || state.isPresentationMode)
         ),
         <.div(cls := "side-pane",
-          FileHierarchy(scope.state.inputs.code, openFile).render
+          FileHierarchy(scope.state.inputs.code, openFile, moveFileOrFolder).render
         ),
         <.div(cls := "central-pane",
           TabStrip(state.tabStripState, tabStripSelectionChange, tabStripCloseTab).render,
