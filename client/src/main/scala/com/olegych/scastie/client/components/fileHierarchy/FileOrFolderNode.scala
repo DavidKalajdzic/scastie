@@ -53,7 +53,6 @@ object FileOrFolderNode {
         }
       }
 
-
       val onDragOver = (e: ReactDragEvent) => {
         if (fileOrFolder.isFolder) {
           isMouseOver.setState(true) >>
