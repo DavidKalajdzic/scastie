@@ -6,8 +6,7 @@ import play.api.libs.json.{Json, OFormat}
 sealed trait FileOrFolder {
   val name: String
   val path: String
-  val isFolder: Boolean
-  val isRoot: Boolean
+  def isFolder: Boolean
 }
 
 object FileOrFolder {
@@ -16,16 +15,15 @@ object FileOrFolder {
 
 
 case class File(override val name: String, content: String = "", override val path: String = "") extends FileOrFolder {
-  override val isFolder: Boolean = false
-  override val isRoot: Boolean = false
+  def isFolder: Boolean = false
 }
 
 object File {
   implicit val format: OFormat[File] = Json.format[File]
 }
 
-case class Folder(override val name: String, children: List[FileOrFolder] = List(), override val path: String = "", override val isRoot: Boolean = false) extends FileOrFolder {
-  override val isFolder: Boolean = true
+case class Folder(override val name: String, children: List[FileOrFolder] = List(), override val path: String = "", isRoot: Boolean = false) extends FileOrFolder {
+  def isFolder: Boolean = true
 
 
   def add(ff: FileOrFolder): Folder = {
