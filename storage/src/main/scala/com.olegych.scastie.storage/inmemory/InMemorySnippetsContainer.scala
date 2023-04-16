@@ -4,7 +4,6 @@ import com.olegych.scastie.api._
 import scala.concurrent.{ExecutionContext, Future}
 
 import scala.collection.mutable
-import System.{lineSeparator => nl}
 import com.olegych.scastie.storage.SnippetsContainer
 import com.olegych.scastie.storage.UserLogin
 import com.olegych.scastie.storage.UsersContainer
@@ -42,7 +41,7 @@ trait InMemorySnippetsContainer extends SnippetsContainer {
       .map { m =>
         SnippetSummary(
           m.snippetId,
-          m.inputs.code.split(nl).take(3).mkString(nl),
+          m.inputs.code.summary,
           m.time
         )
       }

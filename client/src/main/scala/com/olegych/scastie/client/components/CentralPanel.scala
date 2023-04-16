@@ -84,7 +84,7 @@ object CentralPanel {
           scope.modState((ss: ScastieState, s: Scastie) => {
             def updateTab(tab: Tab): Tab = {
               if (tab.tabId.equals(f.path))
-                tab.copy(tabId = dstFolderPath + "/" + f.name)
+                tab.copy(tabId = dstFolderPath.stripSuffix("/") + "/" + f.name)
               else tab
             }
 

@@ -1,11 +1,11 @@
 package com.olegych.scastie.api
 
-import com.olegych.scastie.api.FileOrFolderUtils.prependPath
 import play.api.libs.json.{Json, OFormat}
 
 sealed trait FileOrFolder {
   val name: String
   val path: String
+
   def isFolder: Boolean
 }
 
@@ -22,45 +22,19 @@ object File {
   implicit val format: OFormat[File] = Json.format[File]
 }
 
-case class Folder(override val name: String, children: List[FileOrFolder] = List(), override val path: String = "", isRoot: Boolean = false) extends FileOrFolder {
+case class Folder(override val name: String, children: List[FileOrFolder] = List(), override val path: String = "") extends FileOrFolder {
   def isFolder: Boolean = true
-
-
-  def add(ff: FileOrFolder): Folder = {
-    if (this.path.nonEmpty) {
-      val f = prependPath(this.path, ff)
-      this.copy(children = this.children :+ f)
-    } else {
-      val rootName = name
-      val f = if (isRoot) prependPath(rootName, ff) else ff
-      this.copy(children = this.children :+ f)
-    }
-  }
-
-  def add2(path: String, isFolder: Boolean = false): Folder = { //builds intermediate folders
-    path.split("/").toList match {
-      case Nil => this
-      case head :: Nil =>
-        val newFilePath = this.path + "/" + head
-        val newFile = if (isFolder) Folder(head, path = newFilePath) else File(head, newFilePath)
-        copy(children = children :+ newFile)
-      case head :: tail =>
-        val newIntermediate = Folder(head, path = this.path + "/" + head) // new folder if intermediary 'head' folder does not exist
-        val folder = children.find(_.name.equals(head)).getOrElse(newIntermediate).asInstanceOf[Folder]
-        copy(children = children :+ folder.add2(tail.mkString("/"), isFolder))
-    }
-  }
 
   def isEmpty: Boolean = {
     children.isEmpty
   }
 
-  def take(i: Int): String = {
-    children.head.asInstanceOf[File].content.take(i)
-  }
-
-  def split(nl: String): Array[String] = {
-    children.head.asInstanceOf[File].content.split(nl)
+  def summary: String = {
+    import System.{lineSeparator => nl}
+    children.headOption match {
+      case Some(File(_, content, _)) => content.split(nl).take(3).mkString(nl)
+      case _ => this.toString.take(200) + "..."
+    }
   }
 
   def childHeadFileContent: String = {
@@ -72,7 +46,7 @@ object Folder {
   implicit val format: OFormat[Folder] = Json.format[Folder]
 
   def singleton(code: String): Folder = {
-    Folder("root", List(File("code.scala", code, "/root/code.scala")), "/root", isRoot = true)
+    Folder("", List(File("code.scala", code, "/code.scala")), "/")
   }
 }
 
@@ -138,26 +112,14 @@ object FileOrFolderUtils {
   }
 
   def recomputePaths(f: Folder, prefix: String = ""): Folder = {
+    val isRoot = f.name.isEmpty
+    val currFolderPath = if (isRoot) prefix else prefix + "/" + f.name //don't put double // if the root folder has no name
     f.copy(
-      path = prefix + "/" + f.name,
+      path = if (isRoot) "/" else currFolderPath,
       children = f.children.map {
-        case folder: Folder => recomputePaths(folder, prefix + "/" + f.name)
-        case file: File => file.copy(path = prefix + "/" + f.name + "/" + file.name)
+        case folder: Folder => recomputePaths(folder, prefix = currFolderPath)
+        case file: File => file.copy(path = currFolderPath + "/" + file.name)
       })
-  }
-
-
-  // used only for the .add() function
-  // move the whole
-  def prependPath(p: String, fileOrFolder: FileOrFolder): FileOrFolder = {
-    fileOrFolder match {
-      case File(name, content, path) =>
-        val nonEmptyPath = if (path.isEmpty) name else path // start building the path from the name then put p's one by one to the left with / separators
-        File(name, content, p + "/" + nonEmptyPath)
-      case Folder(name, files, path, ir) =>
-        val nonEmptyPath = if (path.isEmpty) name else path
-        Folder(name, files.map(x => prependPath(p + "/" + name, x)), p + "/" + nonEmptyPath)
-    }
   }
 
   def allFiles(root: Folder): List[File] = {
@@ -165,14 +127,6 @@ object FileOrFolderUtils {
       case f: File => List(f)
       case l: Folder => allFiles(l)
     }
-  }
-
-  def setFileContent(root: Folder, newFileContent: File): Folder = {
-    root.copy(children = root.children.map {
-      case f: File if f.path == newFileContent.path => f.copy(content = newFileContent.content)
-      case f: File => f
-      case l: Folder => setFileContent(l, newFileContent)
-    })
   }
 
   def updateFile(root: Folder, newFile: File): Folder = {

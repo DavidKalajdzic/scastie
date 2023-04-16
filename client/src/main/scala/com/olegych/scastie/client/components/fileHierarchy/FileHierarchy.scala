@@ -47,7 +47,7 @@ object FileHierarchy {
               Callback.empty
             } else {
               moveFileOrFolder(src, dstPath)
-              val newSelectedFile = dstPath + "/" + src.name
+              val newSelectedFile = dstPath.stripSuffix("/") + "/" + src.name
               fhs.setState(FileHierarchyState(selectedFile = newSelectedFile, dragOver = ""))
             }
           } else {

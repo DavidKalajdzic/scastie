@@ -2,7 +2,6 @@ package com.olegych.scastie.sbt
 
 import java.nio.file._
 import java.time.Instant
-
 import akka.actor.{ActorRef, Cancellable, FSM, Stash}
 import akka.pattern.ask
 import akka.util.Timeout
@@ -12,32 +11,40 @@ import com.olegych.scastie.util.ScastieFileUtil.{slurp, write}
 import com.olegych.scastie.util._
 
 import scala.concurrent.duration._
+import scala.reflect.io.Directory
 import scala.util.Random
 
 object SbtProcess {
   sealed trait SbtState
+
   case object Initializing extends SbtState
+
   case object Ready extends SbtState
+
   case object Reloading extends SbtState
+
   case object Running extends SbtState
 
   sealed trait Data
+
   case class SbtData(currentInputs: Inputs) extends Data
+
   case class SbtRun(
-      snippetId: SnippetId,
-      inputs: Inputs,
-      isForcedProgramMode: Boolean,
-      progressActor: ActorRef,
-      snippetActor: ActorRef,
-      timeoutEvent: Option[Cancellable]
-  ) extends Data
+                     snippetId: SnippetId,
+                     inputs: Inputs,
+                     isForcedProgramMode: Boolean,
+                     progressActor: ActorRef,
+                     snippetActor: ActorRef,
+                     timeoutEvent: Option[Cancellable]
+                   ) extends Data
+
   case class SbtStateTimeout(duration: FiniteDuration, state: SbtState) {
     def message: String = {
       val stateMsg =
         state match {
           case Reloading => "updating build configuration"
-          case Running   => "running code"
-          case _         => sys.error(s"unexpected timeout in state $state")
+          case Running => "running code"
+          case _ => sys.error(s"unexpected timeout in state $state")
         }
 
       s"timed out after $duration when $stateMsg"
@@ -66,8 +73,9 @@ class SbtProcess(runTimeout: FiniteDuration,
                  isProduction: Boolean,
                  javaOptions: Seq[String],
                  customSbtDir: Option[Path] = None)
-    extends FSM[SbtProcess.SbtState, SbtProcess.Data]
+  extends FSM[SbtProcess.SbtState, SbtProcess.Data]
     with Stash {
+
   import ProcessActor._
   import SbtProcess._
   import context.dispatcher
@@ -86,8 +94,7 @@ class SbtProcess(runTimeout: FiniteDuration,
       }
   }
 
-  private val sbtDir: Path =
-    customSbtDir.getOrElse(Files.createTempDirectory("scastie"))
+  private val sbtDir: Path = customSbtDir.getOrElse(Files.createTempDirectory("scastie"))
   private val buildFile = sbtDir.resolve("build.sbt")
   private val promptUniqueId = Random.alphanumeric.take(10).mkString
 
@@ -96,8 +103,8 @@ class SbtProcess(runTimeout: FiniteDuration,
   // log.info(s"sbtVersion: $sbtVersion")
   write(projectDir.resolve("build.properties"), s"sbt.version = ${com.olegych.scastie.buildinfo.BuildInfo.sbtVersion}")
   private val pluginFile = projectDir.resolve("plugins.sbt")
-  private val codeFile = sbtDir.resolve("src/main/scala/main.scala")
-  Files.createDirectories(codeFile.getParent)
+  private val scalaDir = sbtDir.resolve("src/main/scala")
+  Files.createDirectories(scalaDir)
 
   private def scalaJsContent(): Option[String] = {
     slurp(sbtDir.resolve(ScalaTarget.Js.targetFilename))
@@ -175,8 +182,8 @@ class SbtProcess(runTimeout: FiniteDuration,
   }
 
   when(Ready) {
-    case Event(task @ SbtTask(snippetId, taskInputs, ip, login, progressActor), SbtData(stateInputs)) =>
-      println(s"Running: (login: $login, ip: $ip) \n ${taskInputs.code.take(30)}")
+    case Event(task@SbtTask(snippetId, taskInputs, ip, login, progressActor), SbtData(stateInputs)) =>
+      println(s"Running: (login: $login, ip: $ip) \n ${taskInputs.code.toString.take(30)}")
 
       val _sbtRun = SbtRun(
         snippetId = snippetId,
@@ -278,7 +285,16 @@ class SbtProcess(runTimeout: FiniteDuration,
     writeFile(buildFile, prompt + "\n" + inputs.sbtConfig)
     Files.deleteIfExists(sbtDir.resolve(ScalaTarget.Js.targetFilename))
     Files.deleteIfExists(sbtDir.resolve(ScalaTarget.Js.sourceMapFilename))
-    write(codeFile, inputs.code.childHeadFileContent, truncate = true) // TODO CODE
+
+    new Directory(scalaDir.toFile).deleteRecursively()
+    Files.createDirectories(scalaDir)
+    println("writing in " + scalaDir)
+
+    FileOrFolderUtils.allFiles(inputs.code).foreach(f => {
+      val path = scalaDir.resolve(f.path.substring(1))
+      Files.createDirectories(path.getParent)
+      write(path, f.content, truncate = true)
+    })
   }
 
   private def writeFile(path: Path, content: String): Unit = {
