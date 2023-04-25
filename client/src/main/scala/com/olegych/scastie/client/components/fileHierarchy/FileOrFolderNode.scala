@@ -136,7 +136,7 @@ object FileOrFolderNode {
             <.i(^.className := s"fa fa-${fafa}"),
             fileOrFolder.name
           ),
-          <.div(^.cls := "hierarchy-list-row-buttons",
+          <.div(^.cls := s"hierarchy-list-row-buttons ${if (isMouseOver.value || fileOrFolder.path.equals("/")) "visibleButtons" else ""}",
             <.button("✎", ^.onClick ==> handleRename).when(fileOrFolder.path != "/"),
             <.button("⌫", ^.onClick ==> handleDelete).when(fileOrFolder.path != "/"),
             <.button("+", ^.onClick ==> handleCreate).when(fileOrFolder.isFolder)
