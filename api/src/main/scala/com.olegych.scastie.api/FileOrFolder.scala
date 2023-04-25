@@ -51,7 +51,6 @@ object Folder {
 }
 
 object FileOrFolderUtils {
-
   def find(root: Folder, path: String): Option[FileOrFolder] = {
     if (root.path == path) {
       Some(root)
@@ -65,6 +64,7 @@ object FileOrFolderUtils {
       }
     }
   }
+
 
   def remove(root: Folder, path: String): Folder = {
     root.copy(children = root.children
@@ -122,6 +122,16 @@ object FileOrFolderUtils {
       })
   }
 
+  def rename(root: Folder, fileOrFolder: FileOrFolder, newName: String): Folder = {
+    recomputePaths(
+      updateFile(
+        root,
+        fileOrFolder match {
+          case f: File => f.copy(name = newName)
+          case f: Folder => f.copy(name = newName)
+        }))
+  }
+
   def allFiles(root: Folder): List[File] = {
     root.children.flatMap {
       case f: File => List(f)
@@ -129,9 +139,9 @@ object FileOrFolderUtils {
     }
   }
 
-  def updateFile(root: Folder, newFile: File): Folder = {
+  def updateFile(root: Folder, newFile: FileOrFolder): Folder = {
     root.copy(children = root.children.map {
-      case f: File if f.path == newFile.path => newFile
+      case f: FileOrFolder if f.path == newFile.path => newFile
       case f: File => f
       case l: Folder => updateFile(l, newFile)
     })

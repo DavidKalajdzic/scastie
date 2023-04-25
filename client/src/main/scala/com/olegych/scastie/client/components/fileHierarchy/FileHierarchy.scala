@@ -6,12 +6,15 @@ import japgolly.scalajs.react.vdom.html_<^._
 
 
 /**
- * @param rootFolder       hierarchy to display
- * @param openFile         when user click on a file in this hierarchy this function is called
- * @param moveFileOrFolder when user moves file or folder this function is called, the string is the destination folder path
+ * @param rootFolder         hierarchy to display
+ * @param openFile           when user click on a file in this hierarchy this function is called
+ * @param moveFileOrFolder   when user moves file or folder this function is called, the string is the destination folder path
+ * @param deleteFileOrFolder when user deletes file or folder this function is called
+ * @param createFileOrFolder when user creates file or folder this function is called
+ * @param renameFileOrFolder when user renames file or folder this function is called, the string is the new name
  */
-final case class FileHierarchy(rootFolder: Folder, openFile: File => Callback, moveFileOrFolder: (FileOrFolder, String) => Callback) {
-  @inline def render: VdomElement = FileHierarchy.component((rootFolder, openFile, moveFileOrFolder))
+final case class FileHierarchy(rootFolder: Folder, openFile: File => Callback, moveFileOrFolder: (FileOrFolder, String) => Callback, deleteFileOrFolder: FileOrFolder => Callback, createFileOrFolder: FileOrFolder => Callback, renameFileOrFolder: (FileOrFolder, String) => Callback) {
+  @inline def render: VdomElement = FileHierarchy.component((rootFolder, openFile, moveFileOrFolder, deleteFileOrFolder, createFileOrFolder, renameFileOrFolder))
 }
 
 object FileHierarchy {
@@ -25,12 +28,15 @@ object FileHierarchy {
   private val initialFhs = FileHierarchyState(selectedFile = "", dragOver = "")
 
 
-  private val component = ScalaFnComponent.withHooks[(Folder, File => Callback, (FileOrFolder, String) => Callback)]
+  private val component = ScalaFnComponent.withHooks[(Folder, File => Callback, (FileOrFolder, String) => Callback, FileOrFolder => Callback, FileOrFolder => Callback, (FileOrFolder, String) => Callback)]
     .useState(initialFhs)
     .render((props, fhs) => {
       val rootFolder: Folder = props._1
       val openFile: File => Callback = props._2
       val moveFileOrFolder: (FileOrFolder, String) => Callback = props._3
+      val deleteFileOrFolder: FileOrFolder => Callback = props._4
+      val createFileOrFolder: FileOrFolder => Callback = props._5
+      val renameFileOrFolder: (FileOrFolder, String) => Callback = props._6
 
       val selectFile: File => Callback = {
         (f: File) => openFile(f) >> fhs.modState(_.copy(selectedFile = f.path))
@@ -56,7 +62,7 @@ object FileHierarchy {
           }
       }
       <.div(
-        FileOrFolderNode(rootFolder, fhs.value.selectedFile, 0, selectFile, dragInfoUpdate).render
+        FileOrFolderNode(rootFolder, fhs.value.selectedFile, 0, selectFile, dragInfoUpdate, deleteFileOrFolder, createFileOrFolder, renameFileOrFolder).render
       )
     })
 }

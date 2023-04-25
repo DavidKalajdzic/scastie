@@ -99,6 +99,59 @@ object CentralPanel {
           Callback.empty
       }
 
+      val deleteFileOrFolder: FileOrFolder => Callback = {
+        f =>
+          // remove f
+          scope.modState((ss: ScastieState, s: Scastie) => {
+            ss.setRootFolder(FileOrFolderUtils.remove(ss.inputs.code, f.path))
+          }).runNow()
+
+          // update tab that had file f opened, or a child in folder f opened
+          scope.modState((ss: ScastieState, s: Scastie) => {
+            def isForInF(tab: Tab): Boolean =
+              f.path.equals(tab.tabId) ||
+                f.isFolder && FileOrFolderUtils.find(f.asInstanceOf[Folder], tab.tabId).nonEmpty
+
+            ss.copy(tabStripState = ss.tabStripState match {
+              case TabStripState(selectedTab, activeTabs) =>
+                TabStripState(selectedTab.filterNot(isForInF), activeTabs.filterNot(isForInF))
+            })
+          }).runNow()
+          Callback.empty
+      }
+
+      val createFileOrFolder: FileOrFolder => Callback = {
+        f =>
+          scope.modState((ss: ScastieState, s: Scastie) => {
+            val folder = FileOrFolderUtils.insert(ss.inputs.code, f, f.path.stripSuffix("/" + f.name))
+            ss.setRootFolder(folder)
+          }).runNow()
+          openFile(f.asInstanceOf[File]).runNow()
+          Callback.empty
+      }
+
+      val renameFileOrFolder: (FileOrFolder, String) => Callback = {
+        (f, newName) =>
+          scope.modState((ss: ScastieState, s: Scastie) => {
+            ss.copy(tabStripState = ss.tabStripState match {
+              case TabStripState(selectedTab, activeTabs) =>
+                def updateTab(tab: Tab): Tab = {
+                  if (tab.tabId.equals(f.path))
+                    tab.copy(tabId = f.path.stripSuffix("/" + f.name) + "/" + newName, title = newName)
+                  else tab
+                }
+
+                TabStripState(selectedTab.map(updateTab), activeTabs.map(updateTab))
+            })
+          }).runNow()
+
+          scope.modState((ss: ScastieState, s: Scastie) => {
+            ss.setRootFolder(FileOrFolderUtils.rename(ss.inputs.code, f, newName))
+          }).runNow()
+
+          Callback.empty
+      }
+
       <.div(cls := "main-grid-central",
         <.div(cls := "side-bar-thin",
           SideBar(
@@ -112,7 +165,7 @@ object CentralPanel {
           ).render.unless(props.isEmbedded || state.isPresentationMode)
         ),
         <.div(cls := "side-pane",
-          FileHierarchy(scope.state.inputs.code, openFile, moveFileOrFolder).render
+          FileHierarchy(scope.state.inputs.code, openFile, moveFileOrFolder, deleteFileOrFolder, createFileOrFolder, renameFileOrFolder).render
         ),
         <.div(cls := "central-pane",
           TabStrip(state.tabStripState, tabStripSelectionChange, tabStripCloseTab).render,

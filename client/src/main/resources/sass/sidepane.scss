@@ -5,11 +5,28 @@
     background-color: #93a1a1;
 
     .hierarchy-list-row {
+      display: flex;
+      flex-direction: row;
+
       div {
         draggable: true;
       }
 
       padding: 8px;
+
+      .hierarchy-list-row-buttons {
+        display: none; // hide by default, on over display block.
+        margin-left: auto;
+
+        button {
+          background-color: #5d7c83;
+          cursor: pointer;
+          //height:8px;
+          //padding: 10px;
+          color: white;
+          //width: calc($sidepane-width - 10px);
+        }
+      }
     }
 
     .file-selected {
@@ -19,6 +36,10 @@
 
     .file-mouse-over {
       background-color: cadetblue;
+
+      .hierarchy-list-row-buttons {
+        display: block;
+      }
     }
   }
 }
