@@ -12,7 +12,6 @@
 @import "tabstrip";
 @import "tabstrip-theme";
 
-
 @import "snippet";
 @import "snippet-theme";
 
@@ -118,15 +117,15 @@ h1 {
       }
 
       .main-grid-container {
-        //background-color: red;
         height: 100%;
+        width: 100%;
+
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: $header-height 1fr $footer-height;
         //word-break: break-all;
 
         .main-grid-header {
-          //border: red 5px solid;
           grid-row-start: 1;
           grid-row-end: span 1;
 
@@ -137,30 +136,61 @@ h1 {
         .main-grid-central {
           grid-row-start: 2;
           grid-row-end: span 1;
-          overflow: auto; //TODO: move this into the actual text editor only
-          //border: blue 5px dotted;
 
-          display: flex;
-          flex-direction: row;
+          height: 100%;
+          width: 100%;
+          overflow: clip;
 
-          .side-bar-thin {
-            width: $sidebar-width;
-          }
+          .centralHFlex {
+            display: flex;
+            flex-direction: row;
+            height: 100%;
 
-          .side-pane {
-            width: 300px;
-          }
+            .side-bar-thin {
+              flex: 0 0 $sidebar-width;
+            }
 
-          .central-pane {
-            width: calc(100% - $sidebar-width - 300px);
-            //background-color: lightgray;
-            //border: #0f262f dotted 5px;
+            .side-pane {
+              flex: 0 0 $sidepane-width;
+            }
+
+            .central-pane {
+              width: calc(100% - $sidebar-width - $sidepane-width);
+              width: calc(calc(env(min-width, 100vw)) - $sidebar-width - $sidepane-width); // for chrome hack because 100% in calc does not work
+              height: 100%;
+
+              .tab-strip {
+                height: $tabstrip-height;
+                background-color: blue;
+              }
+
+              .editor-topbar {
+                display: block;
+                height: $editor-topbar-height;
+                background-color: red;
+              }
+
+              .editor-wrapper {
+                height: calc(100% - $tabstrip-height - $editor-topbar-height);
+                height: calc(calc(env(min-height, 100vh) - env(safe-area-inset-top) - $header-height - $footer-height) - $tabstrip-height - $editor-topbar-height); // for chrome hack because 100% in calc does not work
+              }
+
+              .console-container {
+                display: block;
+                height: $console-height;
+                //overflow-y: scroll;
+                border: red dotted 10px;
+              }
+            }
           }
         }
 
         .main-grid-footer {
           grid-row-start: 3;
           grid-row-end: span 1;
+          //grid-column-start: 2;
+          //max-height:  $footer-height;
+          //  overflow: scroll;
         }
       }
 

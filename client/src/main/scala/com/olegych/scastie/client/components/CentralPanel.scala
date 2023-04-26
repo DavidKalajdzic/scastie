@@ -153,88 +153,90 @@ object CentralPanel {
       }
 
       <.div(cls := "main-grid-central",
-        <.div(cls := "side-bar-thin",
-          SideBar(
-            isDarkTheme = state.isDarkTheme,
-            status = state.status,
-            inputs = state.inputs,
-            toggleTheme = scope.backend.toggleTheme,
-            view = scope.backend.viewSnapshot(state.view),
-            openHelpModal = scope.backend.openHelpModal,
-            openPrivacyPolicyModal = scope.backend.openPrivacyPolicyModal
-          ).render.unless(props.isEmbedded || state.isPresentationMode)
-        ),
-        <.div(cls := "side-pane",
-          FileHierarchy(scope.state.inputs.code, openFile, moveFileOrFolder, deleteFileOrFolder, createFileOrFolder, renameFileOrFolder).render
-        ),
-        <.div(cls := "central-pane",
-          TabStrip(state.tabStripState, tabStripSelectionChange, tabStripCloseTab).render,
+        <.div(cls := "centralHFlex",
+          <.div(cls := "side-bar-thin",
+            SideBar(
+              isDarkTheme = state.isDarkTheme,
+              status = state.status,
+              inputs = state.inputs,
+              toggleTheme = scope.backend.toggleTheme,
+              view = scope.backend.viewSnapshot(state.view),
+              openHelpModal = scope.backend.openHelpModal,
+              openPrivacyPolicyModal = scope.backend.openPrivacyPolicyModal
+            ).render.unless(props.isEmbedded || state.isPresentationMode)
+          ),
+          <.div(cls := "side-pane",
+            FileHierarchy(scope.state.inputs.code, openFile, moveFileOrFolder, deleteFileOrFolder, createFileOrFolder, renameFileOrFolder).render
+          ),
+          <.div(cls := "central-pane",
+            TabStrip(state.tabStripState, tabStripSelectionChange, tabStripCloseTab).render,
 
-          EditorTopBar(
-            clear = backend.clear,
-            closeNewSnippetModal = backend.closeNewSnippetModal,
-            closeEmbeddedModal = backend.closeEmbeddedModal,
-            openEmbeddedModal = backend.openEmbeddedModal,
-            formatCode = backend.formatCode,
-            newSnippet = backend.newSnippet,
-            openNewSnippetModal = backend.openNewSnippetModal,
-            save = backend.saveOrUpdate,
-            toggleWorksheetMode = backend.toggleWorksheetMode,
-            router = props.router,
-            inputsHasChanged = state.inputsHasChanged,
-            isDarkTheme = state.isDarkTheme,
-            isNewSnippetModalClosed = state.modalState.isNewSnippetModalClosed,
-            isEmbeddedModalClosed = state.modalState.isEmbeddedClosed,
-            isRunning = state.isRunning,
-            isStatusOk = false,
-            snippetId = state.snippetId,
-            user = state.user,
-            view = backend.viewSnapshot(state.view),
-            isWorksheetMode = state.inputs.isWorksheetMode,
-            metalsStatus = state.metalsStatus,
-            toggleMetalsStatus = backend.toggleMetalsStatus,
-            scalaTarget = state.inputs.target
+            EditorTopBar(
+              clear = backend.clear,
+              closeNewSnippetModal = backend.closeNewSnippetModal,
+              closeEmbeddedModal = backend.closeEmbeddedModal,
+              openEmbeddedModal = backend.openEmbeddedModal,
+              formatCode = backend.formatCode,
+              newSnippet = backend.newSnippet,
+              openNewSnippetModal = backend.openNewSnippetModal,
+              save = backend.saveOrUpdate,
+              toggleWorksheetMode = backend.toggleWorksheetMode,
+              router = props.router,
+              inputsHasChanged = state.inputsHasChanged,
+              isDarkTheme = state.isDarkTheme,
+              isNewSnippetModalClosed = state.modalState.isNewSnippetModalClosed,
+              isEmbeddedModalClosed = state.modalState.isEmbeddedClosed,
+              isRunning = state.isRunning,
+              isStatusOk = false,
+              snippetId = state.snippetId,
+              user = state.user,
+              view = backend.viewSnapshot(state.view),
+              isWorksheetMode = state.inputs.isWorksheetMode,
+              metalsStatus = state.metalsStatus,
+              toggleMetalsStatus = backend.toggleMetalsStatus,
+              scalaTarget = state.inputs.target
           ).render.unless(props.isEmbedded || state.isPresentationMode),
 
-          CodeEditor(
-            visible = true, //TODO use backend
-            isDarkTheme = state.isDarkTheme,
-            isPresentationMode = state.isPresentationMode,
-            isWorksheetMode = state.inputs.isWorksheetMode,
-            isEmbedded = props.isEmbedded,
-            showLineNumbers = state.showLineNumbers,
-            value = backend.selectedFileCode.runNow(),
-            attachedDoms = state.attachedDoms,
-            instrumentations = state.outputs.instrumentations,
-            compilationInfos = state.outputs.compilationInfos,
-            runtimeError = state.outputs.runtimeError,
-            saveOrUpdate = backend.saveOrUpdate,
-            clear = backend.clear,
-            openNewSnippetModal = backend.openNewSnippetModal,
-            toggleHelp = backend.toggleHelpModal,
-            toggleConsole = backend.toggleConsole,
-            toggleLineNumbers = backend.toggleLineNumbers,
-            togglePresentationMode = backend.togglePresentationMode,
-            formatCode = backend.formatCode,
-            codeChange = backend.selectedFileCodeChange,
-            target = state.inputs.target,
-            metalsStatus = state.metalsStatus,
-            setMetalsStatus = backend.setMetalsStatus,
-            dependencies = state.inputs.libraries
-          ).render,
+            CodeEditor(
+              visible = true, //TODO use backend
+              isDarkTheme = state.isDarkTheme,
+              isPresentationMode = state.isPresentationMode,
+              isWorksheetMode = state.inputs.isWorksheetMode,
+              isEmbedded = props.isEmbedded,
+              showLineNumbers = state.showLineNumbers,
+              value = backend.selectedFileCode.runNow(),
+              attachedDoms = state.attachedDoms,
+              instrumentations = state.outputs.instrumentations,
+              compilationInfos = state.outputs.compilationInfos,
+              runtimeError = state.outputs.runtimeError,
+              saveOrUpdate = backend.saveOrUpdate,
+              clear = backend.clear,
+              openNewSnippetModal = backend.openNewSnippetModal,
+              toggleHelp = backend.toggleHelpModal,
+              toggleConsole = backend.toggleConsole,
+              toggleLineNumbers = backend.toggleLineNumbers,
+              togglePresentationMode = backend.togglePresentationMode,
+              formatCode = backend.formatCode,
+              codeChange = backend.selectedFileCodeChange,
+              target = state.inputs.target,
+              metalsStatus = state.metalsStatus,
+              setMetalsStatus = backend.setMetalsStatus,
+              dependencies = state.inputs.libraries
+            ).render
+            //          , Console(
+            //            isOpen = state.consoleState.consoleIsOpen,
+            //            isRunning = state.isRunning,
+            //            isEmbedded = props.isEmbedded,
+            //            consoleOutputs = state.outputs.consoleOutputs,
+            //            run = backend.run,
+            //            setView = backend.setViewReused,
+            //            close = backend.closeConsole,
+            //            open = backend.openConsole
+            //          ).render
+          )
 
-          Console(
-            isOpen = state.consoleState.consoleIsOpen,
-            isRunning = state.isRunning,
-            isEmbedded = props.isEmbedded,
-            consoleOutputs = state.outputs.consoleOutputs,
-            run = backend.run,
-            setView = backend.setViewReused,
-            close = backend.closeConsole,
-            open = backend.openConsole
-          ).render
-        ),
-        <.p(state.inputs.code.toString)
+          // , <.p(state.inputs.code.toString)
+        )
       )
     })
 }
