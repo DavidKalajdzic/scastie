@@ -151,7 +151,9 @@ h1 {
             }
 
             .side-pane {
-              flex: 0 0 $sidepane-width;
+              width: $sidepane-width;
+              height: 100%;
+              overflow-y: auto;
             }
 
             .central-pane {
@@ -172,14 +174,50 @@ h1 {
 
               .editor-wrapper {
                 height: calc(100% - $tabstrip-height - $editor-topbar-height);
-                height: calc(calc(env(min-height, 100vh) - env(safe-area-inset-top) - $header-height - $footer-height) - $tabstrip-height - $editor-topbar-height); // for chrome hack because 100% in calc does not work
+                height: calc(calc(env(min-height, 100vh) - env(safe-area-inset-top) - $header-height - $footer-height) - $tabstrip-height - $editor-topbar-height - $console-height); // for chrome hack because 100% in calc does not work
               }
 
               .console-container {
                 display: block;
-                height: $console-height;
+                ///height: $console-height;
                 //overflow-y: scroll;
-                border: red dotted 10px;
+                //border: red dotted 10px;
+
+                $handler-height: 6px;
+                $console-handle-height: 38px;
+
+                font-family: $code-font-family;
+
+                &.console-open {
+                  .output-console {
+                    height: $console-height - $console-handle-height - $handler-height;
+                  }
+                }
+
+                .switcher-show, .switcher-hide {
+                  text-align: right;
+                  align-items: center;
+                  line-height: $console-handle-height;
+                  padding-right: 20px;
+                  cursor: pointer;
+                }
+
+                .console {
+                  .handler {
+                    height: $handler-height;
+                  }
+                }
+
+                .console-label {
+                  display: flex;
+                  align-items: center;
+                  margin-left: auto;
+                }
+
+                .output-console {
+                  overflow: auto;
+                  padding: 20px;
+                }
               }
             }
           }

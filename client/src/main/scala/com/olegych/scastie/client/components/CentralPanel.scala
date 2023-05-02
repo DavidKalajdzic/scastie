@@ -7,7 +7,10 @@ import com.olegych.scastie.api.FileOrFolderUtils.recomputePaths
 import com.olegych.scastie.client.components.console.Console
 import com.olegych.scastie.client.components.fileHierarchy.FileHierarchy
 import com.olegych.scastie.client.components.mainComp.{MetalsStatus, Scastie, ScastieBackend, ScastieState}
+import com.olegych.scastie.client.components.projectSettings.BuildSettings
+import com.olegych.scastie.client.components.runnersStatus.Status
 import com.olegych.scastie.client.components.sideBar.SideBar
+import com.olegych.scastie.client.components.snippets.CodeSnippets
 import com.olegych.scastie.client.components.tabStrip.TabStrip
 import com.olegych.scastie.client.components.tabStrip.TabStrip._
 import com.olegych.scastie.client.components.topBarEditor.EditorTopBar
@@ -16,9 +19,11 @@ import japgolly.scalajs.react.component.ScalaFn.Component
 import japgolly.scalajs.react.component.builder.Lifecycle.RenderScope
 import japgolly.scalajs.react.hooks.HookCtx
 import japgolly.scalajs.react.hooks.Hooks.UseState
+import japgolly.scalajs.react.vdom.{HtmlStyles, html_<^}
 import japgolly.scalajs.react.vdom.all.{cls, div, p}
 import japgolly.scalajs.react.vdom.html_<^._
 import org.scalajs.dom.document
+import org.scalajs.dom.html.Div
 import typings.std.global.{length_=, status}
 
 final case class CentralPanel(scope: RenderScope[Scastie, ScastieState, ScastieBackend],
@@ -152,6 +157,68 @@ object CentralPanel {
           Callback.empty
       }
 
+      def visible(view: View): Boolean = view == state.view
+
+      def show(view: View) = if (visible(view)) HtmlStyles.display.block else HtmlStyles.display.none
+
+      val codeSnippets = {
+        (props.router, state.user) match {
+          case (Some(router), Some(user)) if state.view == View.CodeSnippets =>
+            <.div(cls := "snippets-container inner-container")(
+              CodeSnippets(
+                isDarkTheme = state.isDarkTheme,
+                view = state.view,
+                user = user,
+                router = router,
+                isShareModalClosed = state.modalState.isShareModalClosed,
+                closeShareModal = backend.closeShareModal,
+                openShareModal = backend.openShareModal,
+                loadProfile = backend.loadProfile,
+                deleteSnippet = backend.deleteSnippet
+              ).render
+            )
+          case _ => EmptyVdom
+        }
+      }
+
+      val statusView = {
+        <.div(cls := "status-container inner-container", show(View.Status))(
+          props.router match {
+            case Some(router) =>
+              Status(
+                state = state.status,
+                router = router,
+                isAdmin = state.user.exists(_.isAdmin),
+                inputs = state.inputs
+              ).render
+            case _ => EmptyVdom
+          })
+      }
+
+      val buildSettings = {
+        <.div(cls := "settings-container inner-container", show(View.BuildSettings))(
+          BuildSettings(
+            visible = visible(View.BuildSettings),
+            librariesFrom = state.inputs.librariesFrom,
+            isDarkTheme = state.isDarkTheme,
+            isBuildDefault = state.isBuildDefault,
+            isResetModalClosed = state.modalState.isResetModalClosed,
+            scalaTarget = state.inputs.target,
+            sbtConfigExtra = state.inputs.sbtConfigExtra,
+            sbtConfig = state.inputs.sbtConfigGenerated,
+            sbtPluginsConfig = state.inputs.sbtPluginsConfigGenerated,
+            setTarget = backend.setTarget,
+            closeResetModal = backend.closeResetModal,
+            resetBuild = backend.resetBuild,
+            openResetModal = backend.openResetModal,
+            sbtConfigChange = backend.sbtConfigChange,
+            removeScalaDependency = backend.removeScalaDependency,
+            updateDependencyVersion = backend.updateDependencyVersion,
+            addScalaDependency = backend.addScalaDependency
+          ).render
+        )
+      }
+
       <.div(cls := "main-grid-central",
         <.div(cls := "centralHFlex",
           <.div(cls := "side-bar-thin",
@@ -165,10 +232,18 @@ object CentralPanel {
               openPrivacyPolicyModal = scope.backend.openPrivacyPolicyModal
             ).render.unless(props.isEmbedded || state.isPresentationMode)
           ),
-          <.div(cls := "side-pane",
-            FileHierarchy(scope.state.inputs.code, openFile, moveFileOrFolder, deleteFileOrFolder, createFileOrFolder, renameFileOrFolder).render
-          ),
-          <.div(cls := "central-pane",
+          <.div(cls := "side-pane")(
+            if (visible(View.Editor)) {
+              FileHierarchy(scope.state.inputs.code, openFile, moveFileOrFolder, deleteFileOrFolder, createFileOrFolder, renameFileOrFolder).render
+            } else if (visible(View.BuildSettings)) {
+              buildSettings
+            } else if (visible(View.Status)) {
+              statusView
+            } else {
+              EmptyVdom
+            }
+          ).when(visible(View.Editor) || visible(View.BuildSettings) || visible(View.Status)),
+          <.div(cls := "central-pane")(
             TabStrip(state.tabStripState, tabStripSelectionChange, tabStripCloseTab).render,
 
             EditorTopBar(
@@ -195,10 +270,10 @@ object CentralPanel {
               metalsStatus = state.metalsStatus,
               toggleMetalsStatus = backend.toggleMetalsStatus,
               scalaTarget = state.inputs.target
-          ).render.unless(props.isEmbedded || state.isPresentationMode),
+            ).render.unless(props.isEmbedded || state.isPresentationMode),
 
             CodeEditor(
-              visible = true, //TODO use backend
+              visible = visible(View.Editor),
               isDarkTheme = state.isDarkTheme,
               isPresentationMode = state.isPresentationMode,
               isWorksheetMode = state.inputs.isWorksheetMode,
@@ -222,19 +297,20 @@ object CentralPanel {
               metalsStatus = state.metalsStatus,
               setMetalsStatus = backend.setMetalsStatus,
               dependencies = state.inputs.libraries
+            ).render,
+            Console(
+              isOpen = state.consoleState.consoleIsOpen,
+              isRunning = state.isRunning,
+              isEmbedded = props.isEmbedded,
+              consoleOutputs = state.outputs.consoleOutputs,
+              run = backend.run,
+              setView = backend.setViewReused,
+              close = backend.closeConsole,
+              open = backend.openConsole
             ).render
-            //          , Console(
-            //            isOpen = state.consoleState.consoleIsOpen,
-            //            isRunning = state.isRunning,
-            //            isEmbedded = props.isEmbedded,
-            //            consoleOutputs = state.outputs.consoleOutputs,
-            //            run = backend.run,
-            //            setView = backend.setViewReused,
-            //            close = backend.closeConsole,
-            //            open = backend.openConsole
-            //          ).render
-          )
+          ).when(visible(View.Editor) || visible(View.BuildSettings) || visible(View.Status))
 
+          , codeSnippets.when(visible(View.CodeSnippets))
           // , <.p(state.inputs.code.toString)
         )
       )

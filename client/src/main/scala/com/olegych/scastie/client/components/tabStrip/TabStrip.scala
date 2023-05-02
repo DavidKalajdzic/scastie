@@ -41,23 +41,17 @@ object TabStrip {
         file => changeSelection(file)
       }
 
-      <.div()(
-
-        <.div(
-          ^.className := "tab-strip",
-          tabs.map { tab: Tab =>
-            renderTab(
-              tab.title,
-              tab.tabId,
-              tab.tabId.equals(selectedTab.getOrElse(Tab("", "")).tabId)
-            )(handleTabClickCb(tab), closeTab(tab))
-          }.toVdomArray
-        ),
-        <.p($._1.toString)
+      <.div(
+        ^.className := "tab-strip",
+        tabs.map { tab: Tab =>
+          renderTab(
+            tab.title,
+            tab.tabId,
+            tab.tabId.equals(selectedTab.getOrElse(Tab("", "")).tabId)
+          )(handleTabClickCb(tab), closeTab(tab))
+        }.toVdomArray
       )
-    }
-
-    )
+    })
 
   private def renderTab(tabText: String, tabKey: String, isActive: Boolean)(onTabClick: Callback, onTabClose: Callback): VdomElement = {
     <.div(

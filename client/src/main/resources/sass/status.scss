@@ -3,13 +3,13 @@
 @mixin status() {
   .status-container {
     overflow-y: auto;
-    height: calc(100% - #{$header-height});
+    height: 100%;
 
-    padding: 45px 45px;
+    padding: 0px 0px;
 
     .runner-state,
     .runner {
-      padding: 10px;
+      padding: 5px;
     }
 
     .ready {
@@ -28,7 +28,7 @@
 
 
     * {
-      margin: 20px;
+      margin: 5px;
     }
   }
 }

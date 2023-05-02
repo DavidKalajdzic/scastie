@@ -3,7 +3,7 @@
 @mixin buildSettings() {
   .settings-container {
     overflow-y: auto;
-    height: calc(100% - #{$header-height});
+    height: 100%;
 
     font-size: 15px;
 
@@ -28,7 +28,7 @@
       }
 
       h2 {
-        font-size: 24px;
+        font-size: 24-8px;
         font-weight: bold;
         margin-bottom: 20px;
 

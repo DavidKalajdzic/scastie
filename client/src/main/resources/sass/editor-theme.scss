@@ -28,7 +28,7 @@
     }
   }
 
-  .editor-container {
+  //.editor-container { //TODO finish the console refactor
     .switcher-show {
       color: $switcher-show-color;
       background: $hidden-console-background;
@@ -46,7 +46,7 @@
     .handler {
       background: $console-border-color;
     }
-  }
+  //}
 
   .editor-mobile {
     background-color: $sidebar-background;
