@@ -55,6 +55,22 @@ case class ScastieBackend(scastieId: UUID,
     }
   }
 
+  val runtimeError: Reusable[CallbackTo[Option[RuntimeError]]] = {
+    Reusable.always {
+      scope.state.map { state =>
+        state.outputs.runtimeError.filter((r: RuntimeError) => {
+          r.fileName match {
+            case Some(fileName) =>
+              val filePath = state.tabStripState.selectedTab.map(_.tabId).getOrElse("")
+              println(fileName)
+              filePath.contains(fileName)
+            case None => false
+          }
+        })
+      }
+    }
+  }
+
   val sbtConfigChange: String ~=> Callback = {
     Reusable.fn(newConfig => scope.modState(_.setSbtConfigExtra(newConfig)))
   }
@@ -499,7 +515,7 @@ case class ScastieBackend(scastieId: UUID,
               }
             case FormatResponse(Left(error)) =>
               scope.modState {
-                _.setRuntimeError(Some(RuntimeError(message = "Formatting failed: " + error, line = None, fullStack = "")))
+                _.setRuntimeError(Some(RuntimeError(message = "Formatting failed: " + error, line = None, fileName = None, fullStack = "")))
               }
           }
       }

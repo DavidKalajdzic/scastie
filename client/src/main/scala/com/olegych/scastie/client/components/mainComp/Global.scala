@@ -34,6 +34,7 @@ object Global {
                   RuntimeError(
                     message = er.toString,
                     line = None,
+                    fileName = None,
                     fullStack = ""
                   )
                 )

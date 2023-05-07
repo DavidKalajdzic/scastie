@@ -283,7 +283,7 @@ object CentralPanel {
               attachedDoms = state.attachedDoms,
               instrumentations = state.outputs.instrumentations,
               compilationInfos = backend.compilationInfos.runNow(),
-              runtimeError = state.outputs.runtimeError,
+              runtimeError = backend.runtimeError.runNow(),
               saveOrUpdate = backend.saveOrUpdate,
               clear = backend.clear,
               openNewSnippetModal = backend.openNewSnippetModal,
