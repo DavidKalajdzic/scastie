@@ -127,13 +127,15 @@ object CodeEditor {
     Callback {
       editorView.value.dispatch(setDiagnostics(editorView.value.state, getDecorations(props, editorView.value.state.doc)))
     }.when_(
-      prevProps.isDefined &&
+      prevProps.isDefined && (
         props.value == editorView.value.state.doc.toString() && (
-        prevProps.get.compilationInfos != props.compilationInfos ||
-          prevProps.get.runtimeError != props.runtimeError
+          prevProps.get.compilationInfos != props.compilationInfos ||
+            prevProps.get.runtimeError != props.runtimeError
+          )
         )
     )
   }
+
 
   private def updateComponent(
                                props: CodeEditor,

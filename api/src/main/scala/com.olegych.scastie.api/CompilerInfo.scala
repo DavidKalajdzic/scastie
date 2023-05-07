@@ -34,5 +34,6 @@ object Problem {
 case class Problem(
     severity: Severity,
     line: Option[Int],
+    filePath: Option[String],
     message: String
 )

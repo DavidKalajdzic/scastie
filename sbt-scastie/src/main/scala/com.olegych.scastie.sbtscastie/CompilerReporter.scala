@@ -40,7 +40,9 @@ object CompilerReporter {
               case xsbti.Severity.Warn  => api.Warning
               case xsbti.Severity.Error => api.Error
             }
-          api.Problem(severity, toOption(p.position.line).map(_.toInt), p.message)
+          val line: Option[Int] = toOption(p.position.line).map(_.toInt)
+          val filePath: Option[String] = toOption(p.position().sourcePath()).map(_.toString)
+          api.Problem(severity, line, filePath, p.message)
         }
         if (problems.nonEmpty) {
           val apiProblems = problems.map(toApi)

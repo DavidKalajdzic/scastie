@@ -60,6 +60,7 @@ object SbtProcess {
           Problem(
             Error,
             line = None,
+            filePath = None,
             message = message
           )
         )

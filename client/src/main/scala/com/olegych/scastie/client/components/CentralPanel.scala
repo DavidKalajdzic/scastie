@@ -282,7 +282,7 @@ object CentralPanel {
               value = backend.selectedFileCode.runNow(),
               attachedDoms = state.attachedDoms,
               instrumentations = state.outputs.instrumentations,
-              compilationInfos = state.outputs.compilationInfos,
+              compilationInfos = backend.compilationInfos.runNow(),
               runtimeError = state.outputs.runtimeError,
               saveOrUpdate = backend.saveOrUpdate,
               clear = backend.clear,

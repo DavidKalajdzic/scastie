@@ -2,6 +2,7 @@ package com.olegych.scastie.client.components.mainComp
 
 import com.olegych.scastie.api._
 import com.olegych.scastie.client._
+import com.olegych.scastie.client.components.tabStrip.TabStrip.{Tab, TabStripState}
 import com.olegych.scastie.client.utils.{EventStream, EventStreamHandler, RestApiClient}
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.BackendScope
@@ -39,6 +40,17 @@ case class ScastieBackend(scastieId: UUID,
           FileOrFolderUtils.allFiles(state.inputs.code).find(_.path.equals(tab.tabId)).map(_.content)
         }
         selectedTabContent.getOrElse("No selection")
+      }
+    }
+  }
+
+  val compilationInfos: Reusable[CallbackTo[Set[Problem]]] = {
+    Reusable.always {
+      scope.state.map { state =>
+        state.outputs.compilationInfos.filter((p: Problem) => {
+          val filePath = state.tabStripState.selectedTab.map(_.tabId).getOrElse("")
+          p.filePath.getOrElse("").contains(filePath)
+        })
       }
     }
   }

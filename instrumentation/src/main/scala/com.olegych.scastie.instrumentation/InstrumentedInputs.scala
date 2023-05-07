@@ -12,7 +12,7 @@ case class InstrumentationFailureReport(message: String, line: Option[Int]) {
     SnippetProgress.default.copy(
       ts = Some(Instant.now.toEpochMilli),
       snippetId = Some(snippetId),
-      compilationInfos = List(Problem(Error, line, message))
+      compilationInfos = List(Problem(Error, line, None, message)) //TODO None is correct?
     )
   }
 }
