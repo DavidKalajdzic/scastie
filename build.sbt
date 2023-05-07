@@ -295,3 +295,12 @@ lazy val sbtScastie = project
   )
   .settings(version := versionRuntime)
   .dependsOn(api.jvm(ScalaVersions.sbt))
+
+lazy val migrationScripts = project
+  .in(file("migration-scripts"))
+  .settings(baseSettings)
+  .settings(
+    scalaVersion := "3.2.2",
+  )
+  .dependsOn(storage)
+  .enablePlugins(JavaAppPackaging)
