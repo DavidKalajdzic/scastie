@@ -95,7 +95,7 @@ object Main {
         }
       }
 
-      val newCollectionName: String = "snippetsV2" + UUID.randomUUID().toString
+      val newCollectionName: String = "snippetsV2" + UUID.randomUUID().toString.replace("-", "")
       Await.result(database.createCollection(newCollectionName).head(), Duration.Inf)
       val snippetsV2: MongoCollection[Document] = database.getCollection(newCollectionName)
       println(s"[Migration] Successfully created a target collection named: '$newCollectionName'")
