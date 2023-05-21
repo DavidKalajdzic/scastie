@@ -300,7 +300,7 @@ lazy val migrationScripts = project
   .in(file("migration-scripts"))
   .settings(baseSettings)
   .settings(
-    scalaVersion := "3.2.2",
+    scalaVersion := "2.13.10",
   )
   .dependsOn(storage)
   .enablePlugins(JavaAppPackaging)
