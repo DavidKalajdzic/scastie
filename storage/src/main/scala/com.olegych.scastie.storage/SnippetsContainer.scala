@@ -15,6 +15,7 @@ trait SnippetsContainer {
   protected implicit val ec: ExecutionContext
 
   def appendOutput(progress: SnippetProgress): Future[Unit]
+
   def deleteAll(snippetId: SnippetId): Future[Boolean] = {
     def deleteUpdate(update: Int): Future[Boolean] = {
       val updateSnippetId = snippetId.copy(user = snippetId.user.map(_.copy(update = update)))
@@ -30,26 +31,36 @@ trait SnippetsContainer {
         }
       } yield result
     }
+
     deleteUpdate(0)
   }
+
   protected def delete(snippetId: SnippetId): Future[Boolean]
+
   def removeUserSnippets(user: UserLogin): Future[Boolean] = {
     listSnippets(user).flatMap(snippets => {
       Future.sequence(
         snippets
           .map(snippet => deleteAll(snippet.snippetId)))
-          .map(_.fold(true)(_ && _)
-      )
+        .map(_.fold(true)(_ && _)
+        )
     })
   }
+
   def listSnippets(user: UserLogin): Future[List[SnippetSummary]]
+
   def readOldSnippet(id: Int): Future[Option[FetchResult]]
+
   def readScalaJs(snippetId: SnippetId): Future[Option[FetchResultScalaJs]]
+
   def readScalaJsSourceMap(
-      snippetId: SnippetId
-  ): Future[Option[FetchResultScalaJsSourceMap]]
+                            snippetId: SnippetId
+                          ): Future[Option[FetchResultScalaJsSourceMap]]
+
   def readSnippet(snippetId: SnippetId): Future[Option[FetchResult]]
+
   protected def insert(snippetId: SnippetId, inputs: Inputs): Future[Unit]
+
   protected def hideFromUserProfile(snippetId: SnippetId): Future[Unit]
 
   private def insert0(snippetId: SnippetId, inputs: Inputs): Future[SnippetId] =
@@ -77,8 +88,8 @@ trait SnippetsContainer {
     create(inputs.copy(forked = Some(snippetId), isShowingInUserProfile = true), user)
 
   final def readScalaSource(
-      snippetId: SnippetId
-  ): Future[Option[FetchResultScalaSource]] =
+                             snippetId: SnippetId
+                           ): Future[Option[FetchResultScalaSource]] =
     readSnippet(snippetId).map(
       _.flatMap(
         snippet =>
@@ -86,7 +97,7 @@ trait SnippetsContainer {
             case Right(instrumented) =>
               Some(FetchResultScalaSource(instrumented))
             case _ => None
-        }
+          }
       )
     )
 
@@ -112,7 +123,7 @@ trait SnippetsContainer {
         )
         readSnippet(nextSnippetId).flatMap {
           case Some(_) => updateSnippetId(nextSnippetId)
-          case None    => Future.successful(Some(nextSnippetId))
+          case None => Future.successful(Some(nextSnippetId))
         }
       case None => Future.successful(None)
     }
@@ -135,9 +146,20 @@ trait SnippetsContainer {
       Files.createDirectories(projectFile.getParent)
       Files.write(projectFile, inputs.sbtPluginsConfig.linesIterator.filterNot(_.contains("org.scastie")).mkString("\n").getBytes())
 
-      val codeFile = projectDir.resolve(s"src/main/scala/main.${if (inputs.isWorksheetMode) "sc" else "scala"}")
-      Files.createDirectories(codeFile.getParent)
-      Files.write(codeFile, inputs.code.childHeadFileContent.getBytes) // TODO CODE
+      println("inputs.isWorksheetMode: " + inputs.isWorksheetMode.toString + " in path:" + projectDir.toString)
+      if (inputs.isWorksheetMode) {
+        val codeFile = projectDir.resolve("src/main/scala/main.sc")
+        Files.createDirectories(codeFile.getParent)
+        Files.write(codeFile, inputs.code.childHeadFileContent.getBytes)
+      } else {
+        val scalaDir = projectDir.resolve("src/main/scala")
+        FileOrFolderUtils.allFiles(inputs.code).foreach(f => {
+          val path = scalaDir.resolve(f.path.substring(1))
+          Files.createDirectories(path.getParent)
+          Files.write(path, f.content.getBytes)
+        })
+      }
+
       val buildPropsFile = projectDir.resolve("project/build.properties")
       Files.write(buildPropsFile, s"sbt.version=${com.olegych.scastie.buildinfo.BuildInfo.sbtVersion}".getBytes)
     }
