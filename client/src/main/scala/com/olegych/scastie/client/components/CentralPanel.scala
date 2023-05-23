@@ -128,11 +128,15 @@ object CentralPanel {
       val createFileOrFolder: FileOrFolder => Callback = {
         f =>
           scope.modState((ss: ScastieState, s: Scastie) => {
-            val folder = FileOrFolderUtils.insert(ss.inputs.code, f, f.path.stripSuffix("/" + f.name))
+            val folder = FileOrFolderUtils.insert(ss.inputs.code, f)
+            println(folder.toString)
             ss.setRootFolder(folder)
           }).runNow()
-          openFile(f.asInstanceOf[File]).runNow()
-          Callback.empty
+
+          f match {
+            case f: File => openFile(f)
+            case _ => Callback.empty
+          }
       }
 
       val renameFileOrFolder: (FileOrFolder, String) => Callback = {

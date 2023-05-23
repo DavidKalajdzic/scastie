@@ -443,7 +443,7 @@ case class ScastieBackend(scastieId: UUID,
   def loadSnippet(snippetId: SnippetId): Callback = {
     loadSnippetBase(
       restApiClient.fetch(snippetId),
-      afterLoading = _.setSnippetId(snippetId),
+      afterLoading = s => s.selectFirstFile().setSnippetId(snippetId),
       snippetId = Some(snippetId)
     )
   }
@@ -504,7 +504,7 @@ case class ScastieBackend(scastieId: UUID,
     scope.state.flatMap { state =>
       Callback.future {
         restApiClient
-          .format(FormatRequest(state.inputs.code.childHeadFileContent, state.inputs.isWorksheetMode, state.inputs.target)) // TODO format only the selected file
+          .format(FormatRequest(selectedFileCode.runNow(), state.inputs.isWorksheetMode, state.inputs.target))
           .map {
             case FormatResponse(Right(formattedCode)) =>
               scope.modState { s =>

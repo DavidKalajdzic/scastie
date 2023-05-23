@@ -505,6 +505,11 @@ case class ScastieState(view: View, // which view to display
 
   def setSnippetId(snippetId: SnippetId): ScastieState = copyAndSave(snippetId = Some(snippetId))
 
+  def selectFirstFile(): ScastieState = {
+    val headFile = inputs.code.children.find(!_.isFolder).map(x => Tab.fromFile(x.asInstanceOf[File]))
+    copyAndSave(tabStripState = TabStripState(headFile, List(headFile).filter(_.isDefined).map(_.get)))
+  }
+
   def clearSnippetId: ScastieState = copyAndSave(snippetId = None)
 
   private def info(message: String) = Problem(Info, None, None, message)

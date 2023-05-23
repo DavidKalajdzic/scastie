@@ -110,9 +110,9 @@ object FileOrFolderNode {
               window.alert(s"Name $name is already taken")
               Callback.empty
             } else if (name.contains(".")) {
-              createFileOrFolder(File(name, "", fileOrFolder.path + "/" + name))
+              createFileOrFolder(File(name, "", fileOrFolder.path.stripSuffix("/") + "/" + name))
             } else {
-              createFileOrFolder(Folder(name, List(), fileOrFolder.path + "/" + name))
+              createFileOrFolder(Folder(name, List(), fileOrFolder.path.stripSuffix("/") + "/" + name))
             }
         }
       }

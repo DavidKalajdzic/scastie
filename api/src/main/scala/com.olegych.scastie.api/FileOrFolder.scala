@@ -76,19 +76,28 @@ object FileOrFolderUtils {
     )
   }
 
-  def insert(root: Folder, newFolder: FileOrFolder, path: String): Folder = {
+  // place a new item inside the folder in dstFolder
+  // newItem's path is ignored, it will be computed as follows : dstFolder + "/" + newItem.name
+  def insert(root: Folder, newItem: FileOrFolder, dstFolder: String): Folder = {
     recomputePaths(
       root.copy(children =
-        if (root.path.equals(path)) {
-          root.children.filterNot(_.name == newFolder.name) :+ newFolder
+        if (root.path.equals(dstFolder)) {
+          root.children.filterNot(_.name == newItem.name) :+ newItem
         } else
           root.children.map {
             case f: File =>
-              if (f.path.equals(path)) throw new IllegalArgumentException("BRUH")
+              if (f.path.equals(dstFolder)) throw new IllegalArgumentException("BRUH")
               else f
-            case l: Folder => insert(l, newFolder, path)
+            case l: Folder => insert(l, newItem, dstFolder)
           }
       ))
+  }
+
+  def insert(root: Folder, item: FileOrFolder): Folder = {
+    val idx = item.path.lastIndexOf("/")
+    // find the folder location
+    val dst = if (idx <= 0) "/" else item.path.substring(0, idx)
+    insert(root, item, dst)
   }
 
   def move(root: Folder, srcPath: String, dstPath: String): Folder = {
