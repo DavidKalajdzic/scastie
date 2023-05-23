@@ -151,33 +151,44 @@ h1 {
             }
 
             .side-pane {
+              flex-shrink: 0;
               width: $sidepane-width;
               height: 100%;
               overflow-y: auto;
             }
 
             .central-pane {
-              width: calc(100% - $sidebar-width - $sidepane-width);
-              width: calc(calc(env(min-width, 100vw)) - $sidebar-width - $sidepane-width); // for chrome hack because 100% in calc does not work
+              display: flex;
+              flex-direction: column;
+              flex-grow: 1;
+              overflow: hidden;
               height: 100%;
 
               .tab-strip {
+                flex-shrink: 0;
                 height: $tabstrip-height;
                 background-color: blue;
               }
 
               .editor-topbar {
+                flex-shrink: 0;
                 display: block;
                 height: $editor-topbar-height;
                 background-color: red;
               }
 
               .editor-wrapper {
-                height: calc(100% - $tabstrip-height - $editor-topbar-height);
-                height: calc(calc(env(min-height, 100vh) - env(safe-area-inset-top) - $header-height - $footer-height) - $tabstrip-height - $editor-topbar-height - $console-height); // for chrome hack because 100% in calc does not work
+                flex-grow: 1;
+                overflow: hidden;
+              }
+
+              .editor-wrapper.full {
+                height: 300px;
+
               }
 
               .console-container {
+                flex-shrink: 0;
                 display: block;
                 ///height: $console-height;
                 //overflow-y: scroll;
@@ -203,6 +214,8 @@ h1 {
                 }
 
                 .console {
+                  flex-shrink: 0;
+
                   .handler {
                     height: $handler-height;
                   }
@@ -242,29 +255,61 @@ h1 {
       @include statusTheme($class);
     }
 
-    // TODO uncomment this when finished
-    //&:not(.embedded) {
-    //  @include tablet {
-    //    background-color: red;
-    //    .main-grid-container {
-    //      grid-template-rows: 0px 1fr 0px;
-    //
-    //      .main-grid-header {
-    //        display: none;
-    //      }
-    //
-    //      .main-grid-central {
-    //        .side-bar-thin {
-    //          display: none;
-    //        }
-    //
-    //        .side-pane {
-    //          display: none;
-    //        }
-    //      }
-    //    }
-    //  }
-    //}
+    &:not(.embedded) {
+      @include tablet {
+        .main-grid-container {
+          grid-template-rows: 0px 1fr 0px;
+
+          .main-grid-header {
+            display: none;
+          }
+
+          .main-grid-central {
+            .side-pane {
+              width: $sidepane-width-tablet;
+            }
+          }
+        }
+      }
+
+      @include phone {
+        .main-grid-container {
+          grid-template-rows: 0px 1fr 0px;
+
+          .main-grid-header {
+            display: none;
+          }
+
+          .main-grid-central {
+            .centralHFlex {
+              flex-direction: column;
+
+              .side-bar-thin {
+                display: none;
+              }
+
+              .side-pane {
+                height: fit-content;
+                max-height: 20%;
+                overflow-y: scroll;
+                width: 100%;
+              }
+
+              .central-pane {
+                .tab-strip {
+                  display: none;
+                }
+
+                .editor-topbar {
+                  display: none;
+                }
+              }
+            }
+
+          }
+        }
+      }
+    }
   }
 }
 

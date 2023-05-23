@@ -13,7 +13,7 @@ import com.olegych.scastie.client.components.sideBar.SideBar
 import com.olegych.scastie.client.components.snippets.CodeSnippets
 import com.olegych.scastie.client.components.tabStrip.TabStrip
 import com.olegych.scastie.client.components.tabStrip.TabStrip._
-import com.olegych.scastie.client.components.topBarEditor.EditorTopBar
+import com.olegych.scastie.client.components.topBarEditor.{EditorTopBar, MobileBar}
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.ScalaFn.Component
 import japgolly.scalajs.react.component.builder.Lifecycle.RenderScope
@@ -298,6 +298,7 @@ object CentralPanel {
               setMetalsStatus = backend.setMetalsStatus,
               dependencies = state.inputs.libraries
             ).render,
+
             Console(
               isOpen = state.consoleState.consoleIsOpen,
               isRunning = state.isRunning,
@@ -307,6 +308,20 @@ object CentralPanel {
               setView = backend.setViewReused,
               close = backend.closeConsole,
               open = backend.openConsole
+            ).render,
+
+            MobileBar(
+              isRunning = state.isRunning,
+              isStatusOk = state.status.isSbtOk,
+              isDarkTheme = state.isDarkTheme,
+              save = backend.saveOrUpdate,
+              setView = backend.setViewReused,
+              clear = backend.clear,
+              isNewSnippetModalClosed = state.modalState.isNewSnippetModalClosed,
+              openNewSnippetModal = backend.openNewSnippetModal,
+              closeNewSnippetModal = backend.closeNewSnippetModal,
+              newSnippet = backend.newSnippet,
+              forceDesktop = backend.forceDesktop
             ).render
           ).when(visible(View.Editor) || visible(View.BuildSettings) || visible(View.Status))
 
