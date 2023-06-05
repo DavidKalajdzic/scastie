@@ -1,0 +1,48 @@
+@import "commonvars";
+
+@mixin mobileBar() {
+  .scastie {
+    .editor-mobile {
+      display: none;
+      background: $editor-background;
+      box-shadow: inset 0 -2px 0 0 $console-border-color;
+    }
+
+    .editor-mobile {
+      background-color: $sidebar-background;
+    }
+
+    &:not(.embedded) {
+      @include phone {
+        .editor-mobile {
+          display: block;
+          height: $editor-mobile-height;
+          width: 100%;
+
+          & > * {
+            padding: 0px 24px !important;
+          }
+
+          .btn {
+            text-align: center;
+            width: 33.3%;
+            line-height: 48px !important;
+            font-size: 20px;
+            display: inline-block !important;
+            float: left;
+            padding: 0px !important;
+
+            span {
+              display: none;
+            }
+
+            i.fa {
+              line-height: 40px;
+              font-size: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

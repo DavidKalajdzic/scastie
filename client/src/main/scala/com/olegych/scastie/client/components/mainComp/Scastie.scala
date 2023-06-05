@@ -81,6 +81,9 @@ object Scastie {
     val forceDesktopClass =
       (cls := "force-desktop").when(state.isDesktopForced)
 
+    val presentationModeClass =
+      (cls := "presentation-mode").when(state.isPresentationMode)
+
     val topBar = TopBar(
       scope.backend.viewSnapshot(state.view),
       state.user,
@@ -93,7 +96,7 @@ object Scastie {
       scope.backend.openPrivacyPolicyModal
     ).render.unless(props.isEmbedded || state.isPresentationMode)
 
-    div(cls := s"app $theme", forceDesktopClass)(
+    div(cls := s"app $theme", forceDesktopClass, presentationModeClass)(
       div(cls := "main-grid-container")(
         div(cls := "main-grid-header")(
           topBar
@@ -103,20 +106,12 @@ object Scastie {
           footBar
         )
       ),
-      //      SideBar(
-      //        isDarkTheme = state.isDarkTheme,
-      //        status = state.status,
-      //        inputs = state.inputs,
-      //        toggleTheme = scope.backend.toggleTheme,
-      //        view = scope.backend.viewSnapshot(state.view),
-      //        openHelpModal = scope.backend.openHelpModal,
-      //        openPrivacyPolicyModal = scope.backend.openPrivacyPolicyModal
-      //      ).render.unless(props.isEmbedded || state.isPresentationMode),
-      //      MainPanel(
-      //        state,
-      //        scope.backend,
-      //        props
-      //      ).render,
+      EmbeddedOverlay(
+        inputsHasChanged = state.inputsHasChanged,
+        embeddedSnippetId = props.embeddedSnippetId,
+        serverUrl = props.serverUrl,
+        save = scope.backend.saveBlocking,
+      ).render.when(props.isEmbedded),
       HelpModal(
         isDarkTheme = state.isDarkTheme,
         isClosed = state.modalState.isHelpModalClosed,

@@ -3,24 +3,25 @@
 @mixin sidepaneTheme($class) {
 
   .side-pane {
-    background-color: #93a1a1;
+    background-color: $sidepane-background;
+    color: $sidepane-text-color;
   }
 
   .hierarchy-list-row {
     .hierarchy-list-row-buttons {
       button {
-        background-color: #5d7c83;
-        color: white;
+        background-color: $sidepane-button-background-color;
+        color: $sidepane-button-color;
       }
     }
   }
 
   .file-mouse-over {
-    background-color: cadetblue;
+    background-color: $hoverFile-background;
   }
 
   .file-selected {
-    background-color: steelblue;
+    background-color: $selectedFile-background;
     font-weight: bold;
   }
 

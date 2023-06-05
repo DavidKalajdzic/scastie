@@ -1,0 +1,23 @@
+@import "commonvars";
+
+@mixin consoleTheme($class) {
+  .console-container {
+    .switcher-show {
+      color: $switcher-show-color;
+      background: $hidden-console-background;
+    }
+
+    .switcher-hide {
+      background: $console-background;
+    }
+
+    .console {
+      color: $console-text-color;
+      background: $console-background;
+    }
+
+    .handler {
+      background: $console-border-color;
+    }
+  }
+}

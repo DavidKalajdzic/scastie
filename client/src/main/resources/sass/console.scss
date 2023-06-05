@@ -1,0 +1,70 @@
+@import "commonvars";
+
+@mixin console() {
+
+  .console-container {
+    flex-shrink: 0;
+    display: block;
+
+    $handler-height: 6px;
+    $console-handle-height: 38px;
+
+    font-family: $code-font-family;
+
+    &.console-open {
+      .output-console {
+        height: $console-height - $console-handle-height - $handler-height;
+      }
+    }
+
+    .switcher-show, .switcher-hide {
+      text-align: right;
+      align-items: center;
+      line-height: $console-handle-height;
+      padding-right: 20px;
+      cursor: pointer;
+    }
+
+    .console {
+      flex-shrink: 0;
+
+      .handler {
+        height: $handler-height;
+      }
+    }
+
+    .console-label {
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+    }
+
+    .output-console {
+      overflow: auto;
+      padding: 20px;
+    }
+
+    .fa {
+      width: 30px;
+      text-align: center;
+    }
+
+    .run-button {
+      margin-right: auto;
+      text-align: left;
+
+      background: #54A1CC;
+
+      line-height: 25px;
+      min-width: 50px;
+
+      padding: 0px 16px 0px 8px;
+      margin: 4px 0px 4px 4px;
+      border-radius: 15px;
+    }
+
+    .run-button:hover {
+      background-color: #267CAC
+    }
+  }
+}

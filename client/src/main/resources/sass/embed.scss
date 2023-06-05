@@ -5,27 +5,6 @@
 .scastie {
   @include reset();
 
-  .console-container {
-    .run-button {
-      margin-right: auto;
-      text-align: left;
-
-      background: #54A1CC;
-
-      line-height: 25px;
-      min-width: 50px;
-
-      padding: 0px 16px 0px 8px;
-      margin: 4px 0px 4px 4px;
-      border-radius: 15px;
-    }
-
-    .run-button:hover {
-      background-color: #267CAC
-    }
-  }
-
-
   .embedded-overlay {
     position: absolute;
     top: 0;

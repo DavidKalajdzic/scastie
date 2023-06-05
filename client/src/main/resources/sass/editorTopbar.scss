@@ -1,0 +1,79 @@
+@import "commonvars";
+
+@mixin editorTopBar() {
+  .scastie {
+
+    .editor-topbar {
+      overflow-x: auto;
+      width: 100%;
+      height: $editor-topbar-height;
+    }
+
+    .editor-topbar {
+      display: inline-block;
+
+      &.disabled {
+        display: none;
+      }
+
+      .workSheetIndicator {
+        margin-right: 0px;
+        text-align: center;
+        width: 14px;
+        margin-left: 8px;
+        font-size: 14px;
+
+        &.enabled.alpha {
+          opacity: 0.3;
+        }
+      }
+
+      .editor-buttons {
+        white-space: nowrap;
+        display: flex;
+        flex-direction: row;
+        overflow-y: hidden;
+        height: 60px;
+
+        li {
+          display: inline-block;
+        }
+
+        .btn {
+          cursor: pointer;
+          padding: 0 20px;
+          line-height: 58px;
+
+          i {
+            margin-right: 5px;
+          }
+
+          &.disabled {
+            text-decoration: none;
+            cursor: not-allowed;
+          }
+        }
+      }
+
+      .save-buttons {
+        display: inline-block;
+
+        .btn {
+          padding: 0 20px;
+        }
+      }
+    }
+
+    &:not(.embedded) {
+      @include tablet {
+        .editor-topbar {
+          font-size: 20px;
+
+          li span {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}

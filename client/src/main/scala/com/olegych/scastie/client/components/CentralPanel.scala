@@ -277,8 +277,8 @@ object CentralPanel {
               toggleMetalsStatus = backend.toggleMetalsStatus,
               scalaTarget = state.inputs.target
             ).render.unless(props.isEmbedded || state.isPresentationMode),
-
-            CodeEditor(
+            div(cls := "code")(
+              CodeEditor(
               visible = visible(View.Editor),
               isDarkTheme = state.isDarkTheme,
               isPresentationMode = state.isPresentationMode,
@@ -303,8 +303,8 @@ object CentralPanel {
               metalsStatus = state.metalsStatus,
               setMetalsStatus = backend.setMetalsStatus,
               dependencies = state.inputs.libraries
-            ).render,
-
+              ).render
+            ),
             Console(
               isOpen = state.consoleState.consoleIsOpen,
               isRunning = state.isRunning,
@@ -329,10 +329,8 @@ object CentralPanel {
               newSnippet = backend.newSnippet,
               forceDesktop = backend.forceDesktop
             ).render
-          ).when(visible(View.Editor) || visible(View.BuildSettings) || visible(View.Status))
-
-          , codeSnippets.when(visible(View.CodeSnippets))
-          // , <.p(state.inputs.code.toString)
+          ).when(visible(View.Editor) || visible(View.BuildSettings) || visible(View.Status)),
+          codeSnippets.when(visible(View.CodeSnippets))
         )
       )
     })

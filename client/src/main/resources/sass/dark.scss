@@ -19,12 +19,27 @@ $hover-submenu-dropdown-color: #859900;
 $submenu-background-color: #7dc8e5;
 
 // Sidebar
-$sidebar-background: #073642;
+$sidebar-background: #002b36;
 $selected-option-background: #859900;
 $hover-option-color: #859900;
 $selected-option-color: #fdf6e3;
 $option-color: #fdf6e3;
 $worksheet-enabled: #859900;
+
+// FileHirerarchy
+$sidepane-background: #073642;
+$sidepane-text-color: #fdf6e3;
+$sidepane-button-background-color: #859900;
+$sidepane-button-color: #fdf6e3;
+$hoverFile-background: #15414c;
+$selectedFile-background: #15414c;
+
+// Tabstrip
+$tabstrip-background: #2C4B53;
+$tabstrip-item-background: $background-color;
+$tabstrip-item-hover: #073642;
+$tabstrip-item-color: $sidepane-text-color;
+$tabstrip-item-selection-color: #CB73A8;
 
 // Console
 $console-text-color: #fdf6e3;
@@ -73,7 +88,7 @@ $code-background-color: #171717;
 
 .scastie {
   .dark {
-    .main-panel {
+    .central-pane {
       background-color: $cm-background-color;
     }
   }
