@@ -190,9 +190,6 @@ h1 {
               .console-container {
                 flex-shrink: 0;
                 display: block;
-                ///height: $console-height;
-                //overflow-y: scroll;
-                //border: red dotted 10px;
 
                 $handler-height: 6px;
                 $console-handle-height: 38px;
@@ -253,6 +250,30 @@ h1 {
       @include snippetTheme($class);
       @include buildSettingsTheme($class);
       @include statusTheme($class);
+    }
+
+    &.embedded {
+      .app {
+        .main-grid-container {
+          grid-template-rows: 0px 1fr 0px;
+
+          .main-grid-header {
+            display: none;
+          }
+
+          .main-grid-central {
+            .centralHFlex {
+              .side-bar-thin {
+                display: none;
+              }
+
+              .side-pane {
+                width: $sidepane-width-embed;
+              }
+            }
+          }
+        }
+      }
     }
 
     &:not(.embedded) {

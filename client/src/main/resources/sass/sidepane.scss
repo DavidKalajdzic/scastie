@@ -7,6 +7,7 @@
     .hierarchy-list-row {
       display: flex;
       flex-direction: row;
+      height: 22px;
 
       div {
         draggable: true;
@@ -22,24 +23,10 @@
           margin-left: auto;
 
           button {
-            background-color: #5d7c83;
             cursor: pointer;
-            //height:8px;
-            //padding: 10px;
-            color: white;
-            //width: calc($sidepane-width - 10px);
           }
         }
       }
-    }
-
-    .file-selected {
-      background-color: steelblue;
-      font-weight: bold;
-    }
-
-    .file-mouse-over {
-      background-color: cadetblue;
     }
   }
 }

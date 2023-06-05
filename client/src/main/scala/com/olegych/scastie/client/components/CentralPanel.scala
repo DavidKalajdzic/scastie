@@ -246,9 +246,11 @@ object CentralPanel {
             } else {
               EmptyVdom
             }
-          ).when(visible(View.Editor) || visible(View.BuildSettings) || visible(View.Status)),
+          ).when(visible(View.Editor) || visible(View.BuildSettings) || visible(View.Status))
+            .when(if (state.isEmbedded) state.inputs.code.children.length > 1 else true),
           <.div(cls := "central-pane")(
-            TabStrip(state.tabStripState, tabStripSelectionChange, tabStripCloseTab).render,
+            TabStrip(state.tabStripState, tabStripSelectionChange, tabStripCloseTab).render
+              .unless(state.isEmbedded),
 
             EditorTopBar(
               clear = backend.clear,

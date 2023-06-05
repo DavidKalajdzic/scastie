@@ -1,5 +1,6 @@
 @import "shared";
 @import "reset";
+@import "app";
 
 .scastie {
   @include reset();
@@ -58,6 +59,7 @@
       }
     }
   }
+  @include appStyles($class);
 }
 
 
