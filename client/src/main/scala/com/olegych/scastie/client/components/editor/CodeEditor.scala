@@ -33,7 +33,7 @@ final case class CodeEditor(visible: Boolean,
                             showLineNumbers: Boolean,
                             value: String,
                             filePathEditing: String,
-                            fullCode: api.Folder,
+                            fullCode: api.Folder, // used only for Metals setup
                             attachedDoms: Map[String, HTMLElement],
                             instrumentations: Set[api.Instrumentation],
                             compilationInfos: Set[api.Problem],
