@@ -33,7 +33,8 @@ import scala.util.Try
 import scalajs.js
 import vdom.all._
 import JsUtils._
-import com.olegych.scastie.client.components.mainComp.{MetalsConfigurationError, MetalsDisabled, MetalsLoading, MetalsReady, NetworkError}
+import com.olegych.scastie.api.FileOrFolderUtils
+import com.olegych.scastie.client.components.mainComp.{MetalsConfigurationError, MetalsDisabled, MetalsLoading, MetalsReady, MetalsStatus, NetworkError}
 import com.olegych.scastie.client.formatters.HTMLFormatter
 import hooks.Hooks.UseStateF
 
@@ -59,11 +60,18 @@ case class InteractiveProvider(props: CodeEditor) {
     }
   }
 
+  setup()
+
+  def setup() = {
+    val request = api.SetupRequest(FileOrFolderUtils.allFiles(props.fullCode), scastieMetalsOptions)
+    makeRequest(request, "setup")
+  }
+
   def extension: js.Array[Any] = js.Array[Any](autocompletion(autocompletionConfig), hovers)
 
   private def toLSPRequest(code: String, offset: Int): api.LSPRequestDTO = {
     val scastieOptions = api.ScastieMetalsOptions(props.dependencies, props.target)
-    val offsetParams = api.ScastieOffsetParams(code, offset, props.isWorksheetMode)
+    val offsetParams = api.ScastieOffsetParams(code, offset, props.isWorksheetMode, props.filePathEditing)
     api.LSPRequestDTO(scastieOptions, offsetParams)
   }
 
@@ -265,7 +273,7 @@ object InteractiveProvider {
       val effects = interactive.reconfigure(extension)
       editorView.value.dispatch(TransactionSpec().setEffects(effects.asInstanceOf[StateEffect[Any]]))
     }.when_(props.visible && prevProps.exists(prevProps => {
-      didConfigChange(prevProps, props) || (prevProps.visible != props.visible) || wasMetalsToggled(prevProps, props)
+      didConfigChange(prevProps, props) || (prevProps.visible != props.visible) || wasMetalsToggled(prevProps, props) || (prevProps.filePathEditing != props.filePathEditing)
     }))
   }
 

@@ -133,7 +133,7 @@ object ScastieMetalsOptions {
   implicit val scastieMetalsOptions: OFormat[ScastieMetalsOptions] = Json.format[ScastieMetalsOptions]
 }
 
-case class ScastieOffsetParams(content: String, offset: Int, isWorksheetMode: Boolean)
+case class ScastieOffsetParams(content: String, offset: Int, isWorksheetMode: Boolean, filePath:String)
 
 sealed trait FailureType {
   val msg: String
@@ -157,6 +157,11 @@ object PresentationCompilerFailure {
 object ScastieOffsetParams {
   implicit val scastieOffsetParams: OFormat[ScastieOffsetParams] = Json.format[ScastieOffsetParams]
 }
+
+object SetupRequest {
+  implicit val setupRequestFormat: OFormat[SetupRequest] = Json.format[SetupRequest]
+}
+case class SetupRequest(files:List[File], options: ScastieMetalsOptions)
 
 case class LSPRequestDTO(options: ScastieMetalsOptions, offsetParams: ScastieOffsetParams)
 case class CompletionInfoRequest(options: ScastieMetalsOptions, completionItem: CompletionItemDTO)

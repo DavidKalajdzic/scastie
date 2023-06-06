@@ -2,6 +2,7 @@ package com.olegych.scastie.client.components.mainComp
 
 import com.olegych.scastie.api._
 import com.olegych.scastie.client._
+import com.olegych.scastie.client.components.editor.InteractiveProvider
 import com.olegych.scastie.client.components.tabStrip.TabStrip.{Tab, TabStripState}
 import com.olegych.scastie.client.utils.{EventStream, EventStreamHandler, RestApiClient}
 import japgolly.scalajs.react._
@@ -39,6 +40,19 @@ case class ScastieBackend(scastieId: UUID,
         val selectedTabContent: Option[String] = state.tabStripState.selectedTab.flatMap { tab =>
           FileOrFolderUtils.allFiles(state.inputs.code).find(_.path.equals(tab.tabId)).map(_.content)
         }
+        selectedTabContent.getOrElse("No selection")
+      }
+    }
+  }
+
+  val selectedFileCodePath: Reusable[CallbackTo[String]] = {
+    Reusable.always {
+      scope.state.map { state =>
+        val selectedTabContent: Option[String] = state.tabStripState.selectedTab.flatMap { tab =>
+          println(tab.toString)
+          FileOrFolderUtils.allFiles(state.inputs.code).find(_.path.equals(tab.tabId)).map(_.path)
+        }
+        println(selectedTabContent.toString)
         selectedTabContent.getOrElse("No selection")
       }
     }
@@ -443,7 +457,9 @@ case class ScastieBackend(scastieId: UUID,
   def loadSnippet(snippetId: SnippetId): Callback = {
     loadSnippetBase(
       restApiClient.fetch(snippetId),
-      afterLoading = s => s.selectFirstFile().setSnippetId(snippetId),
+      afterLoading = s => {
+        s.selectFirstFile().setSnippetId(snippetId)
+      },
       snippetId = Some(snippetId)
     )
   }
@@ -502,23 +518,27 @@ case class ScastieBackend(scastieId: UUID,
 
   val formatCode: Reusable[Callback] = Reusable.always {
     scope.state.flatMap { state =>
-      Callback.future {
-        restApiClient
-          .format(FormatRequest(selectedFileCode.runNow(), state.inputs.isWorksheetMode, state.inputs.target))
-          .map {
-            case FormatResponse(Right(formattedCode)) =>
-              scope.modState { s =>
-                // avoid overriding user's code if he/she types while it's formatting
-                if (s.inputs.code == state.inputs.code)
-                  s.clearOutputsPreserveConsole.changeSelectedFileContent(formattedCode)
-                else s
-              }
-            case FormatResponse(Left(error)) =>
-              scope.modState {
-                _.setRuntimeError(Some(RuntimeError(message = "Formatting failed: " + error, line = None, fileName = None, fullStack = "")))
-              }
-          }
-      }
+
+    val scastieOptions = ScastieMetalsOptions(state.inputs.libraries, state.inputs.target)
+//    setupRequest(state.inputs.code, scastieOptions)
+Callback.empty
+//      Callback.future {
+//        restApiClient
+//          .format(FormatRequest(selectedFileCode.runNow(), state.inputs.isWorksheetMode, state.inputs.target))
+//          .map {
+//            case FormatResponse(Right(formattedCode)) =>
+//              scope.modState { s =>
+//                // avoid overriding user's code if he/she types while it's formatting
+//                if (s.inputs.code == state.inputs.code)
+//                  s.clearOutputsPreserveConsole.changeSelectedFileContent(formattedCode)
+//                else s
+//              }
+//            case FormatResponse(Left(error)) =>
+//              scope.modState {
+//                _.setRuntimeError(Some(RuntimeError(message = "Formatting failed: " + error, line = None, fileName = None, fullStack = "")))
+//              }
+//          }
+//      }
     }
   }
 

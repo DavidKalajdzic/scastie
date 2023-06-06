@@ -22,8 +22,19 @@ object ScastieMetalsRoutes {
     implicit val lspRequestDecoder: EntityDecoder[F, LSPRequestDTO]                  = jsonOf[F, LSPRequestDTO]
     implicit val scastieMetalsOptionsDecoder: EntityDecoder[F, ScastieMetalsOptions] = jsonOf[F, ScastieMetalsOptions]
     implicit val completionInfoDecoder: EntityDecoder[F, CompletionInfoRequest]      = jsonOf[F, CompletionInfoRequest]
+    implicit val setupRequestDecoder: EntityDecoder[F, SetupRequest]                 = jsonOf[F, SetupRequest]
 
     HttpRoutes.of[F] {
+
+      case req@POST -> Root / "metals" / "setup" => for {
+        setupRequest <- req.as[SetupRequest]
+        results <- metals.setup(setupRequest).value
+        resp <- results match {
+          case Right(_) => Ok()
+          case Left(err) => BadRequest(err.toString)
+        }
+      } yield resp
+
       case req @ POST -> Root / "metals" / "complete" => for {
           lspRequest       <- req.as[LSPRequestDTO]
           maybeCompletions <- metals.complete(lspRequest).value

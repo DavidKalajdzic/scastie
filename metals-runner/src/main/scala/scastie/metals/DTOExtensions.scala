@@ -11,7 +11,7 @@ object DTOExtensions {
   extension (offsetParams: ScastieOffsetParams)
 
     def toOffsetParams: CompilerOffsetParams = {
-      val noSourceFilePath = Path.of(NoSourceFile.path)
+      val uri = Path.of(offsetParams.filePath.substring(1)).toUri
 
       val ident = "  "
       val wrapperObject = s"""|object worksheet {
@@ -27,7 +27,7 @@ object DTOExtensions {
           (adjustedContent, adjustedPosition)
         else (offsetParams.content, offsetParams.offset)
 
-      new CompilerOffsetParams(noSourceFilePath.toUri, content, position)
+      new CompilerOffsetParams(uri, content, position)
     }
 
 }

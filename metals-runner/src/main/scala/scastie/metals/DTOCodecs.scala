@@ -43,6 +43,17 @@ object DTOCodecs {
   implicit val additionalInsertInstructionsEncoder: Encoder[AdditionalInsertInstructions] = deriveEncoder
   implicit val additionalInsertInstructionsDecoder: Decoder[AdditionalInsertInstructions] = deriveDecoder
 
+
+  implicit val setupRequestEncoder: Encoder[SetupRequest] = deriveEncoder
+  implicit val setupRequestDecoder: Decoder[SetupRequest] = deriveDecoder
+  implicit val fofEncoder: Encoder[FileOrFolder] = deriveEncoder
+  implicit val fofDecoder: Decoder[FileOrFolder] = deriveDecoder
+  implicit val fileEncoder: Encoder[File] = deriveEncoder
+  implicit val fDecoder: Decoder[File] = deriveDecoder
+  implicit val folderEncoder: Encoder[Folder] = deriveEncoder
+  implicit val folderDecoder: Decoder[Folder] = deriveDecoder
+
+
   implicit val failureTypeEncoder: Encoder[FailureType] = new Encoder[FailureType] {
     implicit val noResultEncoder: Encoder.AsObject[NoResult] = deriveEncoder[NoResult]
     implicit val presentationCompilerFailureEncoder: Encoder.AsObject[PresentationCompilerFailure] =

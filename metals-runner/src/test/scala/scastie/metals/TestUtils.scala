@@ -28,7 +28,7 @@ object TestUtils extends Assertions with CatsEffectAssertions {
 
   private def testCode(code: String): ScastieOffsetParams = {
     val offset = code.indexOfSlice("@@")
-    ScastieOffsetParams(code.filter(_ != '@'), offset, false)
+    ScastieOffsetParams(code.filter(_ != '@'), offset, false, "")
   }
 
   private def createRequest(
