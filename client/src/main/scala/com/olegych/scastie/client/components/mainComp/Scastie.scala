@@ -182,7 +182,7 @@ object Scastie {
               case _ => Callback(())
             }
 
-          setInputs >> setTheme
+          setInputs >> setTheme >> backend.scope.modState(_.selectFirstFile())
         }
       }
 
