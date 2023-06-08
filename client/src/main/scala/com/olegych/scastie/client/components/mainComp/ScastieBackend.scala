@@ -518,27 +518,23 @@ case class ScastieBackend(scastieId: UUID,
 
   val formatCode: Reusable[Callback] = Reusable.always {
     scope.state.flatMap { state =>
-
-    val scastieOptions = ScastieMetalsOptions(state.inputs.libraries, state.inputs.target)
-//    setupRequest(state.inputs.code, scastieOptions)
-Callback.empty
-//      Callback.future {
-//        restApiClient
-//          .format(FormatRequest(selectedFileCode.runNow(), state.inputs.isWorksheetMode, state.inputs.target))
-//          .map {
-//            case FormatResponse(Right(formattedCode)) =>
-//              scope.modState { s =>
-//                // avoid overriding user's code if he/she types while it's formatting
-//                if (s.inputs.code == state.inputs.code)
-//                  s.clearOutputsPreserveConsole.changeSelectedFileContent(formattedCode)
-//                else s
-//              }
-//            case FormatResponse(Left(error)) =>
-//              scope.modState {
-//                _.setRuntimeError(Some(RuntimeError(message = "Formatting failed: " + error, line = None, fileName = None, fullStack = "")))
-//              }
-//          }
-//      }
+      Callback.future {
+        restApiClient
+          .format(FormatRequest(selectedFileCode.runNow(), state.inputs.isWorksheetMode, state.inputs.target))
+          .map {
+            case FormatResponse(Right(formattedCode)) =>
+              scope.modState { s =>
+                // avoid overriding user's code if he/she types while it's formatting
+                if (s.inputs.code == state.inputs.code)
+                  s.clearOutputsPreserveConsole.changeSelectedFileContent(formattedCode)
+                else s
+              }
+            case FormatResponse(Left(error)) =>
+              scope.modState {
+                _.setRuntimeError(Some(RuntimeError(message = "Formatting failed: " + error, line = None, fileName = None, fullStack = "")))
+              }
+          }
+      }
     }
   }
 
