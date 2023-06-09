@@ -32,7 +32,8 @@ final case class SideBar(isDarkTheme: Boolean,
                          toggleTheme: Reusable[Callback],
                          view: StateSnapshot[View],
                          openHelpModal: Reusable[Callback],
-                         openPrivacyPolicyModal: Reusable[Callback]) {
+                         openPrivacyPolicyModal: Reusable[Callback],
+                         openSidePane: Reusable[Boolean => Callback]) {
   @inline def render: VdomElement = SideBar.component(this)
 }
 
@@ -61,6 +62,13 @@ object SideBar {
         i(cls := "fa fa-question-circle")
       )
 
+    def buttonsOnClick(v: View): Reusable[Callback] = Reusable.always {
+      Callback {
+        val toggle = props.view.value == v
+        props.openSidePane(toggle).runNow()
+      }
+    }
+
     val runnersStatusButton = {
       val (statusIcon, statusClass, statusLabel) =
         props.status.sbtRunnerCount match {
@@ -84,7 +92,7 @@ object SideBar {
       forView = View.Editor,
       buttonTitle = "Editor",
       faIcon = "fa-edit",
-      onClick = reusableEmpty
+      onClick = buttonsOnClick(View.Editor)
     ).render
 
     val buildSettingsButton = ViewToggleButton(
@@ -92,7 +100,7 @@ object SideBar {
       forView = View.BuildSettings,
       buttonTitle = "Build Settings",
       faIcon = "fa-gear",
-      onClick = reusableEmpty
+      onClick = buttonsOnClick(View.BuildSettings)
     ).render
 
     nav(cls := "sidebar")(

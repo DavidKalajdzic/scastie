@@ -14,9 +14,12 @@ import com.olegych.scastie.client.components.snippets.CodeSnippets
 import com.olegych.scastie.client.components.tabStrip.TabStrip
 import com.olegych.scastie.client.components.tabStrip.TabStrip._
 import com.olegych.scastie.client.components.topBarEditor.{EditorTopBar, MobileBar}
+import japgolly.scalajs.react
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.ScalaFn.Component
 import japgolly.scalajs.react.component.builder.Lifecycle.RenderScope
+import japgolly.scalajs.react.facade.React
+import japgolly.scalajs.react.facade.React.useState
 import japgolly.scalajs.react.hooks.HookCtx
 import japgolly.scalajs.react.hooks.Hooks.UseState
 import japgolly.scalajs.react.vdom.{HtmlStyles, html_<^}
@@ -43,6 +46,11 @@ object CentralPanel {
       val tabStripSelectionChange: Tab => Callback = {
         (newSelection: Tab) =>
           scope.modState(_.copy(tabStripState = TabStripState(Some(newSelection), state.tabStripState.activeTabs)))
+      }
+
+      val openSidePane: Reusable[Boolean => Callback] = Reusable.always {
+        toggle =>
+          scope.modState(ss => ss.copy(isSidePaneVisible = if (toggle) !ss.isSidePaneVisible else true))
       }
 
       val tabStripCloseTab: Tab => Callback = {
@@ -165,6 +173,8 @@ object CentralPanel {
 
       def show(view: View) = if (visible(view)) HtmlStyles.display.block else HtmlStyles.display.none
 
+      def sidePaneVisibility() = if (state.isSidePaneVisible) HtmlStyles.display.block else HtmlStyles.display.none
+
       val codeSnippets = {
         (props.router, state.user) match {
           case (Some(router), Some(user)) if state.view == View.CodeSnippets =>
@@ -233,10 +243,11 @@ object CentralPanel {
               toggleTheme = scope.backend.toggleTheme,
               view = scope.backend.viewSnapshot(state.view),
               openHelpModal = scope.backend.openHelpModal,
-              openPrivacyPolicyModal = scope.backend.openPrivacyPolicyModal
+              openPrivacyPolicyModal = scope.backend.openPrivacyPolicyModal,
+              openSidePane = openSidePane,
             ).render.unless(props.isEmbedded || state.isPresentationMode)
           ),
-          <.div(cls := "side-pane")(
+          <.div(cls := "side-pane", sidePaneVisibility())(
             if (visible(View.Editor)) {
               FileHierarchy(scope.state.inputs.code, openFile, moveFileOrFolder, deleteFileOrFolder, createFileOrFolder, renameFileOrFolder).render
             } else if (visible(View.BuildSettings)) {

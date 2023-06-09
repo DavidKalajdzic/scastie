@@ -53,6 +53,7 @@ object ScastieState {
       modalState =
         if (isEmbedded) ModalState.allClosed
         else ModalState.default,
+      isSidePaneVisible = true,
       isDarkTheme = false,
       isDesktopForced = false,
       isPresentationMode = false,
@@ -102,6 +103,7 @@ case class ScastieState(view: View, // which view to display
                         statusStream: Option[EventStream[StatusProgress]],
                         progressStream: Option[EventStream[SnippetProgress]],
                         modalState: ModalState,
+                        isSidePaneVisible: Boolean,
                         isDarkTheme: Boolean,
                         isDesktopForced: Boolean,
                         isPresentationMode: Boolean,
