@@ -59,7 +59,7 @@ object Scastie {
     )
 
   private def setTitle(state: ScastieState, props: Scastie) = {
-    def scastieCode = if (state.inputs.code.isEmpty) "Scastie" else state.inputs.code + " - Scastie"
+    def scastieCode = if (state.inputs.code.isEmpty) "Scastie" else state.inputs.code.summary + " - Scastie"
 
     if (!props.isEmbedded) {
       if (state.inputsHasChanged) {

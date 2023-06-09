@@ -41,7 +41,7 @@ object FooterBar {
 
     val githubButton =
       p(onClick --> github, role := "button", title := "2022 ScalaCenter, Github", cls := "btn")(
-        span("2022 ScalaCenter, Github")
+        span("2023 ScalaCenter, Github")
       )
 
     div(cls := "footer-bar")(

@@ -52,15 +52,6 @@ object SideBar {
         i(cls := s"fa $selectedIcon")
       )
 
-    val privacyPolicyButton =
-      li(onClick --> props.openPrivacyPolicyModal, role := "button", title := "Show privacy policy", cls := "btn")(
-        i(cls := "fa fa-user-secret")
-      )
-
-    val helpButton =
-      li(onClick --> props.openHelpModal, role := "button", title := "Show help Menu", cls := "btn")(
-        i(cls := "fa fa-question-circle")
-      )
 
     def buttonsOnClick(v: View): Reusable[Callback] = Reusable.always {
       Callback {
@@ -107,8 +98,6 @@ object SideBar {
       editorButton,
       buildSettingsButton,
       themeButton,
-      privacyPolicyButton,
-      helpButton,
       runnersStatusButton
     )
   }
