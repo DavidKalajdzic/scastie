@@ -63,12 +63,14 @@ object TestUtils extends Assertions with CatsEffectAssertions {
     testTargets: List[ScalaTarget] = testTargets,
     dependencies: Set[DependencyForVersion] = Set(),
     code: String = "",
+    files: List[File] = List(),
     expected: Either[FailureType, MarkupContent] = Right(MarkupContent()),
     compat: Map[String, Either[FailureType, MarkupContent]] = Map()
   ): IO[List[Unit]] = testTargets.traverse(scalaTarget =>
+    val setupRequest = server.setup(SetupRequest(files, ScastieMetalsOptions(Set(), scalaTarget)))
     val request = createRequest(scalaTarget, dependencies, code)
-    val comp    = server.hover(request).map(_.getContents().getRight()).value
-    assertIO(comp, getCompat(scalaTarget, compat, expected), Left(NoResult(s"Failed for target $scalaTarget")))
+    val comp = server.hover(request).map(_.getContents().getRight())
+    assertIO(setupRequest.flatMap(_ => comp).value, getCompat(scalaTarget, compat, expected), Left(NoResult(s"Failed for target $scalaTarget")))
   )
 
   case class TestSignatureHelp(label: String, doc: String)

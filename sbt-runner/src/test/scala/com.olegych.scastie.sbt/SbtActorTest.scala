@@ -236,6 +236,73 @@ class SbtActorTest() extends TestKit(ActorSystem("SbtActorTest")) with ImplicitS
     )(_.isDone)
   }
 
+  test("multiple files") {
+    val file1 =
+      s"""|object Main {
+          |  def main(args: Array[String]): Unit = {
+          |    Second.doSomething()
+          |  }
+          |}
+          |""".stripMargin
+
+    val file2 =
+      s"""|object Second {
+          |  def doSomething(): Unit = {
+          |    println("Hello, Multiple file (fire?) support!")
+          |  }
+          |}
+          |""".stripMargin
+    val dotty = Inputs.default.copy(
+      code =
+        Folder("", List(
+          File("main.scala", file1, "/main.scala"),
+          File("second.scala", file2, "/second.scala")
+        ), "/"),
+      target = ScalaTarget.Scala3.default,
+      _isWorksheetMode = false
+    )
+    run(dotty)(assertUserOutput("Hello, Multiple file (fire?) support!"))
+  }
+
+  test("multiple files with macros usage") {
+    val file1 =
+      s"""|import scala.quoted.*
+          |
+          |transparent inline def getCompanion[E]: AnyRef = $${ getCompanionMacro[E] }
+          |def getCompanionMacro[E](using Quotes, Type[E]): Expr[AnyRef] =
+          |  import quotes.reflect.*
+          |  val companionSym = TypeRepr.of[E].typeSymbol.companionModule
+          |  Ref(companionSym).asExprOf[AnyRef]
+          |""".stripMargin
+
+    val file2 =
+      s"""|trait Foo
+          |
+          |object Foo
+          |
+          |enum MyEnum:
+          |  case Baz, Bar
+          |
+          |object Main {
+          |  def main(args: Array[String]): Unit = {
+          |    val foo: Foo.type = getCompanion[Foo]
+          |    val myEnum: MyEnum.type = getCompanion[MyEnum]
+          |    println("it worked")
+          |  }
+          |}
+          |""".stripMargin
+    val dotty = Inputs.default.copy(
+      code =
+        Folder("", List(
+          File("main.scala", file1, "/main.scala"),
+          File("second.scala", file2, "/second.scala")
+        ), "/"),
+      target = ScalaTarget.Scala3.default,
+      _isWorksheetMode = false
+    )
+    run(dotty)(assertUserOutput("it worked"))
+  }
+
   def assertCompilationInfo(
                              infoAssert: Problem => Any
                            )(progress: SnippetProgress): Boolean = {

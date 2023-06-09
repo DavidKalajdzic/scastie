@@ -1,24 +1,24 @@
 package scastie.metals
 
-import scala.jdk.CollectionConverters._
-
-import cats.effect._
-import cats.syntax.all._
-import com.olegych.scastie.api.{NoResult, PresentationCompilerFailure, ScalaDependency, ScalaTarget}
+import scala.jdk.CollectionConverters.*
+import cats.effect.*
+import cats.syntax.all.*
+import com.olegych.scastie.api.{File, NoResult, PresentationCompilerFailure, ScalaDependency, ScalaTarget}
 import com.olegych.scastie.buildinfo.BuildInfo
 import munit.CatsEffectSuite
 import org.eclipse.lsp4j.MarkupContent
-import org.http4s._
-import TestUtils._
+import org.http4s.*
+import TestUtils.*
 
 class MetalsServerTest extends CatsEffectSuite {
   private val catsVersion = "2.8.0"
 
   test("Simple completions") {
     testCompletion(
-      code = """object M {
-               |  def hello = printl@@
-               |}
+      code =
+        """object M {
+          |  def hello = printl@@
+          |}
           """.stripMargin,
       expected = Set(
         "println(): Unit",
@@ -29,9 +29,10 @@ class MetalsServerTest extends CatsEffectSuite {
 
   test("Simple completions 2") {
     testCompletion(
-      code = """object M {
-               |  def hello = print@@
-               |}
+      code =
+        """object M {
+          |  def hello = print@@
+          |}
           """.stripMargin,
       expected = Set(
         "println(): Unit",
@@ -45,10 +46,11 @@ class MetalsServerTest extends CatsEffectSuite {
   test("Completions with dependencies") {
     testCompletion(
       dependencies = Set(ScalaDependency("org.typelevel", "cats-core", _, catsVersion)),
-      code = """import cats.syntax.all._
-               |object M {
-               |  def test = "5".asRigh@@
-               |}
+      code =
+        """import cats.syntax.all._
+          |object M {
+          |  def test = "5".asRigh@@
+          |}
           """.stripMargin,
       expected = Set(
         "asRight[B]: Either[B, A]"
@@ -63,10 +65,11 @@ class MetalsServerTest extends CatsEffectSuite {
     testCompletion(
       testTargets = List(ScalaTarget.Scala3.default),
       dependencies = Set(_ => ScalaDependency("org.typelevel", "cats-core", ScalaTarget.Jvm.default, catsVersion)),
-      code = """import cats.syntax.all._
-               |object M {
-               |  def test = "5".asRigh@@
-               |}
+      code =
+        """import cats.syntax.all._
+          |object M {
+          |  def test = "5".asRigh@@
+          |}
           """.stripMargin,
       expected = Set(
         "asRight[B]: Either[B, A]"
@@ -76,17 +79,19 @@ class MetalsServerTest extends CatsEffectSuite {
 
   test("Completions item info") {
     testCompletionInfo(
-      code = """object M {
-               |  printl@@
-               |}
+      code =
+        """object M {
+          |  printl@@
+          |}
           """.stripMargin,
       expected = List(
         Right("Prints a newline character on the default output."),
-        Right("""Prints out an object to the default output, followed by a newline character.
-                |
-                |
-                |**Parameters**
-                |- `x`: the object to print.""".stripMargin)
+        Right(
+          """Prints out an object to the default output, followed by a newline character.
+            |
+            |
+            |**Parameters**
+            |- `x`: the object to print.""".stripMargin)
       )
     )
   }
@@ -95,10 +100,11 @@ class MetalsServerTest extends CatsEffectSuite {
     testCompletionInfo(
       testTargets = List(ScalaTarget.Scala3("3.2.0")),
       dependencies = Set(ScalaDependency("org.typelevel", "cats-core", _, catsVersion)),
-      code = """import cats.syntax.all._
-               |object M {
-               |  def test = "5".asRigh@@
-               |}
+      code =
+        """import cats.syntax.all._
+          |object M {
+          |  def test = "5".asRigh@@
+          |}
           """.stripMargin,
       expected = List(
         Right("Wrap a value in `Right`.")
@@ -110,10 +116,11 @@ class MetalsServerTest extends CatsEffectSuite {
     testCompletionInfo(
       testTargets = List(ScalaTarget.Scala3.default),
       dependencies = Set(_ => ScalaDependency("org.typelevel", "cats-core", ScalaTarget.Jvm.default, catsVersion)),
-      code = """import cats.syntax.all._
-               |object M {
-               |  def test = "5".asRigh@@
-               |}
+      code =
+        """import cats.syntax.all._
+          |object M {
+          |  def test = "5".asRigh@@
+          |}
           """.stripMargin,
       expected = List(
         "Wrap a value in `Right`.".asRight
@@ -123,9 +130,10 @@ class MetalsServerTest extends CatsEffectSuite {
 
   test("Simple hover") {
     testHover(
-      code = """object M {
-               |  def hello = prin@@tln()
-               |}
+      code =
+        """object M {
+          |  def hello = prin@@tln()
+          |}
           """.stripMargin,
       expected = MarkupContent(
         "markdown",
@@ -136,9 +144,10 @@ class MetalsServerTest extends CatsEffectSuite {
 
   test("Simple hover 2") {
     testHover(
-      code = """object M {
-               |  def hello = prin@@t()
-               |}
+      code =
+        """object M {
+          |  def hello = prin@@t()
+          |}
           """.stripMargin,
       expected = MarkupContent(
         "markdown",
@@ -150,10 +159,11 @@ class MetalsServerTest extends CatsEffectSuite {
   test("Hover with dependencies") {
     testHover(
       dependencies = Set(ScalaDependency("org.typelevel", "cats-core", _, catsVersion)),
-      code = """import cats.syntax.all._
-               |object M {
-               |  def test = "5".asRig@@ht
-               |}
+      code =
+        """import cats.syntax.all._
+          |object M {
+          |  def test = "5".asRig@@ht
+          |}
           """.stripMargin,
       expected = MarkupContent(
         "markdown",
@@ -188,10 +198,11 @@ class MetalsServerTest extends CatsEffectSuite {
     testHover(
       testTargets = List(ScalaTarget.Scala3.default),
       dependencies = Set(_ => ScalaDependency("org.typelevel", "cats-core", ScalaTarget.Jvm.default, catsVersion)),
-      code = """import cats.syntax.all._
-               |object M {
-               |  def test = "5".asRigh@@t
-               |}
+      code =
+        """import cats.syntax.all._
+          |object M {
+          |  def test = "5".asRigh@@t
+          |}
           """.stripMargin,
       expected = MarkupContent(
         "markdown",
@@ -210,9 +221,10 @@ class MetalsServerTest extends CatsEffectSuite {
 
   test("Simple signature help") {
     testSignatureHelp(
-      code = """object M {
-               |  def hello = println(@@)
-               |}
+      code =
+        """object M {
+          |  def hello = println(@@)
+          |}
           """.stripMargin,
       expected = Set(
         TestSignatureHelp(
@@ -230,9 +242,10 @@ class MetalsServerTest extends CatsEffectSuite {
 
   test("Simple SignatureHelp 2") {
     testSignatureHelp(
-      code = """object M {
-               |  def hello = print(@@)
-               |}
+      code =
+        """object M {
+          |  def hello = print(@@)
+          |}
           """.stripMargin,
       expected = Set(
         TestSignatureHelp(
@@ -250,10 +263,11 @@ class MetalsServerTest extends CatsEffectSuite {
   test("Signature help with dependencies") {
     testSignatureHelp(
       dependencies = Set(ScalaDependency("org.typelevel", "cats-core", _, catsVersion)),
-      code = """import cats.syntax.all._
-               |object M {
-               |  def test = List().collectSomeFold(@@)
-               |}
+      code =
+        """import cats.syntax.all._
+          |object M {
+          |  def test = List().collectSomeFold(@@)
+          |}
           """.stripMargin,
       expected = Set(
         TestSignatureHelp(
@@ -291,9 +305,10 @@ class MetalsServerTest extends CatsEffectSuite {
   test("No completions for unsupported scala versions") {
     testCompletion(
       testTargets = unsupportedVersions,
-      code = """object M {
-               |  def hello = printl@@
-               |}
+      code =
+        """object M {
+          |  def hello = printl@@
+          |}
           """.stripMargin,
       compat = unsupportedVersions
         .map(v =>
@@ -308,9 +323,10 @@ class MetalsServerTest extends CatsEffectSuite {
   test("No hovers for unsupported scala versions") {
     testHover(
       testTargets = unsupportedVersions,
-      code = """object M {
-               |  def hello = prin@@tln()
-               |}
+      code =
+        """object M {
+          |  def hello = prin@@tln()
+          |}
           """.stripMargin,
       compat = unsupportedVersions
         .map(v =>
@@ -325,9 +341,10 @@ class MetalsServerTest extends CatsEffectSuite {
   test("No signatureHelps for unsupported scala versions") {
     testSignatureHelp(
       testTargets = unsupportedVersions,
-      code = """object M {
-               |  def hello = println(@@)
-               |}
+      code =
+        """object M {
+          |  def hello = println(@@)
+          |}
           """.stripMargin,
       compat = unsupportedVersions
         .map(v =>
@@ -341,9 +358,10 @@ class MetalsServerTest extends CatsEffectSuite {
 
   test("No completions for illegal snippet") {
     testCompletion(
-      code = """object M {
-               |  test hello = printl@@
-               |}
+      code =
+        """object M {
+          |  test hello = printl@@
+          |}
           """.stripMargin,
       expected = Set().asRight
     )
@@ -351,9 +369,10 @@ class MetalsServerTest extends CatsEffectSuite {
 
   test("No hovers for illegal snippet") {
     testHover(
-      code = """object M {
-               |  prin@@
-               |}
+      code =
+        """object M {
+          |  prin@@
+          |}
           """.stripMargin,
       expected = NoResult(s"There is no hover for given position").asLeft
     )
@@ -361,11 +380,43 @@ class MetalsServerTest extends CatsEffectSuite {
 
   test("No signatureHelps for illegal snippet") {
     testSignatureHelp(
-      code = """object M {
-               |  printl(@@)
-               |}
+      code =
+        """object M {
+          |  printl(@@)
+          |}
           """.stripMargin,
       expected = Set().asRight
     )
   }
+
+  //  test("Simple hover across multiple files"){
+  //    val file1 =
+  //      """object M {
+  //        |  def hello(): Unit = println(Second.world())
+  //        |}
+  //        """.stripMargin
+  //    val file2 =
+  //      """
+  //        |object Second {
+  //        |  def world(): String = "the world is beautiful"
+  //        |}
+  //        |""".stripMargin
+  //    testHover(
+  //      testTargets = List(ScalaTarget.Scala3.default),
+  //      code =
+  //        """object M {
+  //          |  def hello(): Unit = println(Second.wor@@ld())
+  //          |}
+  //        """.stripMargin,
+  //      files = List(
+  //        File("file.scala", file1, "/file.scala"),
+  //        File("second.scala", file2, "/second.scala")
+  //      ),
+  //      expected = MarkupContent(
+  //        "markdown",
+  //        "```scala\ndef world(): String"
+  //      ).asRight
+  //    )
+  //  }
+  // TODO this test does not work for some strange reason
 }
